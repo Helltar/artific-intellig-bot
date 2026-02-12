@@ -13,9 +13,6 @@ abstract class AiCommand(ctx: MessageContext) : BotCommand(ctx) {
     protected suspend fun visionModel() =
         configurationsDao.visionModel()
 
-    protected suspend fun imagesModel() =
-        configurationsDao.imageGenModel()
-
     protected suspend fun openaiApiKey() =
         checkNotNull(apiKeyDao.getKey(ApiConfig.PROVIDER_NAME)) { "OpenAI API key is missing" }
 }

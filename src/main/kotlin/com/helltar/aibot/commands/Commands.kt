@@ -1,7 +1,6 @@
 package com.helltar.aibot.commands
 
 import com.helltar.aibot.commands.Commands.User.CMD_CHAT
-import com.helltar.aibot.commands.Commands.User.CMD_IMAGE_GEN
 
 object Commands {
 
@@ -15,7 +14,6 @@ object Commands {
         const val CMD_CHAT = "chat"
         const val CMD_CHATCTX = "chatctx" // dialog context
         const val CMD_CHAT_CTX_REMOVE = "chatrm" // remove context
-        const val CMD_IMAGE_GEN = "imgen"
     }
 
     object Creator {
@@ -24,7 +22,6 @@ object Commands {
         const val CMD_SLOWMODE = "slowmode"
         const val CMD_UPDATE_API_KEY = "updatekey"
         const val CMD_UPDATE_CHAT_MODEL = "chatmodel"
-        const val CMD_UPDATE_IMAGE_GEN_MODEL = "imgmodel"
     }
 
     object Admin {
@@ -40,5 +37,5 @@ object Commands {
     }
 
     val disableableCommands =
-        setOf(CMD_CHAT, CMD_IMAGE_GEN)
+        setOf(CMD_CHAT)
 }

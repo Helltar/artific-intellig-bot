@@ -4,9 +4,7 @@ import com.annimon.tgbotsmodule.services.ResourceBundleLocalizationService
 import com.helltar.aibot.commands.Commands.Creator.CMD_SLOWMODE
 import com.helltar.aibot.commands.Commands.Creator.CMD_UPDATE_API_KEY
 import com.helltar.aibot.commands.Commands.Creator.CMD_UPDATE_CHAT_MODEL
-import com.helltar.aibot.commands.Commands.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
 import com.helltar.aibot.commands.Commands.User.CMD_CHAT_CTX_REMOVE
-import com.helltar.aibot.commands.Commands.User.CMD_IMAGE_GEN
 
 object Strings {
 
@@ -76,12 +74,6 @@ object Strings {
         <code>/$CMD_UPDATE_CHAT_MODEL</code> gpt-4.1
         """
 
-    const val UPDATE_IMAGES_MODEL_COMMAND_USAGE_TEMPLATE_RAW = """
-        ℹ️ Currently, the image generation is using <b>%s</b>. To change it, use the command like this:
-        
-        <code>/$CMD_UPDATE_IMAGE_GEN_MODEL</code> dall-e-3
-        """
-
     const val SLOWMODE_COMMAND_USAGE_TEMPLATE_RAW = """
         ℹ️ The current value is <b>%d</b> requests per hour per user.
         
@@ -92,12 +84,6 @@ object Strings {
         ℹ️ How to use:
         
         <code>/$CMD_UPDATE_API_KEY</code> <u>sk-proj-qwertyuiop</u>
-        """
-
-    const val IMG_GEN_COMMAND_USAGE_TEMPLATE_RAW = """
-        ℹ️ How to use:
-        
-        <code>/$CMD_IMAGE_GEN</code> <u>cute cat</u>
         """
 
     private val localization = ResourceBundleLocalizationService("language")

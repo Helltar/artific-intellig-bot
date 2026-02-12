@@ -7,7 +7,6 @@ object ApiConfig {
 
     object Endpoints {
         const val CHAT_COMPLETIONS = "/chat/completions"
-        const val IMAGES_GENERATIONS = "/images/generations"
     }
 
     object ChatRole {
