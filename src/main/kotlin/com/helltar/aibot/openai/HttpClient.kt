@@ -45,17 +45,6 @@ object HttpClient {
                 )
             }
 
-            /*
-
-            install(Auth) {
-                bearer {
-                    loadTokens { BearerTokens(apiKey ?: "", null) }
-                    sendWithoutRequest { true }
-                }
-            }
-
-            */
-
             install(HttpTimeout) {
                 requestTimeoutMillis = DEFAULT_TIMEOUT
                 connectTimeoutMillis = DEFAULT_TIMEOUT
