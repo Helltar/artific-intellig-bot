@@ -7,6 +7,8 @@ object Config {
     const val LOADING_ANIMATION_FILE = "data/files/loading.gif"
     const val SYSTEM_PROMPT_FILE = "data/files/system.prompt"
 
+    private val dotenv = dotenv { ignoreIfMissing = true }
+
     val creatorId = readEnvVar("CREATOR_ID").toLongOrNull() ?: throw IllegalArgumentException("invalid CREATOR_ID environment variable")
     val telegramBotToken = readEnvVar("BOT_TOKEN")
     val telegramBotUsername = readEnvVar("BOT_USERNAME")
@@ -17,6 +19,6 @@ object Config {
     val databasePassword = readEnvVar("DATABASE_PASSWORD")
 
     private fun readEnvVar(env: String) =
-        dotenv { ignoreIfMissing = true }[env].ifBlank { throw IllegalArgumentException("environment variable $env is blank") }
+        dotenv[env].ifBlank { throw IllegalArgumentException("environment variable $env is blank") }
             ?: throw IllegalArgumentException("environment variable $env is missing")
 }
