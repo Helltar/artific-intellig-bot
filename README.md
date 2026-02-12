@@ -8,7 +8,7 @@ This bot is focused on Group Chats.
 
 ```bash
 mkdir aibot && cd aibot && \
-wget https://raw.githubusercontent.com/Helltar/artific_intellig_bot/master/{.env,compose.yaml}
+wget https://raw.githubusercontent.com/Helltar/artific-intellig-bot/master/{.env,compose.yaml}
 ```
 
 Edit the **.env** file with the following:

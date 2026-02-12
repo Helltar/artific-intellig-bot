@@ -9,7 +9,7 @@ class About(ctx: MessageContext) : BotCommand(ctx) {
     override suspend fun run() {
         replyToMessage(
             """
-            <a href="https://github.com/Helltar/artific_intellig_bot">AᎥ</a>
+            <a href="https://github.com/Helltar/artific-intellig-bot">AᎥ</a>
             Contact: https://helltar.com
             Source Code:
             """

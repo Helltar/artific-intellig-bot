@@ -1,1 +1,1 @@
-rootProject.name = "artific_intellig_bot"
+rootProject.name = "artific-intellig-bot"
