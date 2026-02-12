@@ -33,7 +33,7 @@ First, create the following API key:
 
 Then add it in the bot with:
 
-- `/updatekey sk-qwerty...`
+- `/updatekey sk-proj-qwertyuiop`
 
 ### Commands
 
