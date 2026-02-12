@@ -1,6 +1,6 @@
 # AI Bot for Telegram
 
-This bot is focused on Group Chats.
+This bot is designed for use in group chats.
 
 ## Installation
 
@@ -11,13 +11,13 @@ mkdir aibot && cd aibot && \
 wget https://raw.githubusercontent.com/Helltar/artific-intellig-bot/master/{.env,compose.yaml}
 ```
 
-Edit the **.env** file with the following:
+Edit the **.env** file and set the following values:
 
-- `CREATOR_ID`: Your Telegram user-ID (You can use [@artific_intellig_bot](https://t.me/artific_intellig_bot) by entering the command `/myid`)
-- `BOT_TOKEN`: Obtain from [BotFather](https://t.me/BotFather)
-- `BOT_USERNAME`: Obtain from [BotFather](https://t.me/BotFather) (Example: artific_intellig_bot)
+- `CREATOR_ID`: your Telegram user ID (for example, `1234567890`)
+- `BOT_TOKEN`: get it from [BotFather](https://t.me/BotFather)
+- `BOT_USERNAME`: get it from [BotFather](https://t.me/BotFather) (for example, `artific_intellig_bot`)
 
-Also include PostgreSQL connection data.
+Also add your PostgreSQL connection settings.
 
 ```bash
 docker compose up -d
@@ -25,58 +25,58 @@ docker compose up -d
 
 ## Usage
 
-### Obtain API Keys
+### Get API keys
 
-First, get the following API key:
+First, create the following API key:
 
 - [OpenAI API Key](https://platform.openai.com/api-keys)
 
-Add it using the command in the bot:
+Then add it in the bot with:
 
 - `/updatekey sk-qwerty...`
 
 ### Commands
 
-- `/chat` - Chat and analyze images
-- `/imgen` - Generate images from text prompts
+- `/chat` - chat and analyze images
+- `/imgen` - generate images from text prompts
 
-### Additional Chat Commands
+### Additional chat commands
 
-- `/chatctx` - View dialogue history
-- `/chatrm` - Clear history
+- `/chatctx` - view dialogue history
+- `/chatrm` - clear history
 
-### Admin Commands
+### Admin commands
 
-#### Update Models
+#### Update models
 
-- `/chatmodel` - Change OpenAI model for chat and vision
-- `/imgmodel` - Change model for image generation
+- `/chatmodel` - change the OpenAI model for chat and vision
+- `/imgmodel` - change the model for image generation
 
-#### Change Command State
+#### Change command state
 
-- `/enable commandName` (Example: `/enable chat`)
-- `/disable commandName` (Example: `/disable imgen`)
+- `/enable commandName` (example: `/enable chat`)
+- `/disable commandName` (example: `/disable imgen`)
 
-> **NOTE:** Run `/enable` or `/disable` with no arguments to view supported commands.
+> **Note:** Run `/enable` or `/disable` without arguments to view supported commands.
 
-#### Ban User
+#### Ban users
 
-- `/ban` (Use as reply to a user message, Example: `/ban reason`)
-- `/unban` (Use as reply to user message or by user ID)
+- `/ban` (use as a reply to a user message, example: `/ban reason`)
+- `/unban` (use as a reply to a user message or by user ID)
 - `/banlist`
 
-#### Slowmode
+#### Slow mode
 
-- `/slowmode` (Default: 10 requests per hour per user)
+- `/slowmode` (default: 10 requests per hour per user)
 
-#### Manage Admins
+#### Manage admins
 
-- `/addadmin` (Add admin by ID, Example: `/addadmin 123456789 username`)
-- `/rmadmin` (Remove admin by ID)
-- `/sudoers` (View an admin list)
+- `/addadmin` (add an admin by ID, example: `/addadmin 123456789 username`)
+- `/rmadmin` (remove an admin by ID)
+- `/sudoers` (view the admin list)
 
-#### Manage Chats
+#### Manage chats
 
-- `/addchat` (Add chat to allowlist, Use in chat or by ID)
-- `/rmchat` (Remove chat from allowlist, Use in chat or by ID)
-- `/chats` (View a chat list)
+- `/addchat` (add a chat to the allowlist; use it in the chat or by ID)
+- `/rmchat` (remove a chat from the allowlist; use it in the chat or by ID)
+- `/chats` (view the chat list)
