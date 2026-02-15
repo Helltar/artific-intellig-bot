@@ -14,7 +14,7 @@ class ChatHistoryManager(private val userId: Long) {
 
     companion object {
         const val USER_MESSAGE_LIMIT = 4000
-        private const val DIALOG_HISTORY_LIMIT = USER_MESSAGE_LIMIT * 3
+        private const val DIALOG_HISTORY_LIMIT = USER_MESSAGE_LIMIT * 6
         private val userChatContextMap = ConcurrentHashMap<Long, CopyOnWriteArrayList<Pair<MessageData, Instant>>>()
     }
 
