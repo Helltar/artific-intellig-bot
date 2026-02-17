@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.chat
+package com.helltar.aibot.chat
 
 import com.helltar.aibot.Config.SYSTEM_PROMPT_FILE
 import com.helltar.aibot.database.dao.chatHistoryDao
