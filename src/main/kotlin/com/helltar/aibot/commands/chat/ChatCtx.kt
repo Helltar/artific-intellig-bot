@@ -3,8 +3,8 @@ package com.helltar.aibot.commands.chat
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.chat.ChatHistoryManager
-import com.helltar.aibot.commands.BotCommand
-import com.helltar.aibot.commands.Commands
+import com.helltar.aibot.commandcore.base.BotCommand
+import com.helltar.aibot.commandcore.CommandNames
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -40,7 +40,7 @@ class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.User.CMD_CHATCTX
+        CommandNames.User.CMD_CHATCTX
 
     private suspend fun getUserId() =
         if (!isReply)

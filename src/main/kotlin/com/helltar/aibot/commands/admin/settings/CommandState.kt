@@ -1,8 +1,8 @@
 package com.helltar.aibot.commands.admin.settings
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.BotCommand
+import com.helltar.aibot.commandcore.CommandNames
+import com.helltar.aibot.commandcore.base.BotCommand
 import com.helltar.aibot.Strings
 import com.helltar.aibot.database.dao.commandsDao
 
@@ -21,8 +21,8 @@ class CommandState(ctx: MessageContext, private val disable: Boolean = false) : 
 
         val commandName = arguments[0]
 
-        if (!Commands.disableableCommands.contains(commandName)) {
-            val formattedCommands = Commands.disableableCommands.joinToString { "<code>$it</code>" }
+        if (!CommandNames.toggleableCommands.contains(commandName)) {
+            val formattedCommands = CommandNames.toggleableCommands.joinToString { "<code>$it</code>" }
             replyToMessage(Strings.COMMAND_NOT_AVAILABLE.format(commandName, formattedCommands))
             return
         }
@@ -35,12 +35,12 @@ class CommandState(ctx: MessageContext, private val disable: Boolean = false) : 
 
     override fun commandName() =
         if (disable)
-            Commands.Admin.CMD_DISABLE
+            CommandNames.Admin.CMD_DISABLE
         else
-            Commands.Admin.CMD_ENABLE
+            CommandNames.Admin.CMD_ENABLE
 
     private suspend fun getCommandsStatusText() =
-        Commands.disableableCommands.map { commandName ->
+        CommandNames.toggleableCommands.map { commandName ->
             val isDisabled = commandsDao.isDisabled(commandName)
             val status = if (isDisabled) DISABLED_SYMBOL else ENABLED_SYMBOL
             "$status <code>$commandName</code>"

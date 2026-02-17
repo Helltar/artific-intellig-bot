@@ -2,8 +2,8 @@ package com.helltar.aibot.commands.admin.allowlist
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
-import com.helltar.aibot.commands.BotCommand
-import com.helltar.aibot.commands.Commands
+import com.helltar.aibot.commandcore.base.BotCommand
+import com.helltar.aibot.commandcore.CommandNames
 import com.helltar.aibot.database.dao.chatAllowlistDao
 
 class RemoveChat(ctx: MessageContext) : BotCommand(ctx) {
@@ -20,5 +20,5 @@ class RemoveChat(ctx: MessageContext) : BotCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.Admin.CMD_RM_CHAT
+        CommandNames.Admin.CMD_RM_CHAT
 }

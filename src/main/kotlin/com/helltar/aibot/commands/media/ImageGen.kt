@@ -2,8 +2,8 @@ package com.helltar.aibot.commands.media
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
-import com.helltar.aibot.commands.AiCommand
-import com.helltar.aibot.commands.Commands
+import com.helltar.aibot.commandcore.CommandNames
+import com.helltar.aibot.commandcore.base.AiCommand
 import com.helltar.aibot.openai.service.ImageGenService
 import io.github.oshai.kotlinlogging.KotlinLogging
 
@@ -35,5 +35,5 @@ class ImageGen(ctx: MessageContext) : AiCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.User.CMD_IMAGE_GEN
+        CommandNames.User.CMD_IMAGE_GEN
 }

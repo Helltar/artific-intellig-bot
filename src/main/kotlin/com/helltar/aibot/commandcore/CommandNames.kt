@@ -1,9 +1,6 @@
-package com.helltar.aibot.commands
+package com.helltar.aibot.commandcore
 
-import com.helltar.aibot.commands.Commands.User.CMD_CHAT
-import com.helltar.aibot.commands.Commands.User.CMD_IMAGE_GEN
-
-object Commands {
+object CommandNames {
 
     object General {
         const val CMD_ABOUT = "about"
@@ -39,6 +36,6 @@ object Commands {
         const val CMD_UNBAN_USER = "unban"
     }
 
-    val disableableCommands =
-        setOf(CMD_CHAT, CMD_IMAGE_GEN)
+    val toggleableCommands =
+        setOf(User.CMD_CHAT, User.CMD_IMAGE_GEN)
 }

@@ -1,13 +1,7 @@
-package com.helltar.aibot.commands
+package com.helltar.aibot.commandcore.support
 
 import com.annimon.tgbotsmodule.api.methods.Methods
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.Config.creatorId
-import com.helltar.aibot.Config.telegramBotUsername
-import com.helltar.aibot.database.dao.banlistDao
-import com.helltar.aibot.database.dao.chatAllowlistDao
-import com.helltar.aibot.database.dao.commandsDao
-import com.helltar.aibot.database.dao.sudoersDao
 import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.utils.HtmlUtils.buildStyledHtmlPage
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -18,41 +12,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
-abstract class BotCommand(open val ctx: MessageContext) : Command {
+class CommandMessageSupport(
+    private val ctx: MessageContext,
+    private val message: Message,
+    private val replyMessage: Message?
+) {
 
     private companion object {
         const val TELEGRAM_MESSAGE_LENGTH_LIMIT = 4096
         val log = KotlinLogging.logger {}
     }
-
-    val userLanguageCode = ctx.user().languageCode ?: "en"
-
-    protected val userId: Long = ctx.user().id
-    protected val message = ctx.message()
-    protected val replyMessage: Message? = message.replyToMessage
-    protected val isReply = message.isReply && message.replyToMessage.messageId != message.replyToMessage.messageThreadId // todo: tmp. fix, check.
-    protected val isNotReply = !isReply
-
-    protected val arguments: Array<String> = ctx.arguments()
-    protected val argumentsString: String = ctx.argumentsAsString()
-
-    suspend fun isCommandDisabled(command: String) =
-        commandsDao.isDisabled(command)
-
-    suspend fun isChatInAllowlist() =
-        chatAllowlistDao.isExists(ctx.chatId())
-
-    suspend fun isUserBanned(userId: Long) =
-        banlistDao.isBanned(userId)
-
-    suspend fun isAdmin() =
-        sudoersDao.isAdmin(userId)
-
-    fun isCreator(userId: Long) =
-        userId == creatorId
-
-    fun isNotMyMessage(message: Message?) =
-        message?.from?.userName != telegramBotUsername
 
     fun replyToMessage(text: String, messageId: Int = message.messageId, webPagePreview: Boolean = false) {
         val messageIdToReply = if (replyMessage?.from?.isBot == false) messageId else message.messageId // todo: refact.
@@ -83,7 +52,7 @@ abstract class BotCommand(open val ctx: MessageContext) : Command {
             .setFile(file)
             .call(ctx.sender)
 
-    protected fun replyToMessageWithPhoto(url: String, caption: String = "", messageId: Int? = message.messageId): Message =
+    fun replyToMessageWithPhoto(url: String, caption: String = "", messageId: Int? = message.messageId): Message =
         ctx.replyToMessageWithPhoto()
             .setFile(InputFile(url))
             .setCaption(caption)
@@ -91,7 +60,7 @@ abstract class BotCommand(open val ctx: MessageContext) : Command {
             .setParseMode(ParseMode.HTML)
             .call(ctx.sender)
 
-    protected fun replyWithTextDocument(text: String, caption: String): Int {
+    fun replyWithTextDocument(text: String, caption: String): Int {
         val title = "replyToMessageId-${message.messageId}"
         val html = buildStyledHtmlPage(title, text.trim()).byteInputStream()
 
@@ -103,7 +72,7 @@ abstract class BotCommand(open val ctx: MessageContext) : Command {
             .messageId
     }
 
-    protected fun downloadPhoto(message: Message? = replyMessage, limitBytes: Int = 1024 * 1024): File? {
+    fun downloadPhoto(message: Message? = replyMessage, limitBytes: Int = 1024 * 1024): File? {
         val photo = message?.photo?.maxByOrNull { it.fileSize }
 
         return photo?.let {

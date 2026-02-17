@@ -2,8 +2,8 @@ package com.helltar.aibot.commands.admin.admins
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
-import com.helltar.aibot.commands.BotCommand
-import com.helltar.aibot.commands.Commands
+import com.helltar.aibot.commandcore.base.BotCommand
+import com.helltar.aibot.commandcore.CommandNames
 import com.helltar.aibot.database.dao.sudoersDao
 
 class RemoveAdmin(ctx: MessageContext) : BotCommand(ctx) {
@@ -22,5 +22,5 @@ class RemoveAdmin(ctx: MessageContext) : BotCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.Admin.CMD_RM_ADMIN
+        CommandNames.Admin.CMD_RM_ADMIN
 }

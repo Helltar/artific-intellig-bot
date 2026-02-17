@@ -5,8 +5,8 @@ import com.helltar.aibot.Strings
 import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.chat.ChatHistoryManager.Companion.USER_MESSAGE_LIMIT
-import com.helltar.aibot.commands.AiCommand
-import com.helltar.aibot.commands.Commands
+import com.helltar.aibot.commandcore.base.AiCommand
+import com.helltar.aibot.commandcore.CommandNames
 import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService
@@ -47,7 +47,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.User.CMD_CHAT
+        CommandNames.User.CMD_CHAT
 
     private suspend fun retrieveChatAnswer(messages: List<MessageData>): String? =
         try {

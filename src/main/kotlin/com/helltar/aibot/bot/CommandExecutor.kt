@@ -3,8 +3,8 @@ package com.helltar.aibot.bot
 import com.helltar.aibot.Config
 import com.helltar.aibot.Config.LOADING_ANIMATION_FILE
 import com.helltar.aibot.Strings
-import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.BotCommand
+import com.helltar.aibot.commandcore.CommandNames
+import com.helltar.aibot.commandcore.base.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.configurationsDao
 import com.helltar.aibot.database.dao.slowmodeDao
@@ -108,7 +108,7 @@ class CommandExecutor {
     }
 
     private suspend fun isNotInSlowmode(botCommand: BotCommand): Boolean {
-        if (botCommand.commandName() in Commands.disableableCommands) {
+        if (botCommand.commandName() in CommandNames.toggleableCommands) {
             val slowmodeRemainingSeconds = getSlowmodeRemainingSeconds(botCommand.ctx.user().id)
 
             if (slowmodeRemainingSeconds > 0) {

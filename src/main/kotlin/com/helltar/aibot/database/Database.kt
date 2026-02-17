@@ -6,7 +6,7 @@ import com.helltar.aibot.Config.databasePassword
 import com.helltar.aibot.Config.databaseUser
 import com.helltar.aibot.Config.postgresqlHost
 import com.helltar.aibot.Config.postgresqlPort
-import com.helltar.aibot.commands.Commands.disableableCommands
+import com.helltar.aibot.commandcore.CommandNames.toggleableCommands
 import com.helltar.aibot.database.tables.*
 import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +55,7 @@ object Database {
     }
 
     private suspend fun initializeCommands() {
-        disableableCommands.forEach { command ->
+        toggleableCommands.forEach { command ->
             CommandsStateTable
                 .insertIgnore { // todo: batchInsert
                     it[commandName] = command
