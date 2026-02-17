@@ -20,5 +20,5 @@ class Start(ctx: MessageContext) : BotCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.Simple.CMD_START
+        Commands.General.CMD_START
 }

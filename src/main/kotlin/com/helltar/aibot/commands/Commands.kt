@@ -5,7 +5,7 @@ import com.helltar.aibot.commands.Commands.User.CMD_IMAGE_GEN
 
 object Commands {
 
-    object Simple {
+    object General {
         const val CMD_ABOUT = "about"
         const val CMD_MYID = "myid"
         const val CMD_START = "start"

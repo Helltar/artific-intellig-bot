@@ -23,9 +23,9 @@ import com.helltar.aibot.commands.Commands.Creator.CMD_SLOWMODE
 import com.helltar.aibot.commands.Commands.Creator.CMD_UPDATE_API_KEY
 import com.helltar.aibot.commands.Commands.Creator.CMD_UPDATE_CHAT_MODEL
 import com.helltar.aibot.commands.Commands.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
-import com.helltar.aibot.commands.Commands.Simple.CMD_ABOUT
-import com.helltar.aibot.commands.Commands.Simple.CMD_MYID
-import com.helltar.aibot.commands.Commands.Simple.CMD_START
+import com.helltar.aibot.commands.Commands.General.CMD_ABOUT
+import com.helltar.aibot.commands.Commands.General.CMD_MYID
+import com.helltar.aibot.commands.Commands.General.CMD_START
 import com.helltar.aibot.commands.Commands.User.CMD_CHAT
 import com.helltar.aibot.commands.Commands.User.CMD_CHATCTX
 import com.helltar.aibot.commands.Commands.User.CMD_CHAT_CTX_REMOVE

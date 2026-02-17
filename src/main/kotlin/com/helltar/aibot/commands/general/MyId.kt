@@ -11,5 +11,5 @@ class MyId(ctx: MessageContext) : BotCommand(ctx) {
     }
 
     override fun commandName() =
-        Commands.Simple.CMD_MYID
+        Commands.General.CMD_MYID
 }
