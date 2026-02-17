@@ -37,5 +37,5 @@ object CommandNames {
     }
 
     val toggleableCommands =
-        setOf(User.CMD_CHAT, User.CMD_IMAGE_GEN)
+        listOf(User.CMD_CHAT, User.CMD_IMAGE_GEN)
 }

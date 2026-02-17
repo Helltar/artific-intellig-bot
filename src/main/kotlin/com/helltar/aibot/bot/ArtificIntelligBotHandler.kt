@@ -6,8 +6,7 @@ import com.annimon.tgbotsmodule.commands.CommandRegistry
 import com.annimon.tgbotsmodule.commands.SimpleCommand
 import com.annimon.tgbotsmodule.commands.authority.SimpleAuthority
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.Config.creatorId
-import com.helltar.aibot.Config.telegramBotUsername
+import com.helltar.aibot.Config
 import com.helltar.aibot.commandcore.CommandExecutor
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_ADMIN_LIST
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_BAN_LIST
@@ -58,8 +57,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
 class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions) : BotHandler(botModuleOptions) {
 
-    private val authority = SimpleAuthority(creatorId)
-    private val registry = CommandRegistry(telegramBotUsername, authority)
+    private val authority = SimpleAuthority(Config.botConfig.creatorId)
+    private val registry = CommandRegistry(Config.botConfig.telegramBotUsername, authority)
 
     private val commandExecutor = CommandExecutor()
 
@@ -97,7 +96,7 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions) : BotHandler
             commandExecutor.execute(botCommand, createCommandOptions(isLongRunningCommand = true))
 
         fun shouldProcessMessage(replyToMessage: Message, text: String): Boolean {
-            val isMe = replyToMessage.from.userName == telegramBotUsername
+            val isMe = replyToMessage.from.userName == Config.botConfig.telegramBotUsername
             return isMe && !replyToMessage.hasPhoto() && !text.startsWith("/")
         }
 

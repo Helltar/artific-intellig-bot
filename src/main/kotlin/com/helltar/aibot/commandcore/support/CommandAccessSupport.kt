@@ -1,8 +1,7 @@
 package com.helltar.aibot.commandcore.support
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.Config.creatorId
-import com.helltar.aibot.Config.telegramBotUsername
+import com.helltar.aibot.Config
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.chatAllowlistDao
 import com.helltar.aibot.database.dao.commandsDao
@@ -24,8 +23,8 @@ class CommandAccessSupport(private val ctx: MessageContext, private val userId: 
         sudoersDao.isAdmin(userId)
 
     fun isCreator(userId: Long) =
-        userId == creatorId
+        userId == Config.botConfig.creatorId
 
     fun isNotMyMessage(message: Message?) =
-        message?.from?.userName != telegramBotUsername
+        message?.from?.userName != Config.botConfig.telegramBotUsername
 }

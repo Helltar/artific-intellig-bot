@@ -3,7 +3,6 @@ package com.helltar.aibot.commandcore
 import com.helltar.aibot.Config
 import com.helltar.aibot.Config.LOADING_ANIMATION_FILE
 import com.helltar.aibot.Strings
-import com.helltar.aibot.commandcore.CommandNames
 import com.helltar.aibot.commandcore.base.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.configurationsDao
@@ -47,7 +46,7 @@ class CommandExecutor {
                 if (options.privateChatOnly && !chat.isUserChat) return@launch
 
                 try {
-                    val isCreator = userId == Config.creatorId
+                    val isCreator = userId == Config.botConfig.creatorId
                     val isAdmin = botCommand.isAdmin()
 
                     val shouldRunCommand =

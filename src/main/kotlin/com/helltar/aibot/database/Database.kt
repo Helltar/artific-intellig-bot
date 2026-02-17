@@ -1,12 +1,6 @@
 package com.helltar.aibot.database
 
-import com.helltar.aibot.Config.creatorId
-import com.helltar.aibot.Config.databaseName
-import com.helltar.aibot.Config.databasePassword
-import com.helltar.aibot.Config.databaseUser
-import com.helltar.aibot.Config.postgresqlHost
-import com.helltar.aibot.Config.postgresqlPort
-import com.helltar.aibot.commandcore.CommandNames.toggleableCommands
+import com.helltar.aibot.Config
 import com.helltar.aibot.database.tables.*
 import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import kotlinx.coroutines.Dispatchers
@@ -20,15 +14,15 @@ import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 
 object Database {
 
-    fun init() {
-        val url = "r2dbc:postgresql://$postgresqlHost:$postgresqlPort/$databaseName"
-        val database = R2dbcDatabase.connect(url, user = databaseUser, password = databasePassword)
+    fun init(config: Config.BotConfig, toggleableCommands: List<String>) {
+        val url = "r2dbc:postgresql://${config.postgresqlHost}:${config.postgresqlPort}/${config.databaseName}"
+        val database = R2dbcDatabase.connect(url, user = config.databaseUser, password = config.databasePassword)
 
         runBlocking {
             suspendTransaction(database) {
                 createTables()
-                createSudoUser()
-                initializeCommands()
+                createSudoUser(config.creatorId)
+                initializeCommands(toggleableCommands)
             }
         }
     }
@@ -45,7 +39,7 @@ object Database {
         )
     }
 
-    private suspend fun createSudoUser() {
+    private suspend fun createSudoUser(creatorId: Long) {
         SudoersTable
             .insertIgnore {
                 it[userId] = creatorId
@@ -54,7 +48,7 @@ object Database {
             }
     }
 
-    private suspend fun initializeCommands() {
+    private suspend fun initializeCommands(toggleableCommands: List<String>) {
         toggleableCommands.forEach { command ->
             CommandsStateTable
                 .insertIgnore { // todo: batchInsert

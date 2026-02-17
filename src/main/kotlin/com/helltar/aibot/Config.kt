@@ -9,16 +9,30 @@ object Config {
 
     private val dotenv = dotenv { ignoreIfMissing = true }
 
-    val creatorId = readEnvVar("CREATOR_ID").toLongOrNull() ?: throw IllegalArgumentException("invalid CREATOR_ID environment variable")
-    val telegramBotToken = readEnvVar("BOT_TOKEN")
-    val telegramBotUsername = readEnvVar("BOT_USERNAME")
-    val postgresqlHost = readEnvVar("POSTGRESQL_HOST")
-    val postgresqlPort = readEnvVar("POSTGRESQL_PORT")
-    val databaseName = readEnvVar("DATABASE_NAME")
-    val databaseUser = readEnvVar("DATABASE_USER")
-    val databasePassword = readEnvVar("DATABASE_PASSWORD")
+    data class BotConfig(
+        val creatorId: Long,
+        val telegramBotToken: String,
+        val telegramBotUsername: String,
+        val postgresqlHost: String,
+        val postgresqlPort: Int,
+        val databaseName: String,
+        val databaseUser: String,
+        val databasePassword: String
+    )
 
-    private fun readEnvVar(env: String) =
+    val botConfig =
+        BotConfig(
+            creatorId = readEnv("CREATOR_ID").toLongOrNull() ?: throw IllegalArgumentException("invalid CREATOR_ID environment variable"),
+            telegramBotToken = readEnv("BOT_TOKEN"),
+            telegramBotUsername = readEnv("BOT_USERNAME"),
+            postgresqlHost = readEnv("POSTGRESQL_HOST"),
+            postgresqlPort = readEnv("POSTGRESQL_PORT").toIntOrNull() ?: 5432,
+            databaseName = readEnv("DATABASE_NAME"),
+            databaseUser = readEnv("DATABASE_USER"),
+            databasePassword = readEnv("DATABASE_PASSWORD")
+        )
+
+    private fun readEnv(env: String) =
         dotenv[env].ifBlank { throw IllegalArgumentException("environment variable $env is blank") }
             ?: throw IllegalArgumentException("environment variable $env is missing")
 }
