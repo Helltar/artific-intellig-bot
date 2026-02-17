@@ -15,12 +15,12 @@ class ImageGen(ctx: MessageContext) : AiCommand(ctx) {
 
     override suspend fun run() {
         if (arguments.isEmpty()) {
-            replyToMessage(Strings.IMG_GEN_COMMAND_USAGE_TEMPLATE_RAW.trimIndent())
+            replyToMessage(Strings.Templates.IMG_GEN_COMMAND_USAGE_TEMPLATE_RAW.trimIndent())
             return
         }
 
         if (argumentsString.length > 3200) {
-            replyToMessage(String.format(Strings.MANY_CHARACTERS, 3200))
+            replyToMessage(String.format(Strings.Command.MANY_CHARACTERS, 3200))
             return
         }
 
@@ -29,7 +29,7 @@ class ImageGen(ctx: MessageContext) : AiCommand(ctx) {
             replyToMessageWithPhoto(bytes, argumentsString)
         } catch (e: Exception) {
             log.error { e.message }
-            replyToMessage(Strings.CHAT_EXCEPTION)
+            replyToMessage(Strings.Chat.EXCEPTION)
         }
     }
 

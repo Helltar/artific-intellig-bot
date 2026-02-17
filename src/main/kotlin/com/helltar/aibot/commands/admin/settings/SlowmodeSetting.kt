@@ -11,15 +11,15 @@ class SlowmodeSetting(ctx: MessageContext) : BotCommand(ctx) {
     override suspend fun run() {
         if (arguments.isEmpty() || arguments[0].toIntOrNull() == null) {
             val maxUsageCount = configurationsDao.slowmodeMaxUsageCount()
-            replyToMessage(Strings.SLOWMODE_COMMAND_USAGE_TEMPLATE_RAW.trimIndent().format(maxUsageCount))
+            replyToMessage(Strings.Templates.SLOWMODE_COMMAND_USAGE_TEMPLATE_RAW.trimIndent().format(maxUsageCount))
             return
         }
 
         arguments[0].toIntOrNull()?.let { newMax ->
             if (configurationsDao.updateSlowmodeMaxUsageCount(newMax))
-                replyToMessage(Strings.SLOWMODE_SUCCESSFULLY_CHANGED.format(newMax))
+                replyToMessage(Strings.Slowmode.SUCCESSFULLY_CHANGED.format(newMax))
             else
-                replyToMessage(Strings.SLOWMODE_CHANGE_FAIL)
+                replyToMessage(Strings.Slowmode.CHANGE_FAIL)
         }
     }
 

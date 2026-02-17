@@ -15,9 +15,9 @@ class AddChat(ctx: MessageContext) : BotCommand(ctx) {
             val title = if (arguments.size >= 2) arguments[1] else ctx.message().chat.title
 
             if (chatAllowlistDao.add(it, title))
-                replyToMessage(Strings.CHAT_ADDED)
+                replyToMessage(Strings.Allowlist.CHAT_ADDED)
             else
-                replyToMessage(Strings.CHAT_EXISTS)
+                replyToMessage(Strings.Allowlist.CHAT_EXISTS)
         }
     }
 

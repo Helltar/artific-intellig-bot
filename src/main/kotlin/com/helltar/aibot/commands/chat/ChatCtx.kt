@@ -22,7 +22,7 @@ class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
         val userId = getUserId() ?: return
 
         if (isCreator(userId) && !isCreator(this.userId)) {
-            replyToMessage(Strings.CREATOR_CONTEXT_CANNOT_BE_VIEWED)
+            replyToMessage(Strings.Command.CREATOR_CONTEXT_CANNOT_BE_VIEWED)
             return
         }
 
@@ -35,7 +35,7 @@ class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
             log.error { e.message }
 
             if (userChatHistory.isNotEmpty())
-                replyWithTextDocument(text, Strings.TELEGRAM_API_EXCEPTION_CONTEXT_SAVED_TO_FILE)
+                replyWithTextDocument(text, Strings.Chat.TELEGRAM_API_EXCEPTION_CONTEXT_SAVED_TO_FILE)
         }
     }
 
@@ -49,7 +49,7 @@ class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
             if (isAdmin())
                 message.replyToMessage.from.id
             else {
-                replyToMessage(Strings.ADMIN_ONLY_COMMAND)
+                replyToMessage(Strings.Command.ADMIN_ONLY)
                 null
             }
         }
@@ -62,5 +62,5 @@ class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
                 .filter { it.first.role == ChatRole.USER }
                 .joinToString("\n") { """▫️ <b>${formatter.format(it.second)}</b> - ${it.first.content}""" }
         } else
-            Strings.CHAT_CONTEXT_EMPTY
+            Strings.Chat.CONTEXT_EMPTY
 }

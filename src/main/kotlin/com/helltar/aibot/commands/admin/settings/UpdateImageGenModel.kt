@@ -11,21 +11,21 @@ class UpdateImageGenModel(ctx: MessageContext) : BotCommand(ctx) {
     override suspend fun run() {
         if (arguments.isEmpty()) {
             val imagesModel = configurationsDao.imageGenModel()
-            replyToMessage(Strings.UPDATE_IMAGES_MODEL_COMMAND_USAGE_TEMPLATE_RAW.trimIndent().format(imagesModel))
+            replyToMessage(Strings.Templates.UPDATE_IMAGES_MODEL_COMMAND_USAGE_TEMPLATE_RAW.trimIndent().format(imagesModel))
             return
         }
 
         val modelName = arguments[0].trim()
 
         if (modelName.length < 3) {
-            replyToMessage(Strings.BAD_MODEL_NAME_LENGTH)
+            replyToMessage(Strings.Models.BAD_MODEL_NAME_LENGTH)
             return
         }
 
         if (configurationsDao.updateImageGenModel(modelName))
-            replyToMessage(Strings.IMAGES_MODEL_SUCCESS_UPDATE.format(modelName))
+            replyToMessage(Strings.Models.IMAGES_SUCCESS_UPDATE.format(modelName))
         else
-            replyToMessage(Strings.IMAGES_MODEL_FAIL_UPDATE)
+            replyToMessage(Strings.Models.IMAGES_FAIL_UPDATE)
     }
 
     override fun commandName() =

@@ -11,7 +11,7 @@ class AdminList(ctx: MessageContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         val list = getFormattedSudoersList(sudoersDao.list())
-        replyToMessage(list.ifEmpty { Strings.LIST_IS_EMPTY })
+        replyToMessage(list.ifEmpty { Strings.Ui.LIST_IS_EMPTY })
     }
 
     override fun commandName() =

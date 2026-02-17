@@ -11,21 +11,21 @@ class UpdateChatModel(ctx: MessageContext) : BotCommand(ctx) {
     override suspend fun run() {
         if (arguments.isEmpty()) {
             val chatModel = configurationsDao.chatModel()
-            replyToMessage(Strings.UPDATE_CHAT_MODEL_COMMAND_USAGE_TEMPLATE_RAW.trimIndent().format(chatModel))
+            replyToMessage(Strings.Templates.UPDATE_CHAT_MODEL_COMMAND_USAGE_TEMPLATE_RAW.trimIndent().format(chatModel))
             return
         }
 
         val modelName = arguments[0].trim()
 
         if (modelName.length < 3) {
-            replyToMessage(Strings.BAD_MODEL_NAME_LENGTH)
+            replyToMessage(Strings.Models.BAD_MODEL_NAME_LENGTH)
             return
         }
 
         if (configurationsDao.updateChatModel(modelName) && configurationsDao.updateVisionModel(modelName))
-            replyToMessage(Strings.CHAT_MODEL_SUCCESS_UPDATE.format(modelName))
+            replyToMessage(Strings.Models.CHAT_SUCCESS_UPDATE.format(modelName))
         else
-            replyToMessage(Strings.CHAT_MODEL_FAIL_UPDATE)
+            replyToMessage(Strings.Models.CHAT_FAIL_UPDATE)
     }
 
     override fun commandName() =

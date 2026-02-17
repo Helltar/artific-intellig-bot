@@ -13,9 +13,9 @@ class BanUser(ctx: MessageContext) : BotCommand(ctx) {
         val reason = argumentsString.ifEmpty { null }
 
         if (banlistDao.ban(user, reason))
-            replyToMessage(Strings.USER_BANNED)
+            replyToMessage(Strings.Moderation.USER_BANNED)
         else
-            replyToMessage(Strings.USER_ALREADY_BANNED)
+            replyToMessage(Strings.Moderation.USER_ALREADY_BANNED)
     }
 
     override fun commandName() =

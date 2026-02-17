@@ -15,9 +15,9 @@ class RemoveAdmin(ctx: MessageContext) : BotCommand(ctx) {
             if (isCreator(it)) return
 
             if (sudoersDao.remove(it))
-                replyToMessage(Strings.ADMIN_REMOVED)
+                replyToMessage(Strings.Admins.REMOVED)
             else
-                replyToMessage(Strings.ADMIN_NOT_EXISTS)
+                replyToMessage(Strings.Admins.NOT_EXISTS)
         }
     }
 

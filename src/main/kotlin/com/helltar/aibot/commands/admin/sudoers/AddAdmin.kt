@@ -15,9 +15,9 @@ class AddAdmin(ctx: MessageContext) : BotCommand(ctx) {
             val username = if (arguments.size >= 2) arguments[1] else null
 
             if (sudoersDao.add(it, username))
-                replyToMessage(Strings.ADMIN_ADDED)
+                replyToMessage(Strings.Admins.ADDED)
             else
-                replyToMessage(Strings.ADMIN_EXISTS)
+                replyToMessage(Strings.Admins.EXISTS)
         }
     }
 

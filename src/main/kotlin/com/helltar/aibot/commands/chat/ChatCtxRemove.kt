@@ -15,7 +15,7 @@ class ChatCtxRemove(ctx: MessageContext) : BotCommand(ctx) {
         val (targetUserId, username) =
             if (isReply) {
                 if (!isAdmin()) {
-                    replyToMessage(Strings.ADMIN_ONLY_COMMAND)
+                    replyToMessage(Strings.Command.ADMIN_ONLY)
                     return
                 }
 
@@ -24,14 +24,14 @@ class ChatCtxRemove(ctx: MessageContext) : BotCommand(ctx) {
                 this.userId to ""
 
         if (isCreator(targetUserId) && !isCreator(this.userId)) {
-            replyToMessage(Strings.CREATOR_CONTEXT_CANNOT_BE_DELETED)
+            replyToMessage(Strings.Command.CREATOR_CONTEXT_CANNOT_BE_DELETED)
             return
         }
 
         if (ChatHistoryManager(targetUserId).clear())
-            replyToMessage(Strings.CHAT_CONTEXT_REMOVED + username)
+            replyToMessage(Strings.Chat.CONTEXT_REMOVED + username)
         else
-            replyToMessage(Strings.CHAT_CONTEXT_EMPTY + username)
+            replyToMessage(Strings.Chat.CONTEXT_EMPTY + username)
     }
 
     override fun commandName() =

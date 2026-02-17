@@ -23,7 +23,7 @@ class CommandState(ctx: MessageContext, private val disable: Boolean = false) : 
 
         if (!CommandNames.toggleableCommands.contains(commandName)) {
             val formattedCommands = CommandNames.toggleableCommands.joinToString { "<code>$it</code>" }
-            replyToMessage(Strings.COMMAND_NOT_AVAILABLE.format(commandName, formattedCommands))
+            replyToMessage(Strings.Command.NOT_AVAILABLE.format(commandName, formattedCommands))
             return
         }
 
@@ -50,19 +50,19 @@ class CommandState(ctx: MessageContext, private val disable: Boolean = false) : 
 
     private suspend fun enable(commandName: String) {
         if (!commandsDao.isDisabled(commandName))
-            replyToMessage(Strings.COMMAND_ALREADY_ENABLED.format(commandName))
+            replyToMessage(Strings.Command.ALREADY_ENABLED.format(commandName))
         else {
             commandsDao.changeState(commandName, false)
-            replyToMessage(Strings.COMMAND_ENABLED.format(commandName))
+            replyToMessage(Strings.Command.ENABLED.format(commandName))
         }
     }
 
     private suspend fun disable(commandName: String) {
         if (commandsDao.isDisabled(commandName))
-            replyToMessage(Strings.COMMAND_ALREADY_DISABLED.format(commandName))
+            replyToMessage(Strings.Command.ALREADY_DISABLED.format(commandName))
         else {
             commandsDao.changeState(commandName, true)
-            replyToMessage(Strings.COMMAND_DISABLED.format(commandName))
+            replyToMessage(Strings.Command.DISABLED.format(commandName))
         }
     }
 }

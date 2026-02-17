@@ -77,7 +77,7 @@ class CommandExecutor {
 
     private fun isRequestInProgress(requestKey: String, botCommand: BotCommand) =
         if (requestsMap.containsKey(requestKey) && requestsMap[requestKey]?.isCompleted == false) {
-            botCommand.replyToMessage(Strings.MANY_REQUEST)
+            botCommand.replyToMessage(Strings.Command.MANY_REQUEST)
             true
         } else
             false
@@ -87,19 +87,19 @@ class CommandExecutor {
 
         if (botCommand.isUserBanned(userId)) {
             val reason = banlistDao.reason(userId) ?: """🤷‍♂️"""
-            botCommand.replyToMessage(Strings.BAN_AND_REASON.format(reason))
+            botCommand.replyToMessage(Strings.Moderation.BAN_AND_REASON.format(reason))
             return false
         }
 
         if (!botCommand.isChatInAllowlist()) {
-            botCommand.replyToMessage(Strings.COMMAND_NOT_SUPPORTED_IN_CHAT)
+            botCommand.replyToMessage(Strings.Command.NOT_SUPPORTED_IN_CHAT)
             return false
         }
 
         val commandName = botCommand.commandName()
 
         if (botCommand.isCommandDisabled(commandName)) {
-            botCommand.replyToMessage(Strings.COMMAND_TEMPORARY_DISABLED)
+            botCommand.replyToMessage(Strings.Command.TEMPORARILY_DISABLED)
             return false
         }
 
@@ -111,7 +111,7 @@ class CommandExecutor {
             val slowmodeRemainingSeconds = getSlowmodeRemainingSeconds(botCommand.ctx.user().id)
 
             if (slowmodeRemainingSeconds > 0) {
-                botCommand.replyToMessage(Strings.SLOWMODE_PLEASE_WAIT.format(slowmodeRemainingSeconds))
+                botCommand.replyToMessage(Strings.Slowmode.PLEASE_WAIT.format(slowmodeRemainingSeconds))
                 return false
             }
         }
@@ -121,7 +121,7 @@ class CommandExecutor {
 
     private suspend fun runCommand(botCommand: BotCommand, isLongRunningCommand: Boolean) {
         if (isLongRunningCommand) {
-            val caption = Strings.localizedString(Strings.CHAT_WAIT_MESSAGE, botCommand.userLanguageCode)
+            val caption = Strings.localizedString(Strings.LocalizationKeys.CHAT_WAIT_MESSAGE, botCommand.userLanguageCode)
             val messageId = sendWaitingGif(botCommand, caption)
 
             try {

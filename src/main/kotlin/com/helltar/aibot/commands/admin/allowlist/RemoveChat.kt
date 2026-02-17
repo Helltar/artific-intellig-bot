@@ -13,9 +13,9 @@ class RemoveChat(ctx: MessageContext) : BotCommand(ctx) {
 
         chatId?.let {
             if (chatAllowlistDao.remove(it))
-                replyToMessage(Strings.CHAT_REMOVED)
+                replyToMessage(Strings.Allowlist.CHAT_REMOVED)
             else
-                replyToMessage(Strings.CHAT_NOT_EXISTS)
+                replyToMessage(Strings.Allowlist.CHAT_NOT_EXISTS)
         }
     }
 

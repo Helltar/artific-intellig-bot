@@ -33,7 +33,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             } else {
                 val prompt =
                     argumentsString.takeIf { it.isNotBlank() }
-                        ?: localizedString(Strings.VISION_DEFAULT_PROMPT, userLanguageCode)
+                        ?: localizedString(Strings.LocalizationKeys.VISION_DEFAULT_PROMPT, userLanguageCode)
 
                 chatHistoryManager.saveUserMessage(message, prompt)
 
@@ -54,7 +54,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             ChatService(model = chatModel(), apiKey = openaiApiKey()).getReply(messages)
         } catch (e: Exception) {
             log.error { e.message }
-            replyToMessage(Strings.CHAT_EXCEPTION)
+            replyToMessage(Strings.Chat.EXCEPTION)
             null
         }
 
@@ -63,7 +63,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             try {
                 downloadPhoto() ?: return null
             } catch (_: ImageTooLargeException) {
-                replyToMessage(Strings.IMAGE_MUST_BE_LESS_THAN.format("1.MB"))
+                replyToMessage(Strings.Chat.IMAGE_MUST_BE_LESS_THAN.format("1.MB"))
                 return null
             }
 
@@ -71,7 +71,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             VisionService(model = visionModel(), apiKey = openaiApiKey()).analyzeImage(prompt, photo)
         } catch (e: Exception) {
             log.error { e.message }
-            replyToMessage(Strings.CHAT_EXCEPTION)
+            replyToMessage(Strings.Chat.EXCEPTION)
             null
         } finally {
             photo.delete()
@@ -83,13 +83,13 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             super.replyToMessage(text, messageId, webPagePreview = false)
         } catch (e: Exception) {
             log.error { e.message }
-            replyWithTextDocument(text, Strings.TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE)
+            replyWithTextDocument(text, Strings.Chat.TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE)
         }
     }
 
     private suspend fun processUserMessage(): Int? {
         if (isNotReply && argumentsString.isBlank()) {
-            replyToMessage(Strings.CHAT_HELLO)
+            replyToMessage(Strings.Chat.HELLO)
             return null
         }
 
@@ -104,7 +104,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
                 messageId = message.messageId
 
                 if (text.isNullOrBlank()) {
-                    replyToMessage(Strings.MESSAGE_TEXT_NOT_FOUND, messageId)
+                    replyToMessage(Strings.Chat.MESSAGE_TEXT_NOT_FOUND, messageId)
                     return null
                 }
 
@@ -123,7 +123,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
                 chatHistoryManager.saveUserMessage(message, text)
                 messageId
             } else {
-                replyToMessage(String.format(Strings.MANY_CHARACTERS, USER_MESSAGE_LIMIT))
+                replyToMessage(String.format(Strings.Command.MANY_CHARACTERS, USER_MESSAGE_LIMIT))
                 null
             }
         }
