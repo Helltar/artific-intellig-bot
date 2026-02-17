@@ -41,9 +41,9 @@ import com.helltar.aibot.commands.admin.admins.AdminList
 import com.helltar.aibot.commands.admin.admins.RemoveAdmin
 import com.helltar.aibot.commands.admin.settings.*
 import com.helltar.aibot.commands.BotCommand
-import com.helltar.aibot.commands.simple.About
-import com.helltar.aibot.commands.simple.MyId
-import com.helltar.aibot.commands.simple.Start
+import com.helltar.aibot.commands.general.About
+import com.helltar.aibot.commands.general.MyId
+import com.helltar.aibot.commands.general.Start
 import com.helltar.aibot.commands.chat.Chat
 import com.helltar.aibot.commands.chat.ChatCtx
 import com.helltar.aibot.commands.chat.ChatCtxRemove

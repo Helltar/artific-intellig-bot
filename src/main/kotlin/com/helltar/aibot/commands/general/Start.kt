@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.simple
+package com.helltar.aibot.commands.general
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.commands.BotCommand
