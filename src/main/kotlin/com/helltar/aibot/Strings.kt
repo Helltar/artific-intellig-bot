@@ -10,8 +10,8 @@ import com.helltar.aibot.commandcore.CommandNames.User.CMD_IMAGE_GEN
 
 object Strings {
 
-    const val API_KEY_FAIL_ADD = "⚠\uFE0F Error when add <b>%s</b> API Key"
-    const val API_KEY_FAIL_UPDATE = "⚠\uFE0F Error when update <b>%s</b> API Key"
+    const val API_KEY_FAIL_ADD = "⚠\uFE0F Error while adding <b>%s</b> API key"
+    const val API_KEY_FAIL_UPDATE = "⚠\uFE0F Error while updating <b>%s</b> API key"
     const val BAD_API_KEY_LENGTH = "❌ Invalid API key length"
     const val BAN_AND_REASON = "❌ Ban, reason: <b>%s</b>"
     const val CHAT_CONTEXT_EMPTY = "▫\uFE0F Empty"
@@ -24,14 +24,14 @@ object Strings {
     const val COMMAND_ENABLED = "✅ Command <b>%s</b> enabled"
     const val COMMAND_NOT_AVAILABLE = "Command <b>%s</b> is not available. Available: %s"
     const val COMMAND_NOT_SUPPORTED_IN_CHAT = "Command is not supported in this chat \uD83D\uDE48"
-    const val COMMAND_TEMPORARY_DISABLED = "Command temporary disabled \uD83D\uDC40"
+    const val COMMAND_TEMPORARY_DISABLED = "Command is temporarily disabled \uD83D\uDC40"
     const val IMAGE_MUST_BE_LESS_THAN = "Image must be less than %s 😥"
     const val LIST_IS_EMPTY = "◻️ List is empty"
     const val MANY_CHARACTERS = "Max <b>%d</b> characters \uD83D\uDC40"
     const val MANY_REQUEST = "Wait, let me deal with the last request \uD83E\uDD16"
     const val MESSAGE_TEXT_NOT_FOUND = "The message does not contain text \uD83E\uDD14"
-    const val PROVIDER_API_KEY_SUCCESS_ADD = "✅ API Key for <b>%s</b> succesfully added"
-    const val PROVIDER_API_KEY_SUCCESS_UPDATE = "✅ API Key for <b>%s</b> succesfully updated"
+    const val PROVIDER_API_KEY_SUCCESS_ADD = "✅ API key for <b>%s</b> successfully added"
+    const val PROVIDER_API_KEY_SUCCESS_UPDATE = "✅ API key for <b>%s</b> successfully updated"
 
     private const val TELEGRAM_API_EXCEPTION = "An error occurred (TelegramApiException)."
     private const val TRY_FIX = "You can try fixing it using the /$CMD_CHAT_CTX_REMOVE command ☺\uFE0F"
@@ -61,13 +61,13 @@ object Strings {
     const val CREATOR_CONTEXT_CANNOT_BE_DELETED = "Creator context cannot be deleted ✋"
 
     const val SLOWMODE_PLEASE_WAIT = "✋ Slowmode, wait <b>%d</b> seconds"
-    const val SLOWMODE_SUCCESFULLY_CHANGED = "✅ The value for system-slowmode has been successfully changed to <b>%d</b> requests per hour per user."
-    const val SLOWMODE_CHANGE_FAIL = "❌ Error when change system-slowmode value"
+    const val SLOWMODE_SUCCESSFULLY_CHANGED = "✅ The system slowmode value has been changed to <b>%d</b> requests per hour per user."
+    const val SLOWMODE_CHANGE_FAIL = "❌ Error while changing the system slowmode value"
 
     const val CHAT_MODEL_SUCCESS_UPDATE = "✅ Chat model has been successfully updated to <b>%s</b>"
     const val CHAT_MODEL_FAIL_UPDATE = "⚠\uFE0F Error while updating chat model"
-    const val IMAGES_MODEL_SUCCESS_UPDATE = "✅ Model for images generations has been successfully updated to <b>%s</b>"
-    const val IMAGES_MODEL_FAIL_UPDATE = "⚠\uFE0F Error while updating model for images generations"
+    const val IMAGES_MODEL_SUCCESS_UPDATE = "✅ Image generation model has been successfully updated to <b>%s</b>"
+    const val IMAGES_MODEL_FAIL_UPDATE = "⚠\uFE0F Error while updating the image generation model"
     const val BAD_MODEL_NAME_LENGTH = "❌ Incorrect model name length"
 
     const val UPDATE_CHAT_MODEL_COMMAND_USAGE_TEMPLATE_RAW = """
