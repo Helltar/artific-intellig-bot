@@ -4,11 +4,7 @@ import com.helltar.aibot.openai.ApiConfig.ChatContentType
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.ApiConfig.Endpoints
 import com.helltar.aibot.openai.HttpClient
-import com.helltar.aibot.openai.models.common.ImageData
-import com.helltar.aibot.openai.models.image.VisionContentData
-import com.helltar.aibot.openai.models.image.VisionMessageData
-import com.helltar.aibot.openai.models.image.VisionRequestData
-import com.helltar.aibot.openai.models.image.VisionResponseData
+import com.helltar.aibot.openai.models.image.*
 import java.io.File
 import java.util.*
 
@@ -16,7 +12,7 @@ class VisionService(private val client: HttpClient = HttpClient, private val mod
 
     suspend fun analyzeImage(text: String, image: File): String {
         val imageBase64 = Base64.getEncoder().encodeToString(image.readBytes())
-        val imageData = ImageData("data:image/jpeg;base64,$imageBase64")
+        val imageData = VisionImageData("data:image/jpeg;base64,$imageBase64")
         val contentTextData = VisionContentData(ChatContentType.TEXT, text)
         val contentImageData = VisionContentData(ChatContentType.IMAGE_URL, imageUrl = imageData)
 

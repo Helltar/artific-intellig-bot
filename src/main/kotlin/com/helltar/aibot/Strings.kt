@@ -97,7 +97,7 @@ object Strings {
     const val IMG_GEN_COMMAND_USAGE_TEMPLATE_RAW = """
         ℹ️ How to use:
         
-        <code>/$CMD_IMAGE_GEN</code> <u>cute cat</u>
+        <code>/$CMD_IMAGE_GEN</code> Generate an image of gray tabby cat hugging an otter with an orange scarf
         """
 
     private val localization = ResourceBundleLocalizationService("language")

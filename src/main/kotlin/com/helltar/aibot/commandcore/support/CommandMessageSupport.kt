@@ -6,9 +6,9 @@ import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.utils.HtmlUtils.buildStyledHtmlPage
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.telegram.telegrambots.meta.api.methods.ParseMode
-import org.telegram.telegrambots.meta.api.objects.InputFile
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
@@ -52,9 +52,9 @@ class CommandMessageSupport(
             .setFile(file)
             .call(ctx.sender)
 
-    fun replyToMessageWithPhoto(url: String, caption: String, messageId: Int?): Message =
+    fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int?): Message =
         ctx.replyToMessageWithPhoto()
-            .setFile(InputFile(url))
+            .setFile("image.png", ByteArrayInputStream(bytes))
             .setCaption(caption)
             .setReplyToMessageId(messageId)
             .setParseMode(ParseMode.HTML)

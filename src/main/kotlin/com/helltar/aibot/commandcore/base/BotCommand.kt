@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.message.Message
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
-abstract class BotCommand(override val ctx: MessageContext) : BaseCommand(ctx) {
+abstract class BotCommand(val ctx: MessageContext) : BaseCommand(ctx) {
 
     private val accessSupport = CommandAccessSupport(ctx, userId)
     private val messageSupport = CommandMessageSupport(ctx, message, replyMessage)
@@ -43,8 +43,8 @@ abstract class BotCommand(override val ctx: MessageContext) : BaseCommand(ctx) {
     fun sendDocument(file: File): Message =
         messageSupport.sendDocument(file)
 
-    protected fun replyToMessageWithPhoto(url: String, caption: String, messageId: Int? = message.messageId): Message =
-        messageSupport.replyToMessageWithPhoto(url, caption, messageId)
+    protected fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int? = message.messageId): Message =
+        messageSupport.replyToMessageWithPhoto(bytes, caption, messageId)
 
     protected fun replyWithTextDocument(text: String, caption: String): Int =
         messageSupport.replyWithTextDocument(text, caption)

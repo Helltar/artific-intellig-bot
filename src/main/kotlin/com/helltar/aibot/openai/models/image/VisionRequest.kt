@@ -1,6 +1,5 @@
 package com.helltar.aibot.openai.models.image
 
-import com.helltar.aibot.openai.models.common.ImageData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -24,5 +23,10 @@ data class VisionContentData(
     val text: String? = null,
 
     @SerialName("image_url")
-    val imageUrl: ImageData? = null
+    val imageUrl: VisionImageData? = null
+)
+
+@Serializable
+data class VisionImageData(
+    val url: String
 )

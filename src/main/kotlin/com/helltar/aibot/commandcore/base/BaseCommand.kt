@@ -3,7 +3,7 @@ package com.helltar.aibot.commandcore.base
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import org.telegram.telegrambots.meta.api.objects.message.Message
 
-abstract class BaseCommand(open val ctx: MessageContext) {
+abstract class BaseCommand(ctx: MessageContext) {
 
     val userLanguageCode = ctx.user().languageCode ?: "en"
 

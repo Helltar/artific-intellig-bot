@@ -19,15 +19,14 @@ class ImageGen(ctx: MessageContext) : AiCommand(ctx) {
             return
         }
 
-        if (argumentsString.length > 1000) {
-            replyToMessage(String.format(Strings.MANY_CHARACTERS, 1000))
+        if (argumentsString.length > 3200) {
+            replyToMessage(String.format(Strings.MANY_CHARACTERS, 3200))
             return
         }
 
         try {
-            val imageUrl = ImageGenService(model = imagesModel(), apiKey = openaiApiKey()).generateImage(argumentsString)
-            log.debug { "image url: $imageUrl" }
-            replyToMessageWithPhoto(imageUrl, argumentsString)
+            val bytes = ImageGenService(model = imagesModel(), apiKey = openaiApiKey()).generateImage(argumentsString)
+            replyToMessageWithPhoto(bytes, argumentsString)
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(Strings.CHAT_EXCEPTION)
