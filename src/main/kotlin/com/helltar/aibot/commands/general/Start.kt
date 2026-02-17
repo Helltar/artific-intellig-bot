@@ -1,19 +1,22 @@
 package com.helltar.aibot.commands.general
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.commandcore.base.BotCommand
 import com.helltar.aibot.commandcore.CommandNames
+import com.helltar.aibot.commandcore.base.BotCommand
 
 class Start(ctx: MessageContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         replyToMessage(
             """
-            Welcome to the AI Bot! 🤖✨
- 
-            To start a conversation, please reply to this message.
-        
-            How can I assist you today?
+            👋 Welcome to AI Bot!
+
+            Here is how to start:
+            • reply to any of my messages and write your question
+            • or use <code>/${CommandNames.User.CMD_CHAT}</code> with your prompt
+            • for images, use <code>/${CommandNames.User.CMD_IMAGE_GEN}</code> + prompt
+
+            I'm ready when you are.
             """
                 .trimIndent()
         )
