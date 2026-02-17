@@ -51,7 +51,7 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
 
     private suspend fun retrieveChatAnswer(messages: List<MessageData>): String? =
         try {
-            ChatService(model = chatModel(), apiKey = openaiApiKey()).getReply(messages)
+            ChatService(chatModel(), openaiApiKey()).getReply(messages)
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(Strings.Chat.EXCEPTION)

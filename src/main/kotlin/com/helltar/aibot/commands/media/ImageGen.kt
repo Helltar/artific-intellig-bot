@@ -25,7 +25,7 @@ class ImageGen(ctx: MessageContext) : AiCommand(ctx) {
         }
 
         try {
-            val bytes = ImageGenService(model = imagesModel(), apiKey = openaiApiKey()).generateImage(argumentsString)
+            val bytes = ImageGenService(imagesModel(), openaiApiKey()).generateImage(argumentsString)
             replyToMessageWithPhoto(bytes, argumentsString)
         } catch (e: Exception) {
             log.error { e.message }
