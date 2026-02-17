@@ -8,6 +8,7 @@ import com.annimon.tgbotsmodule.commands.authority.SimpleAuthority
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Config.creatorId
 import com.helltar.aibot.Config.telegramBotUsername
+import com.helltar.aibot.commandcore.CommandExecutor
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_ADMIN_LIST
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_BAN_LIST
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_BAN_USER
@@ -30,10 +31,8 @@ import com.helltar.aibot.commandcore.CommandNames.User.CMD_CHAT
 import com.helltar.aibot.commandcore.CommandNames.User.CMD_CHATCTX
 import com.helltar.aibot.commandcore.CommandNames.User.CMD_CHAT_CTX_REMOVE
 import com.helltar.aibot.commandcore.CommandNames.User.CMD_IMAGE_GEN
+import com.helltar.aibot.commandcore.CommandOptions
 import com.helltar.aibot.commandcore.base.BotCommand
-import com.helltar.aibot.commands.admin.sudoers.AddAdmin
-import com.helltar.aibot.commands.admin.sudoers.AdminList
-import com.helltar.aibot.commands.admin.sudoers.RemoveAdmin
 import com.helltar.aibot.commands.admin.allowlist.AddChat
 import com.helltar.aibot.commands.admin.allowlist.ChatAllowlist
 import com.helltar.aibot.commands.admin.allowlist.RemoveChat
@@ -41,6 +40,9 @@ import com.helltar.aibot.commands.admin.moderation.BanUser
 import com.helltar.aibot.commands.admin.moderation.Banlist
 import com.helltar.aibot.commands.admin.moderation.UnbanUser
 import com.helltar.aibot.commands.admin.settings.*
+import com.helltar.aibot.commands.admin.sudoers.AddAdmin
+import com.helltar.aibot.commands.admin.sudoers.AdminList
+import com.helltar.aibot.commands.admin.sudoers.RemoveAdmin
 import com.helltar.aibot.commands.chat.Chat
 import com.helltar.aibot.commands.chat.ChatCtx
 import com.helltar.aibot.commands.chat.ChatCtxRemove

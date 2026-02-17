@@ -1,4 +1,4 @@
-package com.helltar.aibot.bot
+package com.helltar.aibot.commandcore
 
 import com.helltar.aibot.Config
 import com.helltar.aibot.Config.LOADING_ANIMATION_FILE

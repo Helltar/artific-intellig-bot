@@ -1,4 +1,4 @@
-package com.helltar.aibot.bot
+package com.helltar.aibot.commandcore
 
 data class CommandOptions(
     val checkRights: Boolean,
