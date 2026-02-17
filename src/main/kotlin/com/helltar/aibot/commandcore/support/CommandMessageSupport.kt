@@ -23,7 +23,7 @@ class CommandMessageSupport(
         val log = KotlinLogging.logger {}
     }
 
-    fun replyToMessage(text: String, messageId: Int = message.messageId, webPagePreview: Boolean = false) {
+    fun replyToMessage(text: String, messageId: Int, webPagePreview: Boolean) {
         val messageIdToReply = if (replyMessage?.from?.isBot == false) messageId else message.messageId // todo: refact.
 
         if (text.length <= TELEGRAM_MESSAGE_LENGTH_LIMIT) {
@@ -52,7 +52,7 @@ class CommandMessageSupport(
             .setFile(file)
             .call(ctx.sender)
 
-    fun replyToMessageWithPhoto(url: String, caption: String = "", messageId: Int? = message.messageId): Message =
+    fun replyToMessageWithPhoto(url: String, caption: String, messageId: Int?): Message =
         ctx.replyToMessageWithPhoto()
             .setFile(InputFile(url))
             .setCaption(caption)
@@ -72,7 +72,7 @@ class CommandMessageSupport(
             .messageId
     }
 
-    fun downloadPhoto(message: Message? = replyMessage, limitBytes: Int = 1024 * 1024): File? {
+    fun downloadPhoto(message: Message?, limitBytes: Int): File? {
         val photo = message?.photo?.maxByOrNull { it.fileSize }
 
         return photo?.let {

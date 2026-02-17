@@ -43,7 +43,7 @@ abstract class BotCommand(override val ctx: MessageContext) : BaseCommand(ctx) {
     fun sendDocument(file: File): Message =
         messageSupport.sendDocument(file)
 
-    protected fun replyToMessageWithPhoto(url: String, caption: String = "", messageId: Int? = message.messageId): Message =
+    protected fun replyToMessageWithPhoto(url: String, caption: String, messageId: Int? = message.messageId): Message =
         messageSupport.replyToMessageWithPhoto(url, caption, messageId)
 
     protected fun replyWithTextDocument(text: String, caption: String): Int =
