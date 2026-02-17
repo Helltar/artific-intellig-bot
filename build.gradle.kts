@@ -13,12 +13,12 @@ repositories {
 }
 
 object Versions {
-    const val TGBOTS_MODULE = "9.2.0"
+    const val TGBOTS_MODULE = "9.3.0"
     const val JACKSON_MODULE_KOTLIN = "2.14.2"
     const val DOTENV_KOTLIN = "6.4.1"
-    const val EXPOSED = "1.0.0-rc-4"
+    const val EXPOSED = "1.0.0"
     const val R2DBC_POSTGRESQL = "1.1.0.RELEASE"
-    const val KTOR = "3.3.3"
+    const val KTOR = "3.4.0"
     const val KOTLIN_LOGGING = "7.0.13"
     const val LOGBACK_CLASSIC = "1.5.21"
 }
