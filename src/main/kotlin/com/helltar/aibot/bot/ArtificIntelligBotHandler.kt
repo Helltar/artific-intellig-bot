@@ -31,9 +31,9 @@ import com.helltar.aibot.commandcore.CommandNames.User.CMD_CHATCTX
 import com.helltar.aibot.commandcore.CommandNames.User.CMD_CHAT_CTX_REMOVE
 import com.helltar.aibot.commandcore.CommandNames.User.CMD_IMAGE_GEN
 import com.helltar.aibot.commandcore.base.BotCommand
-import com.helltar.aibot.commands.admin.admins.AddAdmin
-import com.helltar.aibot.commands.admin.admins.AdminList
-import com.helltar.aibot.commands.admin.admins.RemoveAdmin
+import com.helltar.aibot.commands.admin.sudoers.AddAdmin
+import com.helltar.aibot.commands.admin.sudoers.AdminList
+import com.helltar.aibot.commands.admin.sudoers.RemoveAdmin
 import com.helltar.aibot.commands.admin.allowlist.AddChat
 import com.helltar.aibot.commands.admin.allowlist.ChatAllowlist
 import com.helltar.aibot.commands.admin.allowlist.RemoveChat

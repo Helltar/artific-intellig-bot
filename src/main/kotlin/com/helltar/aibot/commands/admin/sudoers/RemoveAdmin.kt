@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.admins
+package com.helltar.aibot.commands.admin.sudoers
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
