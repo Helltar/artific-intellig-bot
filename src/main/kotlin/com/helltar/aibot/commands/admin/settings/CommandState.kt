@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.config
+package com.helltar.aibot.commands.admin.settings
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.commands.Commands

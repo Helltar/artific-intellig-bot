@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.ban
+package com.helltar.aibot.commands.admin.moderation
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings

@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.image
+package com.helltar.aibot.commands.media
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
