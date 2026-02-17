@@ -1,7 +1,7 @@
 package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
-import com.helltar.aibot.database.tables.ChatHistory
+import com.helltar.aibot.database.tables.ChatHistoryTable
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.utils.DateTimeUtils.utcNow
@@ -19,7 +19,7 @@ import java.time.Instant
 class ChatHistoryDao {
 
     suspend fun insert(userId: Long, mesasage: MessageData): Boolean = dbTransaction {
-        ChatHistory
+        ChatHistoryTable
             .insert {
                 it[this.userId] = userId
                 it[role] = mesasage.role
@@ -29,33 +29,33 @@ class ChatHistoryDao {
     }
 
     suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>> = dbTransaction {
-        ChatHistory
-            .select(ChatHistory.role, ChatHistory.content, ChatHistory.createdAt)
-            .where { ChatHistory.userId eq userId }
-            .orderBy(ChatHistory.id)
+        ChatHistoryTable
+            .select(ChatHistoryTable.role, ChatHistoryTable.content, ChatHistoryTable.createdAt)
+            .where { ChatHistoryTable.userId eq userId }
+            .orderBy(ChatHistoryTable.id)
             .map {
                 MessageData(
-                    it[ChatHistory.role],
-                    it[ChatHistory.content]
-                ) to it[ChatHistory.createdAt]
+                    it[ChatHistoryTable.role],
+                    it[ChatHistoryTable.content]
+                ) to it[ChatHistoryTable.createdAt]
             }.toList() // todo: flow
     }
 
     suspend fun deleteOldestEntry(userId: Long): Boolean = dbTransaction {
         val messageId =
-            ChatHistory
-                .select(ChatHistory.id)
-                .where { ChatHistory.userId eq userId and (ChatHistory.role neq ChatRole.SYSTEM) }
-                .orderBy(ChatHistory.id)
+            ChatHistoryTable
+                .select(ChatHistoryTable.id)
+                .where { ChatHistoryTable.userId eq userId and (ChatHistoryTable.role neq ChatRole.SYSTEM) }
+                .orderBy(ChatHistoryTable.id)
                 .limit(1)
-                .singleOrNull()?.getOrNull(ChatHistory.id)
+                .singleOrNull()?.getOrNull(ChatHistoryTable.id)
 
-        messageId?.let { ChatHistory.deleteWhere { ChatHistory.id eq messageId } > 0 } == true
+        messageId?.let { ChatHistoryTable.deleteWhere { ChatHistoryTable.id eq messageId } > 0 } == true
     }
 
     suspend fun clearHistory(userId: Long): Boolean = dbTransaction {
-        ChatHistory
-            .deleteWhere { ChatHistory.userId eq userId } > 0
+        ChatHistoryTable
+            .deleteWhere { ChatHistoryTable.userId eq userId } > 0
     }
 }
 

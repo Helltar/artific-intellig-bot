@@ -41,7 +41,7 @@ object Database {
     private suspend fun createTables() {
         SchemaUtils.create(
             ApiKeysTable, BannedUsersTable, ChatAllowlistTable,
-            CommandsStateTable, SlowmodeTable, SudoersTable, ConfigurationsTable, ChatHistory
+            CommandsStateTable, SlowmodeTable, SudoersTable, ConfigurationsTable, ChatHistoryTable
         )
     }
 

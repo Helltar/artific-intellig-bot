@@ -3,7 +3,7 @@ package com.helltar.aibot.database.tables
 import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
 import org.jetbrains.exposed.v1.javatime.timestamp
 
-object ChatHistory : IntIdTable() {
+object ChatHistoryTable : IntIdTable() {
 
     val userId = long("user_id").index()
     val role = varchar("role", 30).index()
