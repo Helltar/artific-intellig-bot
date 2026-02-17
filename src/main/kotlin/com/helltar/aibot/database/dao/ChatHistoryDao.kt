@@ -18,12 +18,12 @@ import java.time.Instant
 
 class ChatHistoryDao {
 
-    suspend fun insert(userId: Long, mesasage: MessageData): Boolean = dbTransaction {
+    suspend fun insert(userId: Long, message: MessageData): Boolean = dbTransaction {
         ChatHistoryTable
             .insert {
                 it[this.userId] = userId
-                it[role] = mesasage.role
-                it[content] = mesasage.content
+                it[role] = message.role
+                it[content] = message.content
                 it[createdAt] = utcNow()
             }.insertedCount > 0
     }
