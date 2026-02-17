@@ -49,6 +49,6 @@ abstract class BotCommand(val ctx: MessageContext) : BaseCommand(ctx) {
     protected fun replyWithTextDocument(text: String, caption: String): Int =
         messageSupport.replyWithTextDocument(text, caption)
 
-    protected fun downloadPhoto(message: Message? = replyMessage, limitBytes: Int = 1024 * 1024): File? =
+    protected fun downloadPhoto(message: Message? = replyMessage, limitBytes: Int): File? =
         messageSupport.downloadPhoto(message, limitBytes)
 }

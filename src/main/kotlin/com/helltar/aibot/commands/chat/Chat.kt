@@ -5,8 +5,8 @@ import com.helltar.aibot.Strings
 import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.chat.ChatHistoryManager.Companion.USER_MESSAGE_LIMIT
-import com.helltar.aibot.commandcore.base.AiCommand
 import com.helltar.aibot.commandcore.CommandNames
+import com.helltar.aibot.commandcore.base.AiCommand
 import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService
@@ -61,14 +61,14 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
     private suspend fun retrieveVisionAnswer(prompt: String): String? {
         val photo =
             try {
-                downloadPhoto() ?: return null
+                downloadPhoto(limitBytes = 1024 * 1024) ?: return null
             } catch (_: ImageTooLargeException) {
                 replyToMessage(Strings.Chat.IMAGE_MUST_BE_LESS_THAN.format("1.MB"))
                 return null
             }
 
         return try {
-            VisionService(model = visionModel(), apiKey = openaiApiKey()).analyzeImage(prompt, photo)
+            VisionService(visionModel(), openaiApiKey()).analyzeImage(prompt, photo)
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(Strings.Chat.EXCEPTION)
