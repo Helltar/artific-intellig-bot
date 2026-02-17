@@ -1,9 +1,9 @@
-package com.helltar.aibot.commands.user.image
+package com.helltar.aibot.commands.image
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
+import com.helltar.aibot.commands.AiCommand
 import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.base.AiCommand
 import com.helltar.aibot.openai.service.ImageGenService
 import io.github.oshai.kotlinlogging.KotlinLogging
 

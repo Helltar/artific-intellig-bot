@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.base
+package com.helltar.aibot.commands
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.database.dao.apiKeyDao

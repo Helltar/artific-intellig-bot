@@ -1,9 +1,9 @@
-package com.helltar.aibot.commands.admin.sudoers
+package com.helltar.aibot.commands.admin.admins
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.base.BotCommand
 import com.helltar.aibot.Strings
+import com.helltar.aibot.commands.BotCommand
+import com.helltar.aibot.commands.Commands
 import com.helltar.aibot.database.dao.sudoersDao
 
 class RemoveAdmin(ctx: MessageContext) : BotCommand(ctx) {

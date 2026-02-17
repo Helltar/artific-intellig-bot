@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.user.chat
+package com.helltar.aibot.commands.chat
 
 import com.helltar.aibot.Config.SYSTEM_PROMPT_FILE
 import com.helltar.aibot.database.dao.chatHistoryDao
@@ -6,6 +6,7 @@ import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import org.telegram.telegrambots.meta.api.objects.message.Message
+import java.io.File
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -62,7 +63,7 @@ class ChatHistoryManager(private val userId: Long) {
 
     private suspend fun addSystemPromptIfNeeded(message: Message) {
         if (chatHistory().isEmpty()) {
-            val systemPrompt = java.io.File(SYSTEM_PROMPT_FILE).readText()
+            val systemPrompt = File(SYSTEM_PROMPT_FILE).readText()
             val username = message.from.userName ?: message.from.firstName
             val chatTitle = message.chat.title ?: username
             val systemPromptContent = systemPrompt.format(chatTitle, username, userId)

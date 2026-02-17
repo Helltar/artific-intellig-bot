@@ -4,7 +4,7 @@ import com.helltar.aibot.Config
 import com.helltar.aibot.Config.LOADING_ANIMATION_FILE
 import com.helltar.aibot.Strings
 import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.base.BotCommand
+import com.helltar.aibot.commands.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.configurationsDao
 import com.helltar.aibot.database.dao.slowmodeDao

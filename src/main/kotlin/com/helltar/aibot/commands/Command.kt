@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.base
+package com.helltar.aibot.commands
 
 interface Command {
 

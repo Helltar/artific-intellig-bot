@@ -1,11 +1,11 @@
-package com.helltar.aibot.commands.user.chat
+package com.helltar.aibot.commands.chat
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.base.AiCommand
-import com.helltar.aibot.commands.user.chat.ChatHistoryManager.Companion.USER_MESSAGE_LIMIT
+import com.helltar.aibot.commands.AiCommand
+import com.helltar.aibot.commands.chat.ChatHistoryManager.Companion.USER_MESSAGE_LIMIT
 import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService

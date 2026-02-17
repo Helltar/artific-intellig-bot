@@ -3,7 +3,7 @@ package com.helltar.aibot.commands.admin.ban
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.commands.Commands
-import com.helltar.aibot.commands.base.BotCommand
+import com.helltar.aibot.commands.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
 
 class Banlist(ctx: MessageContext) : BotCommand(ctx) {
