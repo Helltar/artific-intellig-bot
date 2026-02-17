@@ -22,9 +22,9 @@ class ConfigurationsDao {
 
         const val NULL_MARKER = "<NULL>"
 
-        const val DEFAULT_CHAT_MODEL = "gpt-5"
-        const val DEFAULT_VISION_MODEL = "gpt-5"
-        const val DEFAULT_IMAGE_GEN_MODEL = "dall-e-3"
+        const val DEFAULT_CHAT_MODEL = "gpt-5.2"
+        const val DEFAULT_VISION_MODEL = "gpt-5.2"
+        const val DEFAULT_IMAGE_GEN_MODEL = "gpt-image-1.5"
     }
 
     private val cache = ConcurrentHashMap<String, String>()
