@@ -14,7 +14,7 @@ repositories {
 
 object Versions {
     const val TGBOTS_MODULE = "9.3.0"
-    const val JACKSON_MODULE_KOTLIN = "2.14.2"
+    const val JACKSON_MODULE_KOTLIN = "3.0.4"
     const val DOTENV_KOTLIN = "6.4.1"
     const val EXPOSED = "1.0.0"
     const val R2DBC_POSTGRESQL = "1.1.0.RELEASE"
@@ -26,7 +26,7 @@ object Versions {
 dependencies {
     implementation("com.annimon:tgbots-module:${Versions.TGBOTS_MODULE}") { exclude("org.telegram", "telegrambots-webhook") }
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.JACKSON_MODULE_KOTLIN}")
+    implementation("tools.jackson.module:jackson-module-kotlin:${Versions.JACKSON_MODULE_KOTLIN}")
     implementation("io.github.cdimascio:dotenv-kotlin:${Versions.DOTENV_KOTLIN}")
 
     runtimeOnly("org.postgresql:r2dbc-postgresql:${Versions.R2DBC_POSTGRESQL}")
