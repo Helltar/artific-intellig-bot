@@ -6,6 +6,5 @@ build/
 deploy/
 test/
 
-data/logs
-data/*.txt
-data/avatars
+data/
+!data/files
