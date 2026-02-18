@@ -6,7 +6,7 @@ import com.annimon.tgbotsmodule.Runner
 import com.annimon.tgbotsmodule.beans.Config
 import com.helltar.aibot.Config.BotConfig
 import com.helltar.aibot.Config.botConfig
-import com.helltar.aibot.commandcore.CommandNames.toggleableCommands
+import com.helltar.aibot.command.CommandNames.toggleableCommands
 import com.helltar.aibot.database.Database
 
 class ArtificIntelligBot : BotModule {

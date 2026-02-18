@@ -1,4 +1,4 @@
-package com.helltar.aibot.commandcore.base
+package com.helltar.aibot.command.base
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import org.telegram.telegrambots.meta.api.objects.message.Message

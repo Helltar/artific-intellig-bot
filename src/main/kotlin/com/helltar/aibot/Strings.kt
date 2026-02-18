@@ -1,12 +1,12 @@
 package com.helltar.aibot
 
 import com.annimon.tgbotsmodule.services.ResourceBundleLocalizationService
-import com.helltar.aibot.commandcore.CommandNames.Creator.CMD_SLOWMODE
-import com.helltar.aibot.commandcore.CommandNames.Creator.CMD_UPDATE_API_KEY
-import com.helltar.aibot.commandcore.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
-import com.helltar.aibot.commandcore.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
-import com.helltar.aibot.commandcore.CommandNames.User.CMD_CHAT_CTX_REMOVE
-import com.helltar.aibot.commandcore.CommandNames.User.CMD_IMAGE_GEN
+import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
+import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_API_KEY
+import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
+import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
+import com.helltar.aibot.command.CommandNames.User.CMD_CHAT_CTX_REMOVE
+import com.helltar.aibot.command.CommandNames.User.CMD_IMAGE_GEN
 
 object Strings {
 

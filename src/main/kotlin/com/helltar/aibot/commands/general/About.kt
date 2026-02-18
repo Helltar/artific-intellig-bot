@@ -1,8 +1,8 @@
 package com.helltar.aibot.commands.general
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.commandcore.CommandNames
-import com.helltar.aibot.commandcore.base.BotCommand
+import com.helltar.aibot.command.CommandNames
+import com.helltar.aibot.command.base.BotCommand
 
 class About(ctx: MessageContext) : BotCommand(ctx) {
 

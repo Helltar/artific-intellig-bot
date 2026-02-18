@@ -5,8 +5,8 @@ import com.helltar.aibot.Strings
 import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.chat.ChatHistoryManager.Companion.USER_MESSAGE_LIMIT
-import com.helltar.aibot.commandcore.CommandNames
-import com.helltar.aibot.commandcore.base.AiCommand
+import com.helltar.aibot.command.CommandNames
+import com.helltar.aibot.command.base.AiCommand
 import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService

@@ -1,8 +1,8 @@
-package com.helltar.aibot.commandcore.base
+package com.helltar.aibot.command.base
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.commandcore.support.CommandAccessSupport
-import com.helltar.aibot.commandcore.support.CommandMessageSupport
+import com.helltar.aibot.command.support.CommandAccessSupport
+import com.helltar.aibot.command.support.CommandMessageSupport
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import java.io.File
 import java.util.concurrent.CompletableFuture

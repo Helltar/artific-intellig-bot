@@ -1,4 +1,4 @@
-package com.helltar.aibot.commandcore.support
+package com.helltar.aibot.command.support
 
 import com.annimon.tgbotsmodule.api.methods.Methods
 import com.annimon.tgbotsmodule.commands.context.MessageContext
