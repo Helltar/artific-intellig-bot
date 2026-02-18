@@ -6,7 +6,7 @@ import com.annimon.tgbotsmodule.commands.CommandRegistry
 import com.annimon.tgbotsmodule.commands.SimpleCommand
 import com.annimon.tgbotsmodule.commands.authority.SimpleAuthority
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.Config
+import com.helltar.aibot.Config.BotConfig
 import com.helltar.aibot.commandcore.CommandExecutor
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_ADMIN_LIST
 import com.helltar.aibot.commandcore.CommandNames.Admin.CMD_BAN_LIST
@@ -55,10 +55,13 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
-class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions) : BotHandler(botModuleOptions) {
+class ArtificIntelligBotHandler(
+    botModuleOptions: BotModuleOptions,
+    private val botConfig: BotConfig
+) : BotHandler(botModuleOptions) {
 
-    private val authority = SimpleAuthority(Config.botConfig.creatorId)
-    private val registry = CommandRegistry(Config.botConfig.telegramBotUsername, authority)
+    private val authority = SimpleAuthority(botConfig.creatorId)
+    private val registry = CommandRegistry(botConfig.telegramBotUsername, authority)
 
     private val commandExecutor = CommandExecutor()
 
@@ -91,31 +94,11 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions) : BotHandler
     }
 
     override fun onUpdate(update: Update): BotApiMethod<*>? {
-
-        fun executeCommand(botCommand: BotCommand) =
-            commandExecutor.execute(botCommand, createCommandOptions(isLongRunningCommand = true))
-
-        fun shouldProcessMessage(replyToMessage: Message, text: String): Boolean {
-            val isMe = replyToMessage.from.userName == Config.botConfig.telegramBotUsername
-            return isMe && !replyToMessage.hasPhoto() && !text.startsWith("/")
-        }
-
-        fun processMessage(message: Message) {
-            if (!message.hasEntities() ||
-                !message.entities.any { it.type == EntityType.MENTION || it.type == EntityType.TEXTMENTION }
-            ) {
-                val ctx = MessageContext(this, update, "")
-
-                if (!message.replyToMessage.hasAudio() && !message.replyToMessage.hasVoice())
-                    executeCommand(Chat(ctx))
-            }
-        }
-
         if (update.hasMessage() && update.message.isReply && update.message.hasText()) {
             val message = update.message
 
-            if (shouldProcessMessage(message.replyToMessage, message.text))
-                processMessage(message)
+            if (shouldProcessMessage(message))
+                processMessage(update, message)
         }
 
         registry.handleUpdate(this, update)
@@ -135,6 +118,25 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions) : BotHandler
         privateChatOnly: Boolean = false
     ) =
         CommandOptions(checkRights, isAdminCommand, isCreatorCommand, isLongRunningCommand, privateChatOnly)
+
+    private fun executeLongRunningCommand(botCommand: BotCommand) {
+        commandExecutor.execute(botCommand, createCommandOptions(isLongRunningCommand = true))
+    }
+
+    private fun shouldProcessMessage(message: Message): Boolean {
+        val replyToMessage = message.replyToMessage
+        val isReplyToBot = replyToMessage.from.userName == botConfig.telegramBotUsername
+        return isReplyToBot && !replyToMessage.hasPhoto() && !message.text.startsWith("/")
+    }
+
+    private fun processMessage(update: Update, message: Message) {
+        if (hasMention(message)) return
+        if (message.replyToMessage.hasAudio() || message.replyToMessage.hasVoice()) return
+        executeLongRunningCommand(Chat(MessageContext(this, update, "")))
+    }
+
+    private fun hasMention(message: Message): Boolean =
+        message.entities.orEmpty().any { it.type == EntityType.MENTION || it.type == EntityType.TEXTMENTION }
 
     private fun registerCommand(command: String, botCommand: (MessageContext) -> BotCommand, options: CommandOptions) {
         registry.register(SimpleCommand("/$command") { commandExecutor.execute(botCommand(it), options) })
