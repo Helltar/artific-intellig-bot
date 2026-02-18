@@ -4,7 +4,6 @@ import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.chat.ChatHistoryManager
-import com.helltar.aibot.chat.ChatHistoryManager.Companion.USER_MESSAGE_LIMIT
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.AiCommand
 import com.helltar.aibot.exceptions.ImageTooLargeException
@@ -16,6 +15,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 class Chat(ctx: MessageContext) : AiCommand(ctx) {
 
     private companion object {
+        const val USER_MESSAGE_LIMIT = 4000
         val log = KotlinLogging.logger {}
     }
 
