@@ -5,6 +5,7 @@ import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_API_KEY
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
+import com.helltar.aibot.command.CommandNames.User.CMD_CHAT
 import com.helltar.aibot.command.CommandNames.User.CMD_CHAT_CTX_REMOVE
 import com.helltar.aibot.command.CommandNames.User.CMD_IMAGE_GEN
 
@@ -27,7 +28,7 @@ object Strings {
         const val NOT_SUPPORTED_IN_CHAT = "Command is not supported in this chat \uD83D\uDE48"
         const val TEMPORARILY_DISABLED = "Command is temporarily disabled \uD83D\uDC40"
         const val MANY_CHARACTERS = "Max <b>%d</b> characters \uD83D\uDC40"
-        const val MANY_REQUEST = "Wait, let me deal with the last request \uD83E\uDD16"
+        const val MANY_REQUEST = "Please wait, I am still processing your previous request \uD83D\uDE0A"
         const val ADMIN_ONLY = "You cannot use this command like this (admin-only) ✋"
         const val CREATOR_CONTEXT_CANNOT_BE_VIEWED = "Creator context cannot be viewed ✋"
         const val CREATOR_CONTEXT_CANNOT_BE_DELETED = "Creator context cannot be deleted ✋"
@@ -37,7 +38,7 @@ object Strings {
         const val CONTEXT_EMPTY = "▫\uFE0F Empty"
         const val CONTEXT_REMOVED = "Context has been removed \uD83D\uDC4C"
         const val EXCEPTION = "Something went wrong \uD83E\uDEE1"
-        const val HELLO = "\uD83D\uDC4B Hello, please ask your questions as replying to my messages"
+        const val HELLO = "\uD83D\uDC4B Send <code>/$CMD_CHAT your text</code> or reply to my message to continue the conversation"
         const val MESSAGE_TEXT_NOT_FOUND = "The message does not contain text \uD83E\uDD14"
         const val IMAGE_MUST_BE_LESS_THAN = "Image must be less than %s 😥"
 
