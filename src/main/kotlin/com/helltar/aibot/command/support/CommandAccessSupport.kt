@@ -1,14 +1,18 @@
 package com.helltar.aibot.command.support
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
-import com.helltar.aibot.Config
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.chatAllowlistDao
 import com.helltar.aibot.database.dao.commandsDao
 import com.helltar.aibot.database.dao.sudoersDao
 import org.telegram.telegrambots.meta.api.objects.message.Message
 
-class CommandAccessSupport(private val ctx: MessageContext, private val userId: Long) {
+class CommandAccessSupport(
+    private val ctx: MessageContext,
+    private val userId: Long,
+    private val creatorId: Long,
+    private val botUsername: String
+) {
 
     suspend fun isCommandDisabled(command: String) =
         commandsDao.isDisabled(command)
@@ -23,8 +27,8 @@ class CommandAccessSupport(private val ctx: MessageContext, private val userId: 
         sudoersDao.isAdmin(userId)
 
     fun isCreator(userId: Long) =
-        userId == Config.botConfig.creatorId
+        userId == creatorId
 
     fun isNotMyMessage(message: Message?) =
-        message?.from?.userName != Config.botConfig.telegramBotUsername
+        message?.from?.userName != botUsername
 }

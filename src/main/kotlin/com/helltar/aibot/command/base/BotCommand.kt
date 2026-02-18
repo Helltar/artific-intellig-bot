@@ -1,15 +1,16 @@
 package com.helltar.aibot.command.base
 
 import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.Config
 import com.helltar.aibot.command.support.CommandAccessSupport
 import com.helltar.aibot.command.support.CommandMessageSupport
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import java.io.File
 import java.util.concurrent.CompletableFuture
 
-abstract class BotCommand(val ctx: MessageContext) : BaseCommand(ctx) {
+abstract class BotCommand(val ctx: MessageContext, botConfig: Config.BotConfig = Config.botConfig) : BaseCommand(ctx) {
 
-    private val accessSupport = CommandAccessSupport(ctx, userId)
+    private val accessSupport = CommandAccessSupport(ctx, userId, botConfig.creatorId, botConfig.telegramBotUsername)
     private val messageSupport = CommandMessageSupport(ctx, message, replyMessage)
 
     suspend fun isCommandDisabled(command: String) =
