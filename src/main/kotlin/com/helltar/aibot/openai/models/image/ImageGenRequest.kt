@@ -2,7 +2,7 @@ package com.helltar.aibot.openai.models.image
 
 import kotlinx.serialization.Serializable
 
-/* https://platform.openai.com/docs/api-reference/images */
+/* https://developers.openai.com/api/reference/resources/images/methods/generate */
 
 @Serializable
 data class ImageGenRequest(

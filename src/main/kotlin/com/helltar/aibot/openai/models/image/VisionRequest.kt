@@ -3,7 +3,7 @@ package com.helltar.aibot.openai.models.image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-/* https://platform.openai.com/docs/guides/vision */
+/* https://developers.openai.com/api/docs/guides/images-vision/ */
 
 @Serializable
 data class VisionRequestData(
