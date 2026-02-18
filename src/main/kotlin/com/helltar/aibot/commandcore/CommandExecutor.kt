@@ -55,7 +55,7 @@ class CommandExecutor {
                             options.isCreatorCommand -> isCreator
                             options.isAdminCommand -> isAdmin
                             isCreator || isAdmin -> true
-                            else -> isCanExecuteCommand(botCommand)
+                            else -> canExecuteCommand(botCommand)
                         }
 
                     if (shouldRunCommand)
@@ -63,7 +63,7 @@ class CommandExecutor {
                     else
                         log.info { "command /$commandName not allowed for user $userId" }
                 } catch (e: Exception) {
-                    log.error { e.message }
+                    log.error(e) { "failed to execute command /$commandName for user $userId" }
                 } finally {
                     requestsMap.remove(requestKey)
                 }
@@ -82,7 +82,7 @@ class CommandExecutor {
         } else
             false
 
-    private suspend fun isCanExecuteCommand(botCommand: BotCommand): Boolean {
+    private suspend fun canExecuteCommand(botCommand: BotCommand): Boolean {
         val userId = botCommand.ctx.user().id
 
         if (botCommand.isUserBanned(userId)) {
@@ -103,10 +103,10 @@ class CommandExecutor {
             return false
         }
 
-        return isNotInSlowmode(botCommand)
+        return passesSlowmode(botCommand)
     }
 
-    private suspend fun isNotInSlowmode(botCommand: BotCommand): Boolean {
+    private suspend fun passesSlowmode(botCommand: BotCommand): Boolean {
         if (botCommand.commandName() in CommandNames.toggleableCommands) {
             val slowmodeRemainingSeconds = getSlowmodeRemainingSeconds(botCommand.ctx.user().id)
 
@@ -162,7 +162,7 @@ class CommandExecutor {
     private suspend fun sendWaitingGif(botCommand: BotCommand, caption: String): Int {
 
         suspend fun sendGifAndUpdateFileId(): Int {
-            val message = botCommand.sendDocument(File(LOADING_ANIMATION_FILE))
+            val message = botCommand.sendDocument(File(LOADING_ANIMATION_FILE), caption)
             val fileId = message.document.fileId
 
             if (fileId != null)

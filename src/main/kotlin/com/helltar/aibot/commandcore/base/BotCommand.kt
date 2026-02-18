@@ -40,8 +40,8 @@ abstract class BotCommand(val ctx: MessageContext) : BaseCommand(ctx) {
     fun deleteMessage(messageId: Int): CompletableFuture<Boolean> =
         messageSupport.deleteMessage(messageId)
 
-    fun sendDocument(file: File): Message =
-        messageSupport.sendDocument(file)
+    fun sendDocument(file: File, caption: String): Message =
+        messageSupport.sendDocument(file, caption)
 
     protected fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int? = message.messageId): Message =
         messageSupport.replyToMessageWithPhoto(bytes, caption, messageId)

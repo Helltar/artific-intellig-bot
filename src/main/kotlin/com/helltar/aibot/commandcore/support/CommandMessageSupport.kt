@@ -47,9 +47,11 @@ class CommandMessageSupport(
     fun deleteMessage(messageId: Int): CompletableFuture<Boolean> =
         ctx.deleteMessage().setMessageId(messageId).callAsync(ctx.sender)
 
-    fun sendDocument(file: File): Message =
+    fun sendDocument(file: File, caption: String): Message =
         ctx.replyWithDocument()
             .setFile(file)
+            .setCaption(caption)
+            .setReplyToMessageId(message.messageId)
             .call(ctx.sender)
 
     fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int?): Message =
