@@ -1,6 +1,5 @@
 package com.helltar.aibot.command
 
-import com.helltar.aibot.Config
 import com.helltar.aibot.Config.LOADING_ANIMATION_FILE
 import com.helltar.aibot.Strings
 import com.helltar.aibot.command.base.BotCommand
@@ -20,7 +19,7 @@ import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.hours
 
-class CommandExecutor {
+class CommandExecutor(private val creatorId: Long) {
 
     private companion object {
         const val SLOW_MODE_TIMEOUT_HOURS = 1
@@ -46,7 +45,7 @@ class CommandExecutor {
                 if (options.privateChatOnly && !chat.isUserChat) return@launch
 
                 try {
-                    val isCreator = userId == Config.botConfig.creatorId
+                    val isCreator = userId == creatorId
                     val isAdmin = botCommand.isAdmin()
 
                     val shouldRunCommand =

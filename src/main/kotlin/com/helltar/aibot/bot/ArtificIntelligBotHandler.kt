@@ -62,8 +62,7 @@ class ArtificIntelligBotHandler(
 
     private val authority = SimpleAuthority(botConfig.creatorId)
     private val registry = CommandRegistry(botConfig.telegramBotUsername, authority)
-
-    private val commandExecutor = CommandExecutor()
+    private val commandExecutor = CommandExecutor(botConfig.creatorId)
 
     init {
         registerSimpleCommand(CMD_START, ::Start)
