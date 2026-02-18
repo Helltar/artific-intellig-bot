@@ -16,15 +16,12 @@ class ConfigurationsDao {
         const val KEY_CHAT_MODEL = "chat_model"
         const val KEY_VISION_MODEL = "vision_model"
         const val KEY_IMAGE_GEN_MODEL = "image_gen_model"
-
         const val KEY_SLOWMODE_MAX_USAGE_COUNT = "global_slowmode_max_usage_count"
         const val KEY_LOADING_GIF_FILE_ID = "loading_gif_file_id"
-
-        const val NULL_MARKER = "<NULL>"
-
         const val DEFAULT_CHAT_MODEL = "gpt-5.2"
         const val DEFAULT_VISION_MODEL = "gpt-5.2"
         const val DEFAULT_IMAGE_GEN_MODEL = "gpt-image-1.5"
+        const val NULL_MARKER = "<NULL>"
     }
 
     private val cache = ConcurrentHashMap<String, String>()
