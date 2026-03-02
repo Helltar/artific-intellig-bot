@@ -28,6 +28,10 @@ class ChatHistoryManager(private val userId: Long) {
         chatContext().map { it.first }
     }
 
+    suspend fun systemPrompt(): String? = withUserLock {
+        chatContext().firstOrNull()?.first?.takeIf { it.role == ChatRole.SYSTEM }?.content
+    }
+
     suspend fun saveAssistantMessage(message: String): Unit = withUserLock {
         saveMessage(MessageData(ChatRole.ASSISTANT, message))
     }

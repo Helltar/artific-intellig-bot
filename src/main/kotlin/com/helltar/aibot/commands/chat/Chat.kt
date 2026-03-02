@@ -68,7 +68,8 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             }
 
         return try {
-            VisionService(visionModel(), openaiApiKey()).analyzeImage(prompt, photo)
+            val systemPrompt = chatHistoryManager.systemPrompt()
+            VisionService(visionModel(), openaiApiKey()).analyzeImage(prompt, photo, systemPrompt)
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(Strings.Chat.EXCEPTION)
