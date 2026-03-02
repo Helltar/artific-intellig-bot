@@ -16,7 +16,7 @@ object ApiConfig {
         const val SYSTEM = "system"
     }
 
-    object ChatContentType {
+    object ChatContentPartType {
         const val TEXT = "text"
         const val IMAGE_URL = "image_url"
     }
