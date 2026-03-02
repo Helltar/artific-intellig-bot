@@ -1,22 +1,22 @@
 plugins {
-    kotlin("jvm") version "2.3.0"
-    kotlin("plugin.serialization") version "2.3.0"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
     id("com.gradleup.shadow") version "9.3.0"
     application
 }
 
 group = "com.helltar"
-version = "0.16.0"
+version = "0.16.1"
 
 repositories {
     mavenCentral()
 }
 
 object Versions {
-    const val TGBOTS_MODULE = "9.3.0"
+    const val TGBOTS_MODULE = "9.4.0"
     const val JACKSON_MODULE_KOTLIN = "3.0.4"
     const val DOTENV_KOTLIN = "6.4.1"
-    const val EXPOSED = "1.0.0"
+    const val EXPOSED = "1.1.1"
     const val R2DBC_POSTGRESQL = "1.1.0.RELEASE"
     const val KTOR = "3.4.0"
     const val KOTLIN_LOGGING = "7.0.13"
@@ -24,7 +24,9 @@ object Versions {
 }
 
 dependencies {
-    implementation("com.annimon:tgbots-module:${Versions.TGBOTS_MODULE}") { exclude("org.telegram", "telegrambots-webhook") }
+    implementation("com.annimon:tgbots-module:${Versions.TGBOTS_MODULE}") {
+        exclude("org.telegram", "telegrambots-webhook")
+    }
 
     implementation("tools.jackson.module:jackson-module-kotlin:${Versions.JACKSON_MODULE_KOTLIN}")
     implementation("io.github.cdimascio:dotenv-kotlin:${Versions.DOTENV_KOTLIN}")
