@@ -41,7 +41,9 @@ class Chat(ctx: MessageContext) : AiCommand(ctx) {
             }
 
         answer?.let {
-            replyToMessage(it, messageIdToReply)
+            if (it.trim() != "[SILENT]")
+                replyToMessage(it, messageIdToReply)
+
             chatHistoryManager.saveAssistantMessage(it)
         }
     }
