@@ -3,11 +3,12 @@ package com.helltar.aibot.commands.chat
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.chat.ChatHistoryManager
-import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
+import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.util.*
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -60,7 +61,7 @@ class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
 
             userChatHistory
                 .filter { it.first.role == ChatRole.USER }
-                .joinToString("\n") { """▫️ <b>${formatter.format(it.second)}</b> - ${it.first.content}""" }
+                .joinToString("\n") { """▫️ <b>${formatter.format(it.second)}</b> - ${it.first.content.escapeHTML()}""" }
         } else
             Strings.Chat.CONTEXT_EMPTY
 }
