@@ -2,15 +2,12 @@ package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.tables.ChatHistoryTable
-import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.toList
-import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.core.neq
 import org.jetbrains.exposed.v1.r2dbc.deleteWhere
 import org.jetbrains.exposed.v1.r2dbc.insert
 import org.jetbrains.exposed.v1.r2dbc.select
@@ -45,7 +42,7 @@ class ChatHistoryDao {
         val messageId =
             ChatHistoryTable
                 .select(ChatHistoryTable.id)
-                .where { ChatHistoryTable.userId eq userId and (ChatHistoryTable.role neq ChatRole.SYSTEM) }
+                .where { ChatHistoryTable.userId eq userId }
                 .orderBy(ChatHistoryTable.id)
                 .limit(1)
                 .singleOrNull()?.getOrNull(ChatHistoryTable.id)

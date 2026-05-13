@@ -58,27 +58,35 @@ class ChatHistoryManager(private val userId: Long) {
     private suspend fun contentLength(): Int =
         chatContext().sumOf { it.first.content.length }
 
-    private suspend fun removeSecondMessage() {
-        if (chatHistoryDao.deleteOldestEntry(userId)) {
-            val history = chatContext()
-            if (history.size > 1) history.removeAt(1)
-        }
+    private suspend fun removeSecondMessage(): Boolean {
+        val history = chatContext()
+        if (history.size <= 1) return false
+        if (!chatHistoryDao.deleteOldestEntry(userId)) return false
+        history.removeAt(1)
+        return true
     }
 
     private suspend fun ensureDialogLengthWithinLimit() {
-        while (contentLength() > MAX_DIALOG_HISTORY_LENGTH)
-            removeSecondMessage()
+        while (contentLength() > MAX_DIALOG_HISTORY_LENGTH ||
+            chatContext().getOrNull(1)?.first?.role == ChatRole.ASSISTANT
+        ) {
+            if (!removeSecondMessage()) break
+        }
     }
 
     private suspend fun addSystemPromptIfNeeded(message: Message) {
-        if (chatContext().isEmpty()) {
-            val systemPrompt = File(SYSTEM_PROMPT_FILE).readText()
-            val username = message.from.userName ?: message.from.firstName
-            val chatTitle = message.chat.title ?: username
-            val systemPromptContent = systemPrompt.format(chatTitle, username, userId)
-            val systemPromptData = MessageData(ChatRole.SYSTEM, systemPromptContent)
-            saveMessage(systemPromptData)
-        }
+        val context = chatContext()
+
+        if (context.firstOrNull()?.first?.role == ChatRole.SYSTEM)
+            return
+
+        val systemPrompt = File(SYSTEM_PROMPT_FILE).readText()
+        val username = message.from.userName ?: message.from.firstName
+        val chatTitle = message.chat.title ?: username
+        val systemPromptContent = systemPrompt.format(chatTitle, username, userId)
+        val systemPromptData = MessageData(ChatRole.SYSTEM, systemPromptContent)
+
+        context.add(0, systemPromptData to utcNow())
     }
 
     private suspend fun chatContext(): MutableList<Pair<MessageData, Instant>> {
