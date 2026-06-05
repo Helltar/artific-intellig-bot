@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.sudoers
+package com.helltar.aibot.command.admin.sudoers
 
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.messages.BotMessages

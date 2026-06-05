@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.settings
+package com.helltar.aibot.command.admin.settings
 
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.messages.BotMessages
@@ -6,12 +6,12 @@ import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.configurationsDao
 
-class UpdateImageGenModel(ctx: BotCommandContext) : BotCommand(ctx) {
+class UpdateChatModel(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         if (arguments.isEmpty()) {
-            val imagesModel = configurationsDao.imageGenModel()
-            replyToMessage(BotMessages.Usage.updateImageGenModel(imagesModel))
+            val chatModel = configurationsDao.chatModel()
+            replyToMessage(BotMessages.Usage.updateChatModel(chatModel))
             return
         }
 
@@ -22,12 +22,12 @@ class UpdateImageGenModel(ctx: BotCommandContext) : BotCommand(ctx) {
             return
         }
 
-        if (configurationsDao.updateImageGenModel(modelName))
-            replyToMessage(BotMessages.Models.imagesSuccessUpdate(modelName))
+        if (configurationsDao.updateChatModel(modelName) && configurationsDao.updateVisionModel(modelName))
+            replyToMessage(BotMessages.Models.chatSuccessUpdate(modelName))
         else
-            replyToMessage(BotMessages.Models.IMAGES_FAIL_UPDATE)
+            replyToMessage(BotMessages.Models.CHAT_FAIL_UPDATE)
     }
 
     override fun commandName() =
-        CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
+        CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
 }

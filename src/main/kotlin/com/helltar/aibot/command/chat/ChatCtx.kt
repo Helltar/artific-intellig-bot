@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.chat
+package com.helltar.aibot.command.chat
 
 import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.chat.ChatHistoryManager

@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.media
+package com.helltar.aibot.command.media
 
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.messages.BotMessages

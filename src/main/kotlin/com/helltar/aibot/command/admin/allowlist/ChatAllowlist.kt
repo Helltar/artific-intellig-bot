@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.allowlist
+package com.helltar.aibot.command.admin.allowlist
 
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.messages.BotMessages

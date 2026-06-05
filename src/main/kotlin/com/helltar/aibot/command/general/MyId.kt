@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.general
+package com.helltar.aibot.command.general
 
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.base.BotCommand

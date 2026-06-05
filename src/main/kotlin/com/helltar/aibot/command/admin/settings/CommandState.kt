@@ -1,4 +1,4 @@
-package com.helltar.aibot.commands.admin.settings
+package com.helltar.aibot.command.admin.settings
 
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
