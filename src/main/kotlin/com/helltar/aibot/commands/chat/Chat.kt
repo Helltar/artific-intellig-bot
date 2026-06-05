@@ -1,9 +1,8 @@
 package com.helltar.aibot.commands.chat
 
-import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
-import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.chat.ChatHistoryManager
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.AiCommand
 import com.helltar.aibot.exceptions.ImageTooLargeException
@@ -17,6 +16,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
     private companion object {
         const val USER_MESSAGE_LIMIT = 4000
+        const val VISION_DEFAULT_PROMPT = "What is in this image?"
         val log = KotlinLogging.logger {}
     }
 
@@ -34,7 +34,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             } else {
                 val prompt =
                     argumentsString.takeIf { it.isNotBlank() }
-                        ?: localizedString(Strings.LocalizationKeys.VISION_DEFAULT_PROMPT, userLanguageCode)
+                        ?: VISION_DEFAULT_PROMPT
 
                 chatHistoryManager.saveUserMessage(message, prompt)
 

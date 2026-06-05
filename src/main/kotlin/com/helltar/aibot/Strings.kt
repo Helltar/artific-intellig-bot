@@ -1,6 +1,5 @@
 package com.helltar.aibot
 
-import com.annimon.tgbotsmodule.services.ResourceBundleLocalizationService
 import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_API_KEY
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
@@ -120,13 +119,4 @@ object Strings {
         <code>/$CMD_IMAGE_GEN</code> Generate an image of gray tabby cat hugging an otter with an orange scarf
         """
     }
-
-    object LocalizationKeys {
-        const val VISION_DEFAULT_PROMPT = "vision_default_prompt"
-    }
-
-    private val localization = ResourceBundleLocalizationService("language")
-
-    fun localizedString(key: String, languageCode: String): String =
-        localization.getString(key, languageCode)
 }
