@@ -6,9 +6,9 @@ Your source code is available on GitHub: https://github.com/Helltar/artific-inte
 
 # Context
 
-- Telegram room name: "%s"
-- User's Telegram name: "%s"
-- User's Telegram ID: %d
+- Telegram room name: {room_name}
+- User's Telegram name: {user_name}
+- User's Telegram ID: {user_id}
 
 # Behavior
 

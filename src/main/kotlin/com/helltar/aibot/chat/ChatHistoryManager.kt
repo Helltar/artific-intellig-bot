@@ -16,6 +16,8 @@ class ChatHistoryManager(private val userId: Long) {
 
     private companion object {
         const val MAX_DIALOG_HISTORY_LENGTH = 24576 // todo: tokens
+        val placeholderRegex = Regex("""\{(room_name|user_name|user_id)}""")
+        val systemPromptTemplate by lazy { File(SYSTEM_PROMPT_FILE).readText() }
         val userChatContextMap = ConcurrentHashMap<Long, MutableList<Pair<MessageData, Instant>>>()
         val userLocks = ConcurrentHashMap<Long, Mutex>()
     }
@@ -80,10 +82,10 @@ class ChatHistoryManager(private val userId: Long) {
         if (context.firstOrNull()?.first?.role == ChatRole.SYSTEM)
             return
 
-        val systemPrompt = File(SYSTEM_PROMPT_FILE).readText()
         val username = message.from.userName ?: message.from.firstName
         val chatTitle = message.chat.title ?: username
-        val systemPromptContent = systemPrompt.format(chatTitle, username, userId)
+        val replacements = mapOf("room_name" to chatTitle, "user_name" to username, "user_id" to userId.toString())
+        val systemPromptContent = placeholderRegex.replace(systemPromptTemplate) { replacements.getValue(it.groupValues[1]) }
         val systemPromptData = MessageData(ChatRole.SYSTEM, systemPromptContent)
 
         context.add(0, systemPromptData to instantNow())
