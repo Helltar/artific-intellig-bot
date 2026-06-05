@@ -1,7 +1,7 @@
 services:
 
   aibot:
-    container_name: aibot_container
+    container_name: aibot-container
     image: ghcr.io/helltar/aibot:latest
     restart: unless-stopped
     env_file: .env
@@ -9,7 +9,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - aibot_data:/app/data
+      - aibot-data:/app/data
     logging:
       driver: json-file
       options:
@@ -17,7 +17,7 @@ services:
         max-file: "3"
 
   postgres:
-    container_name: postgres_container
+    container_name: postgres-container
     image: postgres:17.7
     restart: unless-stopped
     environment:
@@ -26,7 +26,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       PGPORT: ${POSTGRESQL_PORT}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}" ]
       interval: 5s
@@ -34,5 +34,5 @@ services:
       retries: 5
 
 volumes:
-  postgres_data:
-  aibot_data:
+  postgres-data:
+  aibot-data:
