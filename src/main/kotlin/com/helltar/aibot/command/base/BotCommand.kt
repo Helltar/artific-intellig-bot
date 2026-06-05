@@ -3,11 +3,13 @@ package com.helltar.aibot.command.base
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.support.CommandAccessSupport
 import com.helltar.aibot.command.support.CommandMessageSupport
+import org.telegram.telegrambots.meta.api.methods.ActionType
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import java.io.File
-import java.util.concurrent.CompletableFuture
 
 abstract class BotCommand(commandContext: BotCommandContext) : BaseCommand(commandContext) {
+
+    protected open val chatAction: ActionType = ActionType.TYPING
 
     private val botConfig = commandContext.botConfig
     private val accessSupport = CommandAccessSupport(ctx, userId, botConfig.creatorId, botConfig.telegramBotUsername)
@@ -35,14 +37,8 @@ abstract class BotCommand(commandContext: BotCommandContext) : BaseCommand(comma
         messageSupport.replyToMessage(text, messageId, webPagePreview)
     }
 
-    fun replyToMessageWithDocument(fileId: String, caption: String): Int =
-        messageSupport.replyToMessageWithDocument(fileId, caption)
-
-    fun deleteMessage(messageId: Int): CompletableFuture<Boolean> =
-        messageSupport.deleteMessage(messageId)
-
-    fun sendDocument(file: File, caption: String): Message =
-        messageSupport.sendDocument(file, caption)
+    fun sendChatAction() =
+        messageSupport.sendChatAction(chatAction)
 
     protected fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int? = message.messageId): Message =
         messageSupport.replyToMessageWithPhoto(bytes, caption, messageId)

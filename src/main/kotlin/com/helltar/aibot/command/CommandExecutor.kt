@@ -1,6 +1,5 @@
 package com.helltar.aibot.command
 
-import com.helltar.aibot.Config.LOADING_ANIMATION_FILE
 import com.helltar.aibot.Strings
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
@@ -9,21 +8,19 @@ import com.helltar.aibot.database.dao.slowmodeDao
 import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import com.helltar.aibot.utils.StringUtils.singleLineTruncated
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.chat.Chat
-import java.io.File
 import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 class CommandExecutor(private val creatorId: Long) {
 
     private companion object {
         const val SLOW_MODE_TIMEOUT_HOURS = 1
+        const val CHAT_ACTION_INTERVAL_SECONDS = 4
         val scope = CoroutineScope(Dispatchers.IO)
         val requestsMap = ConcurrentHashMap<String, Job>()
         val log = KotlinLogging.logger {}
@@ -122,17 +119,24 @@ class CommandExecutor(private val creatorId: Long) {
     }
 
     private suspend fun runCommand(botCommand: BotCommand, isLongRunningCommand: Boolean) {
-        if (isLongRunningCommand) {
-            val caption = Strings.localizedString(Strings.LocalizationKeys.CHAT_WAIT_MESSAGE, botCommand.userLanguageCode)
-            val messageId = sendWaitingGif(botCommand, caption)
-
-            try {
-                botCommand.run()
-            } finally {
-                botCommand.deleteMessage(messageId)
-            }
-        } else
+        if (!isLongRunningCommand) {
             botCommand.run()
+            return
+        }
+
+        val chatActionJob =
+            scope.launch {
+                while (isActive) {
+                    botCommand.sendChatAction()
+                    delay(CHAT_ACTION_INTERVAL_SECONDS.seconds)
+                }
+            }
+
+        try {
+            botCommand.run()
+        } finally {
+            chatActionJob.cancel()
+        }
     }
 
     private suspend fun getSlowmodeRemainingSeconds(userId: Long): Long {
@@ -159,30 +163,5 @@ class CommandExecutor(private val creatorId: Long) {
         slowmodeDao.incrementUsageCount(userId)
 
         return 0
-    }
-
-    private suspend fun sendWaitingGif(botCommand: BotCommand, caption: String): Int {
-
-        suspend fun sendGifAndUpdateFileId(): Int {
-            val message = botCommand.sendDocument(File(LOADING_ANIMATION_FILE), caption)
-            val fileId = message.document.fileId
-
-            if (fileId != null)
-                configurationsDao.updateLoadingGifFileId(fileId)
-
-            return message.messageId
-        }
-
-        val fileId = configurationsDao.loadingGifFileId()
-
-        return if (fileId != null) {
-            try {
-                botCommand.replyToMessageWithDocument(fileId, caption)
-            } catch (e: Exception) {
-                log.error { e.message }
-                sendGifAndUpdateFileId()
-            }
-        } else
-            sendGifAndUpdateFileId()
     }
 }

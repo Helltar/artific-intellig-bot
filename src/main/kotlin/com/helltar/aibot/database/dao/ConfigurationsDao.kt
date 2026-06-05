@@ -17,7 +17,6 @@ class ConfigurationsDao {
         const val KEY_VISION_MODEL = "vision_model"
         const val KEY_IMAGE_GEN_MODEL = "image_gen_model"
         const val KEY_SLOWMODE_MAX_USAGE_COUNT = "global_slowmode_max_usage_count"
-        const val KEY_LOADING_GIF_FILE_ID = "loading_gif_file_id"
         const val DEFAULT_CHAT_MODEL = "gpt-5.2"
         const val DEFAULT_VISION_MODEL = "gpt-5.2"
         const val DEFAULT_IMAGE_GEN_MODEL = "gpt-image-1.5"
@@ -25,12 +24,6 @@ class ConfigurationsDao {
     }
 
     private val cache = ConcurrentHashMap<String, String>()
-
-    suspend fun loadingGifFileId(): String? =
-        getCached(KEY_LOADING_GIF_FILE_ID)
-
-    suspend fun updateLoadingGifFileId(fileId: String): Boolean =
-        setAndCache(KEY_LOADING_GIF_FILE_ID, fileId)
 
     suspend fun slowmodeMaxUsageCount(): Int =
         getCached(KEY_SLOWMODE_MAX_USAGE_COUNT)?.toIntOrNull() ?: 10

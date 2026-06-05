@@ -122,7 +122,6 @@ object Strings {
     }
 
     object LocalizationKeys {
-        const val CHAT_WAIT_MESSAGE = "long_running_command_message"
         const val VISION_DEFAULT_PROMPT = "vision_default_prompt"
     }
 

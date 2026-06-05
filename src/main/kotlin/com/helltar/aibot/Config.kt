@@ -4,7 +4,6 @@ import io.github.cdimascio.dotenv.dotenv
 
 object Config {
 
-    const val LOADING_ANIMATION_FILE = "data/assets/loading.gif"
     const val SYSTEM_PROMPT_FILE = "data/assets/system.prompt.md"
 
     private val dotenv = dotenv { ignoreIfMissing = true }

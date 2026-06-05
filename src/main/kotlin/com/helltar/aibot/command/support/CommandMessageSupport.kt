@@ -5,12 +5,12 @@ import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.exceptions.ImageTooLargeException
 import com.helltar.aibot.utils.HtmlUtils.buildStyledHtmlPage
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.telegram.telegrambots.meta.api.methods.ActionType
 import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import java.io.ByteArrayInputStream
 import java.io.File
-import java.util.concurrent.CompletableFuture
 
 class CommandMessageSupport(
     private val ctx: MessageContext,
@@ -36,23 +36,9 @@ class CommandMessageSupport(
             chunkedReplyToMessage(text, messageIdToReply, webPagePreview)
     }
 
-    fun replyToMessageWithDocument(fileId: String, caption: String): Int =
-        ctx.replyWithDocument()
-            .setFile(fileId)
-            .setCaption(caption)
-            .setReplyToMessageId(message.messageId)
-            .call(ctx.sender)
-            .messageId
-
-    fun deleteMessage(messageId: Int): CompletableFuture<Boolean> =
-        ctx.deleteMessage().setMessageId(messageId).callAsync(ctx.sender)
-
-    fun sendDocument(file: File, caption: String): Message =
-        ctx.replyWithDocument()
-            .setFile(file)
-            .setCaption(caption)
-            .setReplyToMessageId(message.messageId)
-            .call(ctx.sender)
+    fun sendChatAction(action: ActionType) {
+        Methods.sendChatAction(message.chatId, action).callAsync(ctx.sender)
+    }
 
     fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int?): Message =
         ctx.replyToMessageWithPhoto()
