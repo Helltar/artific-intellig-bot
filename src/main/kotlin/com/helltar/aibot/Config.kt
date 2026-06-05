@@ -33,6 +33,6 @@ object Config {
         )
 
     private fun readEnv(env: String) =
-        dotenv[env].ifBlank { throw IllegalArgumentException("environment variable $env is blank") }
+        dotenv[env]?.ifBlank { throw IllegalArgumentException("environment variable $env is blank") }
             ?: throw IllegalArgumentException("environment variable $env is missing")
 }
