@@ -11,10 +11,10 @@ services:
     volumes:
       - aibot_data:/app/data
     logging:
-      driver: "json-file"
+      driver: json-file
       options:
         max-size: "10m"
-        max-file: "1"
+        max-file: "3"
 
   postgres:
     container_name: postgres_container
