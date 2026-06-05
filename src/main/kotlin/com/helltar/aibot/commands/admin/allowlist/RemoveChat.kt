@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.admin.allowlist
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.database.dao.chatAllowlistDao
@@ -13,9 +13,9 @@ class RemoveChat(ctx: BotCommandContext) : BotCommand(ctx) {
 
         chatId?.let {
             if (chatAllowlistDao.remove(it))
-                replyToMessage(Strings.Allowlist.CHAT_REMOVED)
+                replyToMessage(BotMessages.Allowlist.CHAT_REMOVED)
             else
-                replyToMessage(Strings.Allowlist.CHAT_NOT_EXISTS)
+                replyToMessage(BotMessages.Allowlist.CHAT_NOT_EXISTS)
         }
     }
 

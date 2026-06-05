@@ -1,6 +1,6 @@
 package com.helltar.aibot.commands.chat
 
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
@@ -16,7 +16,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
     private companion object {
         const val USER_MESSAGE_LIMIT = 4000
-        const val VISION_DEFAULT_PROMPT = "What is in this image?"
+        const val VISION_DEFAULT_PROMPT = "What's in this image?"
         val log = KotlinLogging.logger {}
     }
 
@@ -55,7 +55,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             ChatService(chatModel(), openaiApiKey()).getReply(messages)
         } catch (e: Exception) {
             log.error { e.message }
-            replyToMessage(Strings.Chat.EXCEPTION)
+            replyToMessage(BotMessages.Chat.EXCEPTION)
             null
         }
 
@@ -64,7 +64,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             try {
                 downloadPhoto(limitBytes = 1024 * 1024) ?: return null
             } catch (_: ImageTooLargeException) {
-                replyToMessage(Strings.Chat.IMAGE_MUST_BE_LESS_THAN.format("1.MB"))
+                replyToMessage(BotMessages.Chat.imageMustBeLessThan("1 MB"))
                 return null
             }
 
@@ -73,7 +73,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             VisionService(visionModel(), openaiApiKey()).analyzeImage(prompt, photo, systemPrompt)
         } catch (e: Exception) {
             log.error { e.message }
-            replyToMessage(Strings.Chat.EXCEPTION)
+            replyToMessage(BotMessages.Chat.EXCEPTION)
             null
         } finally {
             photo.delete()
@@ -85,13 +85,13 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             super.replyToMessage(text, messageId, webPagePreview = false)
         } catch (e: TelegramApiException) {
             log.error { e.message }
-            replyWithTextDocument(text, Strings.Chat.TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE)
+            replyWithTextDocument(text, BotMessages.Chat.TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE)
         }
     }
 
     private suspend fun processUserMessage(): Int? {
         if (isNotReply && argumentsString.isBlank()) {
-            replyToMessage(Strings.Chat.HELLO)
+            replyToMessage(BotMessages.Chat.HELLO)
             return null
         }
 
@@ -106,7 +106,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
                 messageId = message.messageId
 
                 if (text.isNullOrBlank()) {
-                    replyToMessage(Strings.Chat.MESSAGE_TEXT_NOT_FOUND, messageId)
+                    replyToMessage(BotMessages.Chat.MESSAGE_TEXT_NOT_FOUND, messageId)
                     return null
                 }
 
@@ -125,7 +125,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
                 chatHistoryManager.saveUserMessage(message, text)
                 messageId
             } else {
-                replyToMessage(String.format(Strings.Command.MANY_CHARACTERS, USER_MESSAGE_LIMIT))
+                replyToMessage(BotMessages.Command.manyCharacters(USER_MESSAGE_LIMIT))
                 null
             }
         }

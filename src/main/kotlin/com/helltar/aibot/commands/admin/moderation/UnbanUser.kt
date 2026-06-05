@@ -3,7 +3,7 @@ package com.helltar.aibot.commands.admin.moderation
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.database.dao.banlistDao
 
 class UnbanUser(ctx: BotCommandContext) : BotCommand(ctx) {
@@ -13,9 +13,9 @@ class UnbanUser(ctx: BotCommandContext) : BotCommand(ctx) {
 
         userId?.let {
             if (banlistDao.unban(it))
-                replyToMessage(Strings.Moderation.USER_UNBANNED)
+                replyToMessage(BotMessages.Moderation.USER_UNBANNED)
             else
-                replyToMessage(Strings.Moderation.USER_NOT_BANNED)
+                replyToMessage(BotMessages.Moderation.USER_NOT_BANNED)
         }
     }
 

@@ -3,7 +3,7 @@ package com.helltar.aibot.commands.admin.settings
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.database.dao.commandsDao
 
 class CommandState(ctx: BotCommandContext, private val disable: Boolean = false) : BotCommand(ctx) {
@@ -23,7 +23,7 @@ class CommandState(ctx: BotCommandContext, private val disable: Boolean = false)
 
         if (!CommandNames.toggleableCommands.contains(commandName)) {
             val formattedCommands = CommandNames.toggleableCommands.joinToString { "<code>$it</code>" }
-            replyToMessage(Strings.Command.NOT_AVAILABLE.format(commandName, formattedCommands))
+            replyToMessage(BotMessages.Command.notAvailable(commandName, formattedCommands))
             return
         }
 
@@ -50,19 +50,19 @@ class CommandState(ctx: BotCommandContext, private val disable: Boolean = false)
 
     private suspend fun enable(commandName: String) {
         if (!commandsDao.isDisabled(commandName))
-            replyToMessage(Strings.Command.ALREADY_ENABLED.format(commandName))
+            replyToMessage(BotMessages.Command.alreadyEnabled(commandName))
         else {
             commandsDao.changeState(commandName, false)
-            replyToMessage(Strings.Command.ENABLED.format(commandName))
+            replyToMessage(BotMessages.Command.enabled(commandName))
         }
     }
 
     private suspend fun disable(commandName: String) {
         if (commandsDao.isDisabled(commandName))
-            replyToMessage(Strings.Command.ALREADY_DISABLED.format(commandName))
+            replyToMessage(BotMessages.Command.alreadyDisabled(commandName))
         else {
             commandsDao.changeState(commandName, true)
-            replyToMessage(Strings.Command.DISABLED.format(commandName))
+            replyToMessage(BotMessages.Command.disabled(commandName))
         }
     }
 }

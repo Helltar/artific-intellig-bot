@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.admin.sudoers
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.database.dao.sudoersDao
@@ -15,9 +15,9 @@ class RemoveAdmin(ctx: BotCommandContext) : BotCommand(ctx) {
             if (isCreator(it)) return
 
             if (sudoersDao.remove(it))
-                replyToMessage(Strings.Admins.REMOVED)
+                replyToMessage(BotMessages.Admins.REMOVED)
             else
-                replyToMessage(Strings.Admins.NOT_EXISTS)
+                replyToMessage(BotMessages.Admins.NOT_EXISTS)
         }
     }
 

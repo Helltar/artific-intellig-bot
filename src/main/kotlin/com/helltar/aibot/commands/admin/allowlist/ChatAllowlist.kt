@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.admin.allowlist
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.chatAllowlistDao
@@ -15,7 +15,7 @@ class ChatAllowlist(ctx: BotCommandContext) : BotCommand(ctx) {
                 "<code>${it.chatId}</code> $title <i>(${it.createdAt})</i>"
             }
 
-        replyToMessage(text.ifEmpty { Strings.Ui.LIST_IS_EMPTY })
+        replyToMessage(text.ifEmpty { BotMessages.Ui.LIST_IS_EMPTY })
     }
 
     override fun commandName() =

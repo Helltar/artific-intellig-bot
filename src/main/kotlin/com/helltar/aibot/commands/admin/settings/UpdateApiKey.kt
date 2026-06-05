@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.admin.settings
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.apiKeyDao
@@ -11,7 +11,7 @@ class UpdateApiKey(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         if (arguments.isEmpty()) {
-            replyToMessage(Strings.Templates.UPDATE_API_KEY_COMMAND_USAGE_TEMPLATE_RAW.trimIndent())
+            replyToMessage(BotMessages.Usage.updateApiKey())
             return
         }
 
@@ -19,27 +19,27 @@ class UpdateApiKey(ctx: BotCommandContext) : BotCommand(ctx) {
         val apiKey = arguments[0].trim()
 
         if (apiKey.length < 16) {
-            replyToMessage(Strings.ApiKey.BAD_LENGTH)
+            replyToMessage(BotMessages.ApiKey.BAD_LENGTH)
             return
         }
 
         val currentApiKey = apiKeyDao.getKey(provider)
 
         if (currentApiKey == apiKey) {
-            replyToMessage(Strings.ApiKey.SUCCESS_UPDATE.format(provider))
+            replyToMessage(BotMessages.ApiKey.successUpdate(provider))
             return
         }
 
         if (currentApiKey == null) {
             if (apiKeyDao.add(provider, apiKey))
-                replyToMessage(Strings.ApiKey.SUCCESS_ADD.format(provider))
+                replyToMessage(BotMessages.ApiKey.successAdd(provider))
             else
-                replyToMessage(Strings.ApiKey.FAIL_ADD.format(provider))
+                replyToMessage(BotMessages.ApiKey.failAdd(provider))
         } else {
             if (apiKeyDao.update(provider, apiKey))
-                replyToMessage(Strings.ApiKey.SUCCESS_UPDATE.format(provider))
+                replyToMessage(BotMessages.ApiKey.successUpdate(provider))
             else
-                replyToMessage(Strings.ApiKey.FAIL_UPDATE.format(provider))
+                replyToMessage(BotMessages.ApiKey.failUpdate(provider))
         }
     }
 

@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.media
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.AiCommand
 import com.helltar.aibot.openai.service.ImageGenService
@@ -18,12 +18,12 @@ class ImageGen(ctx: BotCommandContext) : AiCommand(ctx) {
 
     override suspend fun run() {
         if (arguments.isEmpty()) {
-            replyToMessage(Strings.Templates.IMG_GEN_COMMAND_USAGE_TEMPLATE_RAW.trimIndent())
+            replyToMessage(BotMessages.Usage.imageGen())
             return
         }
 
         if (argumentsString.length > 3200) {
-            replyToMessage(String.format(Strings.Command.MANY_CHARACTERS, 3200))
+            replyToMessage(BotMessages.Command.manyCharacters(3200))
             return
         }
 
@@ -32,7 +32,7 @@ class ImageGen(ctx: BotCommandContext) : AiCommand(ctx) {
             replyToMessageWithPhoto(bytes, argumentsString)
         } catch (e: Exception) {
             log.error { e.message }
-            replyToMessage(Strings.Chat.EXCEPTION)
+            replyToMessage(BotMessages.Chat.EXCEPTION)
         }
     }
 

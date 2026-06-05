@@ -3,7 +3,7 @@ package com.helltar.aibot.commands.admin.moderation
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.database.dao.banlistDao
 
 class BanUser(ctx: BotCommandContext) : BotCommand(ctx) {
@@ -13,9 +13,9 @@ class BanUser(ctx: BotCommandContext) : BotCommand(ctx) {
         val reason = argumentsString.ifEmpty { null }
 
         if (banlistDao.ban(user, reason))
-            replyToMessage(Strings.Moderation.USER_BANNED)
+            replyToMessage(BotMessages.Moderation.USER_BANNED)
         else
-            replyToMessage(Strings.Moderation.USER_ALREADY_BANNED)
+            replyToMessage(BotMessages.Moderation.USER_ALREADY_BANNED)
     }
 
     override fun commandName() =

@@ -1,10 +1,10 @@
 package com.helltar.aibot.command
 
-import com.helltar.aibot.Strings
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.configurationsDao
 import com.helltar.aibot.database.dao.slowmodeDao
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import com.helltar.aibot.utils.StringUtils.singleLineTruncated
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -76,7 +76,7 @@ class CommandExecutor(private val creatorId: Long) {
 
     private fun isRequestInProgress(requestKey: String, botCommand: BotCommand) =
         if (requestsMap.containsKey(requestKey) && requestsMap[requestKey]?.isCompleted == false) {
-            botCommand.replyToMessage(Strings.Command.MANY_REQUEST)
+            botCommand.replyToMessage(BotMessages.Command.MANY_REQUEST)
             true
         } else
             false
@@ -86,19 +86,19 @@ class CommandExecutor(private val creatorId: Long) {
 
         if (botCommand.isUserBanned(userId)) {
             val reason = banlistDao.reason(userId) ?: """🤷‍♂️"""
-            botCommand.replyToMessage(Strings.Moderation.BAN_AND_REASON.format(reason))
+            botCommand.replyToMessage(BotMessages.Moderation.banAndReason(reason))
             return false
         }
 
         if (!botCommand.isChatInAllowlist()) {
-            botCommand.replyToMessage(Strings.Command.NOT_SUPPORTED_IN_CHAT)
+            botCommand.replyToMessage(BotMessages.Command.NOT_SUPPORTED_IN_CHAT)
             return false
         }
 
         val commandName = botCommand.commandName()
 
         if (botCommand.isCommandDisabled(commandName)) {
-            botCommand.replyToMessage(Strings.Command.TEMPORARILY_DISABLED)
+            botCommand.replyToMessage(BotMessages.Command.TEMPORARILY_DISABLED)
             return false
         }
 
@@ -110,7 +110,7 @@ class CommandExecutor(private val creatorId: Long) {
             val slowmodeRemainingSeconds = getSlowmodeRemainingSeconds(botCommand.ctx.user().id)
 
             if (slowmodeRemainingSeconds > 0) {
-                botCommand.replyToMessage(Strings.Slowmode.PLEASE_WAIT.format(slowmodeRemainingSeconds))
+                botCommand.replyToMessage(BotMessages.Slowmode.pleaseWait(slowmodeRemainingSeconds))
                 return false
             }
         }

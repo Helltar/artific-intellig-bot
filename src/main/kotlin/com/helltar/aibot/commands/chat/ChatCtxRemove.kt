@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.chat
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
@@ -15,7 +15,7 @@ class ChatCtxRemove(ctx: BotCommandContext) : BotCommand(ctx) {
         val (targetUserId, username) =
             if (isReply) {
                 if (!isAdmin()) {
-                    replyToMessage(Strings.Command.ADMIN_ONLY)
+                    replyToMessage(BotMessages.Command.ADMIN_ONLY)
                     return
                 }
 
@@ -24,14 +24,14 @@ class ChatCtxRemove(ctx: BotCommandContext) : BotCommand(ctx) {
                 this.userId to ""
 
         if (isCreator(targetUserId) && !isCreator(this.userId)) {
-            replyToMessage(Strings.Command.CREATOR_CONTEXT_CANNOT_BE_DELETED)
+            replyToMessage(BotMessages.Command.CREATOR_CONTEXT_CANNOT_BE_DELETED)
             return
         }
 
         if (ChatHistoryManager(targetUserId).clear())
-            replyToMessage(Strings.Chat.CONTEXT_REMOVED + username)
+            replyToMessage(BotMessages.Chat.contextRemoved(username))
         else
-            replyToMessage(Strings.Chat.CONTEXT_EMPTY + username)
+            replyToMessage(BotMessages.Chat.contextEmpty(username))
     }
 
     override fun commandName() =

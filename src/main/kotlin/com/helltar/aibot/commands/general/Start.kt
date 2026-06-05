@@ -1,5 +1,6 @@
 package com.helltar.aibot.commands.general
 
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
@@ -7,19 +8,7 @@ import com.helltar.aibot.command.base.BotCommand
 class Start(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
-        replyToMessage(
-            """
-            👋 Welcome to AI Bot!
-
-            Here is how to start:
-            • reply to any of my messages and write your question
-            • or use <code>/${CommandNames.User.CMD_CHAT}</code> with your prompt
-            • for images, use <code>/${CommandNames.User.CMD_IMAGE_GEN}</code> + prompt
-
-            I'm ready when you are.
-            """
-                .trimIndent()
-        )
+        replyToMessage(BotMessages.General.start())
     }
 
     override fun commandName() =

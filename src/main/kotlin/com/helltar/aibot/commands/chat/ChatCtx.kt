@@ -1,6 +1,6 @@
 package com.helltar.aibot.commands.chat
 
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
@@ -25,7 +25,7 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
         val userId = getUserId() ?: return
 
         if (isCreator(userId) && !isCreator(this.userId)) {
-            replyToMessage(Strings.Command.CREATOR_CONTEXT_CANNOT_BE_VIEWED)
+            replyToMessage(BotMessages.Command.CREATOR_CONTEXT_CANNOT_BE_VIEWED)
             return
         }
 
@@ -38,7 +38,7 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
             log.error { e.message }
 
             if (userChatHistory.isNotEmpty())
-                replyWithTextDocument(text, Strings.Chat.TELEGRAM_API_EXCEPTION_CONTEXT_SAVED_TO_FILE)
+                replyWithTextDocument(text, BotMessages.Chat.TELEGRAM_API_EXCEPTION_CONTEXT_SAVED_TO_FILE)
         }
     }
 
@@ -52,7 +52,7 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
             if (isAdmin())
                 message.replyToMessage.from.id
             else {
-                replyToMessage(Strings.Command.ADMIN_ONLY)
+                replyToMessage(BotMessages.Command.ADMIN_ONLY)
                 null
             }
         }
@@ -61,7 +61,7 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
         val userMessages = userChatHistory.filter { it.first.role == ChatRole.USER }
 
         if (userMessages.isEmpty())
-            return Strings.Chat.CONTEXT_EMPTY
+            return BotMessages.Chat.CONTEXT_EMPTY
 
         return userMessages.joinToString("\n\n") { (message, time) ->
             "▫️ <b>${dateFormatter.format(time)}</b>\n${message.content.singleLineTruncated(100).escapeHTML()}"

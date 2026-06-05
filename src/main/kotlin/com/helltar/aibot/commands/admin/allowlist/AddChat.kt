@@ -1,7 +1,7 @@
 package com.helltar.aibot.commands.admin.allowlist
 
 import com.helltar.aibot.command.BotCommandContext
-import com.helltar.aibot.Strings
+import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.database.dao.chatAllowlistDao
@@ -15,9 +15,9 @@ class AddChat(ctx: BotCommandContext) : BotCommand(ctx) {
             val title = if (arguments.size >= 2) arguments[1] else ctx.message().chat.title
 
             if (chatAllowlistDao.add(it, title))
-                replyToMessage(Strings.Allowlist.CHAT_ADDED)
+                replyToMessage(BotMessages.Allowlist.CHAT_ADDED)
             else
-                replyToMessage(Strings.Allowlist.CHAT_EXISTS)
+                replyToMessage(BotMessages.Allowlist.CHAT_EXISTS)
         }
     }
 
