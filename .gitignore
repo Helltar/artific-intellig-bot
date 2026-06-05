@@ -8,3 +8,5 @@ test/
 
 data/
 !data/files
+
+.env
