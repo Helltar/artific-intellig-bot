@@ -1,0 +1,34 @@
+[versions]
+kotlin = "2.4.0"
+shadow = "9.3.0"
+tgbots-module = "9.5.0"
+jackson-module-kotlin = "3.0.4"
+dotenv-kotlin = "6.4.1"
+exposed = "1.3.0"
+r2dbc-postgresql = "1.1.0.RELEASE"
+ktor = "3.5.0"
+kotlin-logging = "8.0.4"
+logback-classic = "1.5.34"
+
+[libraries]
+tgbots-module = { module = "com.annimon:tgbots-module", version.ref = "tgbots-module" }
+jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson-module-kotlin" }
+dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv-kotlin" }
+r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", version.ref = "r2dbc-postgresql" }
+exposed-r2dbc = { module = "org.jetbrains.exposed:exposed-r2dbc", version.ref = "exposed" }
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-classic" }
+
+[bundles]
+exposed = ["exposed-r2dbc", "exposed-java-time"]
+ktor = ["ktor-client-cio", "ktor-client-auth", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

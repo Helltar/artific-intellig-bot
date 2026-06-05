@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "2.3.10"
-    kotlin("plugin.serialization") version "2.3.10"
-    id("com.gradleup.shadow") version "9.3.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.shadow)
     application
 }
 
@@ -12,37 +12,15 @@ repositories {
     mavenCentral()
 }
 
-object Versions {
-    const val TGBOTS_MODULE = "9.5.0"
-    const val JACKSON_MODULE_KOTLIN = "3.0.4"
-    const val DOTENV_KOTLIN = "6.4.1"
-    const val EXPOSED = "1.1.1"
-    const val R2DBC_POSTGRESQL = "1.1.0.RELEASE"
-    const val KTOR = "3.4.1"
-    const val KOTLIN_LOGGING = "7.0.13"
-    const val LOGBACK_CLASSIC = "1.5.21"
-}
-
 dependencies {
-    implementation("com.annimon:tgbots-module:${Versions.TGBOTS_MODULE}") {
-        exclude("org.telegram", "telegrambots-webhook")
-    }
-
-    implementation("tools.jackson.module:jackson-module-kotlin:${Versions.JACKSON_MODULE_KOTLIN}")
-    implementation("io.github.cdimascio:dotenv-kotlin:${Versions.DOTENV_KOTLIN}")
-
-    runtimeOnly("org.postgresql:r2dbc-postgresql:${Versions.R2DBC_POSTGRESQL}")
-    implementation("org.jetbrains.exposed:exposed-r2dbc:${Versions.EXPOSED}")
-    implementation("org.jetbrains.exposed:exposed-java-time:${Versions.EXPOSED}")
-
-    implementation("io.ktor:ktor-client-cio:${Versions.KTOR}")
-    implementation("io.ktor:ktor-client-auth:${Versions.KTOR}")
-    implementation("io.ktor:ktor-client-content-negotiation:${Versions.KTOR}")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.KTOR}")
-
-    implementation("io.github.oshai:kotlin-logging-jvm:${Versions.KOTLIN_LOGGING}")
-    runtimeOnly("ch.qos.logback:logback-classic:${Versions.LOGBACK_CLASSIC}")
-
+    implementation(libs.tgbots.module) { exclude("org.telegram", "telegrambots-webhook") }
+    implementation(libs.bundles.ktor)
+    implementation(libs.bundles.exposed)
+    runtimeOnly(libs.r2dbc.postgresql)
+    implementation(libs.jackson.module.kotlin)
+    implementation(libs.dotenv.kotlin)
+    implementation(libs.kotlin.logging.jvm)
+    runtimeOnly(libs.logback.classic)
     testImplementation(kotlin("test"))
 }
 
