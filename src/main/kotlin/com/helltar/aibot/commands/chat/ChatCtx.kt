@@ -1,12 +1,13 @@
 package com.helltar.aibot.commands.chat
 
-import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.chat.ChatHistoryManager
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
+import com.helltar.aibot.utils.StringUtils.singleLineTruncated
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.util.*
 import java.time.Instant
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter
 class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
 
     private companion object {
+        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM HH:mm").withZone(ZoneId.systemDefault())
         val log = KotlinLogging.logger {}
     }
 
@@ -55,13 +57,14 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
             }
         }
 
-    private fun formatUserChatHistory(userChatHistory: List<Pair<MessageData, Instant>>) =
-        if (userChatHistory.isNotEmpty()) {
-            val formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm").withZone(ZoneId.systemDefault())
+    private fun formatUserChatHistory(userChatHistory: List<Pair<MessageData, Instant>>): String {
+        val userMessages = userChatHistory.filter { it.first.role == ChatRole.USER }
 
-            userChatHistory
-                .filter { it.first.role == ChatRole.USER }
-                .joinToString("\n") { """▫️ <b>${formatter.format(it.second)}</b> - ${it.first.content.escapeHTML()}""" }
-        } else
-            Strings.Chat.CONTEXT_EMPTY
+        if (userMessages.isEmpty())
+            return Strings.Chat.CONTEXT_EMPTY
+
+        return userMessages.joinToString("\n\n") { (message, time) ->
+            "▫️ <b>${dateFormatter.format(time)}</b>\n${message.content.singleLineTruncated(100).escapeHTML()}"
+        }
+    }
 }

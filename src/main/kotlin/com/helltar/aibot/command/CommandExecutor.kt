@@ -7,6 +7,7 @@ import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.configurationsDao
 import com.helltar.aibot.database.dao.slowmodeDao
 import com.helltar.aibot.utils.DateTimeUtils.utcNow
+import com.helltar.aibot.utils.StringUtils.singleLineTruncated
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,8 +71,10 @@ class CommandExecutor(private val creatorId: Long) {
     }
 
     private fun logCommandExecution(botCommand: BotCommand, user: User, chat: Chat, commandName: String) {
-        val logMessage = "$commandName: ${chat.id} ${chat.title} ${user.id} ${user.userName} ${user.firstName}: ${botCommand.ctx.message().text}"
-        log.info { logMessage }
+        val chatInfo = chat.title?.let { "${chat.id} '$it'" } ?: chat.id.toString()
+        val userInfo = listOfNotNull(user.id, user.userName?.let { "@$it" }, user.firstName).joinToString(" ")
+        val text = botCommand.ctx.message().text.orEmpty().singleLineTruncated(500)
+        log.info { "/$commandName | chat: $chatInfo | user: $userInfo | text: $text" }
     }
 
     private fun isRequestInProgress(requestKey: String, botCommand: BotCommand) =
