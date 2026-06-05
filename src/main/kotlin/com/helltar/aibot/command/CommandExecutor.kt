@@ -21,7 +21,7 @@ class CommandExecutor(private val creatorId: Long) {
     private companion object {
         const val SLOW_MODE_TIMEOUT_HOURS = 1
         const val CHAT_ACTION_INTERVAL_SECONDS = 4
-        val scope = CoroutineScope(Dispatchers.IO)
+        val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         val requestsMap = ConcurrentHashMap<String, Job>()
         val log = KotlinLogging.logger {}
     }
@@ -127,7 +127,9 @@ class CommandExecutor(private val creatorId: Long) {
         val chatActionJob =
             scope.launch {
                 while (isActive) {
-                    botCommand.sendChatAction()
+                    runCatching { botCommand.sendChatAction() }
+                        .onFailure { log.error(it) { "failed to send chat action" } }
+
                     delay(CHAT_ACTION_INTERVAL_SECONDS.seconds)
                 }
             }
