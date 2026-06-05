@@ -4,7 +4,7 @@ import com.helltar.aibot.Config.SYSTEM_PROMPT_FILE
 import com.helltar.aibot.database.dao.chatHistoryDao
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
+import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.telegram.telegrambots.meta.api.objects.message.Message
@@ -52,7 +52,7 @@ class ChatHistoryManager(private val userId: Long) {
 
     private suspend fun saveMessage(message: MessageData) {
         if (chatHistoryDao.insert(userId, message))
-            chatContext().add(message to utcNow())
+            chatContext().add(message to instantNow())
     }
 
     private suspend fun contentLength(): Int =
@@ -86,7 +86,7 @@ class ChatHistoryManager(private val userId: Long) {
         val systemPromptContent = systemPrompt.format(chatTitle, username, userId)
         val systemPromptData = MessageData(ChatRole.SYSTEM, systemPromptContent)
 
-        context.add(0, systemPromptData to utcNow())
+        context.add(0, systemPromptData to instantNow())
     }
 
     private suspend fun chatContext(): MutableList<Pair<MessageData, Instant>> {

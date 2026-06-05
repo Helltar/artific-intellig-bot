@@ -2,7 +2,6 @@ package com.helltar.aibot.database
 
 import com.helltar.aibot.Config
 import com.helltar.aibot.database.tables.*
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -44,7 +43,6 @@ object Database {
             .insertIgnore {
                 it[userId] = creatorId
                 it[username] = "Owner"
-                it[createdAt] = utcNow()
             }
     }
 
@@ -54,7 +52,6 @@ object Database {
                 .insertIgnore { // todo: batchInsert
                     it[commandName] = command
                     it[isDisabled] = false
-                    it[createdAt] = utcNow()
                 }
         }
     }

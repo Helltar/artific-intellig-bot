@@ -2,7 +2,7 @@ package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.tables.ApiKeysTable
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
+import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import kotlinx.coroutines.flow.singleOrNull
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.r2dbc.insertIgnore
@@ -19,7 +19,6 @@ class ApiKeyDao {
             .insertIgnore {
                 it[this.provider] = provider
                 it[this.apiKey] = apiKey
-                it[createdAt] = utcNow()
             }
             .insertedCount > 0).also { if (it) cache[provider] = apiKey }
     }
@@ -28,7 +27,7 @@ class ApiKeyDao {
         (ApiKeysTable
             .update({ ApiKeysTable.provider eq provider }) {
                 it[this.apiKey] = apiKey
-                it[updatedAt] = utcNow()
+                it[updatedAt] = instantNow()
             } > 0).also { if (it) cache[provider] = apiKey }
     }
 

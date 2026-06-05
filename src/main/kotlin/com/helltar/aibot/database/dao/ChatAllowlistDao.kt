@@ -3,7 +3,6 @@ package com.helltar.aibot.database.dao
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.models.ChatAllowlistData
 import com.helltar.aibot.database.tables.ChatAllowlistTable
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.core.eq
@@ -19,7 +18,6 @@ class ChatAllowlistDao {
             .insertIgnore {
                 it[this.chatId] = chatId
                 it[this.title] = title?.take(70)
-                it[createdAt] = utcNow()
             }
     }
         .insertedCount > 0

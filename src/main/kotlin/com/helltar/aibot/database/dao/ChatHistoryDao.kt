@@ -3,7 +3,6 @@ package com.helltar.aibot.database.dao
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.tables.ChatHistoryTable
 import com.helltar.aibot.openai.models.common.MessageData
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.toList
@@ -21,7 +20,6 @@ class ChatHistoryDao {
                 it[this.userId] = userId
                 it[role] = message.role
                 it[content] = message.content
-                it[createdAt] = utcNow()
             }.insertedCount > 0
     }
 

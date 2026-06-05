@@ -6,7 +6,7 @@ import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.banlistDao
 import com.helltar.aibot.database.dao.configurationsDao
 import com.helltar.aibot.database.dao.slowmodeDao
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
+import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import com.helltar.aibot.utils.StringUtils.singleLineTruncated
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CoroutineScope
@@ -144,7 +144,7 @@ class CommandExecutor(private val creatorId: Long) {
         }
 
         val lastUsage = userSlowmodeStatus.lastUsage
-        val timeElapsed = Duration.between(lastUsage, utcNow())
+        val timeElapsed = Duration.between(lastUsage, instantNow())
 
         if (timeElapsed.toHours() >= SLOW_MODE_TIMEOUT_HOURS) {
             slowmodeDao.resetUsageCount(userId)

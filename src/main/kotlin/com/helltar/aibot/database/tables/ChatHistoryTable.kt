@@ -1,5 +1,6 @@
 package com.helltar.aibot.database.tables
 
+import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
 import org.jetbrains.exposed.v1.javatime.timestamp
 
@@ -9,5 +10,5 @@ object ChatHistoryTable : IntIdTable() {
     val role = varchar("role", 30).index()
     val content = text("content")
 
-    val createdAt = timestamp("created_at")
+    val createdAt = timestamp("created_at").clientDefault { instantNow() }
 }

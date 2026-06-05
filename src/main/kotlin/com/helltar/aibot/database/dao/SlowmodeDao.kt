@@ -3,7 +3,7 @@ package com.helltar.aibot.database.dao
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.models.SlowmodeStatusData
 import com.helltar.aibot.database.tables.SlowmodeTable
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
+import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import kotlinx.coroutines.flow.singleOrNull
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.plus
@@ -17,8 +17,6 @@ class SlowmodeDao {
         SlowmodeTable
             .insertIgnore {
                 it[this.userId] = userId
-                it[updatedAt] = utcNow()
-                it[createdAt] = utcNow()
             }
             .insertedCount > 0
     }
@@ -27,7 +25,7 @@ class SlowmodeDao {
         SlowmodeTable
             .update({ SlowmodeTable.userId eq userId }) {
                 it[usageCount] = usageCount + 1
-                it[updatedAt] = utcNow()
+                it[updatedAt] = instantNow()
             } > 0
     }
 
@@ -35,7 +33,7 @@ class SlowmodeDao {
         SlowmodeTable
             .update({ SlowmodeTable.userId eq userId }) {
                 it[usageCount] = 1
-                it[updatedAt] = utcNow()
+                it[updatedAt] = instantNow()
             } > 0
     }
 

@@ -2,7 +2,7 @@ package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.tables.ConfigurationsTable
-import com.helltar.aibot.utils.DateTimeUtils.utcNow
+import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import kotlinx.coroutines.flow.singleOrNull
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.r2dbc.insertIgnore
@@ -83,13 +83,12 @@ class ConfigurationsDao {
         (ConfigurationsTable
             .update({ ConfigurationsTable.key eq key }) {
                 it[this.value] = value
-                it[this.updatedAt] = utcNow()
+                it[this.updatedAt] = instantNow()
             }.takeIf { it > 0 }
             ?: ConfigurationsTable
                 .insertIgnore {
                     it[this.key] = key
                     it[this.value] = value
-                    it[this.createdAt] = utcNow()
                 }.insertedCount) > 0
     }
 }
