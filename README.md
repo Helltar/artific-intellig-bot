@@ -17,7 +17,9 @@ Open **.env** and fill in:
 - `CREATOR_ID` — your Telegram user ID, e.g. `1234567890` (this user becomes the bot's owner)
 - `BOT_TOKEN` — get it from [BotFather](https://t.me/BotFather)
 - `BOT_USERNAME` — get it from [BotFather](https://t.me/BotFather), e.g. `artific_intellig_bot`
-- PostgreSQL connection settings (host, port, database name, user, password)
+- PostgreSQL connection settings (host, database name, user, password)
+
+> **Note:** Compose includes a ready-to-use PostgreSQL service, so `POSTGRESQL_HOST=postgres` works out of the box. To use your own external database instead, set `POSTGRESQL_HOST` to its host and remove the `postgres` service from `compose.yaml`.
 
 Then start the bot:
 

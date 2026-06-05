@@ -14,7 +14,6 @@ object Config {
         val telegramBotToken: String,
         val telegramBotUsername: String,
         val postgresqlHost: String,
-        val postgresqlPort: Int,
         val databaseName: String,
         val databaseUser: String,
         val databasePassword: String
@@ -26,7 +25,6 @@ object Config {
             telegramBotToken = readEnv("BOT_TOKEN"),
             telegramBotUsername = readEnv("BOT_USERNAME"),
             postgresqlHost = readEnv("POSTGRESQL_HOST"),
-            postgresqlPort = readEnv("POSTGRESQL_PORT").toIntOrNull() ?: 5432,
             databaseName = readEnv("DATABASE_NAME"),
             databaseUser = readEnv("DATABASE_USER"),
             databasePassword = readEnv("DATABASE_PASSWORD")
