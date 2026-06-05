@@ -11,6 +11,7 @@ import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService
 import com.helltar.aibot.openai.service.VisionService
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
 class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
@@ -82,7 +83,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
     private fun replyToMessage(text: String, messageId: Int) {
         try {
             super.replyToMessage(text, messageId, webPagePreview = false)
-        } catch (e: Exception) {
+        } catch (e: TelegramApiException) {
             log.error { e.message }
             replyWithTextDocument(text, Strings.Chat.TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE)
         }

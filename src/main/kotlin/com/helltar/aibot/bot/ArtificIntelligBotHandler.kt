@@ -105,8 +105,8 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions, private val 
         return null
     }
 
-    override fun handleTelegramApiException(tae: TelegramApiException?) {
-        throw tae ?: TelegramApiException("TelegramApiException") // todo: TelegramApiException
+    override fun handleTelegramApiException(e: TelegramApiException) {
+        throw e
     }
 
     private fun createCommandOptions(
