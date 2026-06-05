@@ -47,7 +47,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.helltar.aibot.bot.ArtificIntelligBot")
+    mainClass.set("com.helltar.aibot.MainKt")
 }
 
 kotlin {
