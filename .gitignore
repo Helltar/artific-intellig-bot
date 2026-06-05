@@ -7,6 +7,6 @@ deploy/
 test/
 
 data/
-!data/files
+!data/assets
 
 .env
