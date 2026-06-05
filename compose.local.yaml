@@ -1,0 +1,8 @@
+# Local override: build the image from this checkout instead of pulling it.
+# Usage: docker compose -f compose.yaml -f compose.local.yaml up --build
+services:
+
+  aibot:
+    image: aibot:local
+    build:
+      context: .

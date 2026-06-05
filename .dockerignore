@@ -1,0 +1,14 @@
+.git
+.gradle
+.idea
+.kotlin
+build
+deploy
+test
+data
+.env
+.env.example
+README.md
+compose.yaml
+compose.local.yaml
+Dockerfile
