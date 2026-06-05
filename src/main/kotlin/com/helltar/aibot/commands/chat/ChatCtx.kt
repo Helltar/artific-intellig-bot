@@ -38,7 +38,7 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
             log.error { e.message }
 
             if (userChatHistory.isNotEmpty())
-                replyWithTextDocument(text, BotMessages.Chat.TELEGRAM_API_EXCEPTION_CONTEXT_SAVED_TO_FILE)
+                replyWithTextDocument(text, BotMessages.Chat.savedToFile("context"))
         }
     }
 

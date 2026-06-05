@@ -78,11 +78,8 @@ object BotMessages {
         const val HELLO = "👋 Send <code>/$CMD_CHAT your text</code> or reply to one of my messages to continue the conversation"
         const val MESSAGE_TEXT_NOT_FOUND = "That message has no text 🤔"
 
-        const val TELEGRAM_API_EXCEPTION_CONTEXT_SAVED_TO_FILE =
-            "Telegram could not send the context, so I saved it as a file. Try /$CMD_CHAT_CTX_REMOVE if this keeps happening ☺️"
-
-        const val TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE =
-            "Telegram could not send the response, so I saved it as a file. Try /$CMD_CHAT_CTX_REMOVE if this keeps happening ☺️"
+        fun savedToFile(subject: String) =
+            "Telegram could not send the $subject, so I saved it as a file. Try /$CMD_CHAT_CTX_REMOVE if this keeps happening ☺️"
 
         fun contextEmpty(userSuffix: String) =
             CONTEXT_EMPTY + userSuffix
@@ -90,8 +87,8 @@ object BotMessages {
         fun contextRemoved(userSuffix: String) =
             CONTEXT_REMOVED + userSuffix
 
-        fun imageMustBeLessThan(size: String) =
-            "The image must be smaller than $size 😥"
+        fun imageMustBeLessThan(maxBytes: Int) =
+            "The image must be smaller than ${maxBytes / 1024 / 1024} MB 😥"
     }
 
     object Moderation {

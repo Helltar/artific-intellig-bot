@@ -16,6 +16,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
     private companion object {
         const val USER_MESSAGE_LIMIT = 4000
+        const val IMAGE_SIZE_LIMIT_BYTES = 1024 * 1024
         const val VISION_DEFAULT_PROMPT = "What's in this image?"
         val log = KotlinLogging.logger {}
     }
@@ -62,9 +63,9 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
     private suspend fun retrieveVisionAnswer(prompt: String): String? {
         val photo =
             try {
-                downloadPhoto(limitBytes = 1024 * 1024) ?: return null
+                downloadPhoto(limitBytes = IMAGE_SIZE_LIMIT_BYTES) ?: return null
             } catch (_: ImageTooLargeException) {
-                replyToMessage(BotMessages.Chat.imageMustBeLessThan("1 MB"))
+                replyToMessage(BotMessages.Chat.imageMustBeLessThan(IMAGE_SIZE_LIMIT_BYTES))
                 return null
             }
 
@@ -85,7 +86,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             super.replyToMessage(text, messageId, webPagePreview = false)
         } catch (e: TelegramApiException) {
             log.error { e.message }
-            replyWithTextDocument(text, BotMessages.Chat.TELEGRAM_API_EXCEPTION_RESPONSE_SAVED_TO_FILE)
+            replyWithTextDocument(text, BotMessages.Chat.savedToFile("response"))
         }
     }
 
