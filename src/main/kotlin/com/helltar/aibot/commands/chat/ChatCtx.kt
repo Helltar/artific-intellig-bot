@@ -1,6 +1,6 @@
 package com.helltar.aibot.commands.chat
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.command.CommandNames
@@ -13,7 +13,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class ChatCtx(ctx: MessageContext) : BotCommand(ctx) {
+class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
 
     private companion object {
         val log = KotlinLogging.logger {}

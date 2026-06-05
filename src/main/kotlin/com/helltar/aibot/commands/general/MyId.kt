@@ -1,10 +1,10 @@
 package com.helltar.aibot.commands.general
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
 
-class MyId(ctx: MessageContext) : BotCommand(ctx) {
+class MyId(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         replyToMessage("<code>$userId</code>")

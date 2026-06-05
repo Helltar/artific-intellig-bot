@@ -1,10 +1,10 @@
 package com.helltar.aibot.commands.general
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
 
-class About(ctx: MessageContext) : BotCommand(ctx) {
+class About(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         replyToMessage(

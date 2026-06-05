@@ -7,6 +7,7 @@ import com.annimon.tgbotsmodule.commands.SimpleCommand
 import com.annimon.tgbotsmodule.commands.authority.SimpleAuthority
 import com.annimon.tgbotsmodule.commands.context.MessageContext
 import com.helltar.aibot.Config.BotConfig
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandExecutor
 import com.helltar.aibot.command.CommandNames.Admin.CMD_ADMIN_LIST
 import com.helltar.aibot.command.CommandNames.Admin.CMD_BAN_LIST
@@ -55,14 +56,13 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
-class ArtificIntelligBotHandler(
-    botModuleOptions: BotModuleOptions,
-    private val botConfig: BotConfig
-) : BotHandler(botModuleOptions) {
+class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions, private val botConfig: BotConfig) : BotHandler(botModuleOptions) {
 
     private val authority = SimpleAuthority(botConfig.creatorId)
     private val registry = CommandRegistry(botConfig.telegramBotUsername, authority)
     private val commandExecutor = CommandExecutor(botConfig.creatorId)
+
+    private typealias CommandFactory = (BotCommandContext) -> BotCommand
 
     init {
         registerSimpleCommand(CMD_START, ::Start)
@@ -131,29 +131,29 @@ class ArtificIntelligBotHandler(
     private fun processMessage(update: Update, message: Message) {
         if (hasMention(message)) return
         if (message.replyToMessage.hasAudio() || message.replyToMessage.hasVoice()) return
-        executeLongRunningCommand(Chat(MessageContext(this, update, "")))
+        executeLongRunningCommand(Chat(BotCommandContext(MessageContext(this, update, ""), botConfig)))
     }
 
     private fun hasMention(message: Message): Boolean =
         message.entities.orEmpty().any { it.type == EntityType.MENTION || it.type == EntityType.TEXTMENTION }
 
-    private fun registerCommand(command: String, botCommand: (MessageContext) -> BotCommand, options: CommandOptions) {
-        registry.register(SimpleCommand("/$command") { commandExecutor.execute(botCommand(it), options) })
+    private fun registerCommand(command: String, botCommand: CommandFactory, options: CommandOptions) {
+        registry.register(SimpleCommand("/$command") { commandExecutor.execute(botCommand(BotCommandContext(it, botConfig)), options) })
     }
 
-    private fun registerSimpleCommand(command: String, botCommand: (MessageContext) -> BotCommand, checkRights: Boolean = false) {
+    private fun registerSimpleCommand(command: String, botCommand: CommandFactory, checkRights: Boolean = false) {
         registerCommand(command, botCommand, createCommandOptions(checkRights = checkRights))
     }
 
-    private fun registerLongRunningCommand(command: String, botCommand: (MessageContext) -> BotCommand) {
+    private fun registerLongRunningCommand(command: String, botCommand: CommandFactory) {
         registerCommand(command, botCommand, createCommandOptions(isLongRunningCommand = true))
     }
 
-    private fun registerAdminCommand(command: String, botCommand: (MessageContext) -> BotCommand, privateChatOnly: Boolean = false) {
+    private fun registerAdminCommand(command: String, botCommand: CommandFactory, privateChatOnly: Boolean = false) {
         registerCommand(command, botCommand, createCommandOptions(isAdminCommand = true, privateChatOnly = privateChatOnly))
     }
 
-    private fun registerCreatorCommand(command: String, botCommand: (MessageContext) -> BotCommand, privateChatOnly: Boolean = false) {
+    private fun registerCreatorCommand(command: String, botCommand: CommandFactory, privateChatOnly: Boolean = false) {
         registerCommand(command, botCommand, createCommandOptions(isCreatorCommand = true, privateChatOnly = privateChatOnly))
     }
 }

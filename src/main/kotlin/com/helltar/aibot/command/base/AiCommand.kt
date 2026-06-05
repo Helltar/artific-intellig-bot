@@ -1,11 +1,11 @@
 package com.helltar.aibot.command.base
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.database.dao.apiKeyDao
 import com.helltar.aibot.database.dao.configurationsDao
 import com.helltar.aibot.openai.ApiConfig
 
-abstract class AiCommand(ctx: MessageContext) : BotCommand(ctx) {
+abstract class AiCommand(ctx: BotCommandContext) : BotCommand(ctx) {
 
     protected suspend fun chatModel() =
         configurationsDao.chatModel()

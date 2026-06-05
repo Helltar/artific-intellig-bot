@@ -1,6 +1,6 @@
 package com.helltar.aibot.commands.chat
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.Strings.localizedString
 import com.helltar.aibot.chat.ChatHistoryManager
@@ -12,7 +12,7 @@ import com.helltar.aibot.openai.service.ChatService
 import com.helltar.aibot.openai.service.VisionService
 import io.github.oshai.kotlinlogging.KotlinLogging
 
-class Chat(ctx: MessageContext) : AiCommand(ctx) {
+class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
     private companion object {
         const val USER_MESSAGE_LIMIT = 4000

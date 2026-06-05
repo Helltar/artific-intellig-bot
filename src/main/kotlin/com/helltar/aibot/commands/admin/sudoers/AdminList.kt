@@ -1,13 +1,13 @@
 package com.helltar.aibot.commands.admin.sudoers
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.database.dao.sudoersDao
 import com.helltar.aibot.database.models.SudoersData
 
-class AdminList(ctx: MessageContext) : BotCommand(ctx) {
+class AdminList(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         val list = getFormattedSudoersList(sudoersDao.list())

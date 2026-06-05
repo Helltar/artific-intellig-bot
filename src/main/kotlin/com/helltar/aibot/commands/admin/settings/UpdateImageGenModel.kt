@@ -1,12 +1,12 @@
 package com.helltar.aibot.commands.admin.settings
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
 import com.helltar.aibot.database.dao.configurationsDao
 
-class UpdateImageGenModel(ctx: MessageContext) : BotCommand(ctx) {
+class UpdateImageGenModel(ctx: BotCommandContext) : BotCommand(ctx) {
 
     override suspend fun run() {
         if (arguments.isEmpty()) {

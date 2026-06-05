@@ -1,13 +1,13 @@
 package com.helltar.aibot.commands.media
 
-import com.annimon.tgbotsmodule.commands.context.MessageContext
+import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.Strings
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.AiCommand
 import com.helltar.aibot.openai.service.ImageGenService
 import io.github.oshai.kotlinlogging.KotlinLogging
 
-class ImageGen(ctx: MessageContext) : AiCommand(ctx) {
+class ImageGen(ctx: BotCommandContext) : AiCommand(ctx) {
 
     private companion object {
         val log = KotlinLogging.logger {}
