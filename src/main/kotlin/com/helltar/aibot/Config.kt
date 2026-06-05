@@ -5,7 +5,7 @@ import io.github.cdimascio.dotenv.dotenv
 object Config {
 
     const val LOADING_ANIMATION_FILE = "data/files/loading.gif"
-    const val SYSTEM_PROMPT_FILE = "data/files/system.prompt"
+    const val SYSTEM_PROMPT_FILE = "data/files/system.prompt.md"
 
     private val dotenv = dotenv { ignoreIfMissing = true }
 
