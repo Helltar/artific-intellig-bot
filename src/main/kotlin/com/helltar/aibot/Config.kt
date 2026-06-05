@@ -4,7 +4,7 @@ import io.github.cdimascio.dotenv.dotenv
 
 object Config {
 
-    const val SYSTEM_PROMPT_FILE = "data/assets/system.prompt.md"
+    const val SYSTEM_PROMPT_FILE = "config/system.prompt.md"
 
     private val dotenv = dotenv { ignoreIfMissing = true }
 
