@@ -2,7 +2,6 @@ package com.helltar.aibot.openai
 
 object ApiConfig {
 
-    const val PROVIDER_NAME = "openai.com"
     const val BASE_URL = "https://api.openai.com/v1"
 
     object Endpoints {

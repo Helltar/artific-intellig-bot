@@ -1,7 +1,6 @@
 package com.helltar.aibot.messages
 
 import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
-import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_API_KEY
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
 import com.helltar.aibot.command.CommandNames.User.CMD_CHAT
@@ -26,22 +25,6 @@ object BotMessages {
             <a href="https://github.com/Helltar/artific-intellig-bot">AI Bot on GitHub</a>
             Contact: https://helltar.com
         """.trimIndent()
-    }
-
-    object ApiKey {
-        const val BAD_LENGTH = "❌ API key is too short"
-
-        fun failAdd(provider: String) =
-            "⚠️ Could not add the <b>$provider</b> API key"
-
-        fun failUpdate(provider: String) =
-            "⚠️ Could not update the <b>$provider</b> API key"
-
-        fun successAdd(provider: String) =
-            "✅ Added the <b>$provider</b> API key"
-
-        fun successUpdate(provider: String) =
-            "✅ Updated the <b>$provider</b> API key"
     }
 
     object Command {
@@ -161,12 +144,6 @@ object BotMessages {
             
             To change it, use:
             <code>/$CMD_SLOWMODE</code> 15
-        """.trimIndent()
-
-        fun updateApiKey() = """
-            ℹ️ Usage:
-            
-            <code>/$CMD_UPDATE_API_KEY</code> sk-proj-qwertyuiop
         """.trimIndent()
 
         fun imageGen() = """

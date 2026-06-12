@@ -21,7 +21,6 @@ import com.helltar.aibot.command.CommandNames.Admin.CMD_UNBAN_USER
 import com.helltar.aibot.command.CommandNames.Creator.CMD_ADD_ADMIN
 import com.helltar.aibot.command.CommandNames.Creator.CMD_ADD_CHAT
 import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
-import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_API_KEY
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
 import com.helltar.aibot.command.CommandNames.General.CMD_ABOUT
@@ -87,7 +86,6 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions, private val 
         registerCreatorCommand(CMD_ADD_ADMIN, ::AddAdmin)
         registerCreatorCommand(CMD_ADD_CHAT, ::AddChat)
         registerCreatorCommand(CMD_SLOWMODE, ::SlowmodeSetting)
-        registerCreatorCommand(CMD_UPDATE_API_KEY, ::UpdateApiKey, privateChatOnly = true)
         registerCreatorCommand(CMD_UPDATE_CHAT_MODEL, ::UpdateChatModel)
         registerCreatorCommand(CMD_UPDATE_IMAGE_GEN_MODEL, ::UpdateImageGenModel)
     }
