@@ -49,6 +49,7 @@ import com.helltar.aibot.command.general.About
 import com.helltar.aibot.command.general.MyId
 import com.helltar.aibot.command.general.Start
 import com.helltar.aibot.command.media.ImageGen
+import com.helltar.aibot.exceptions.TelegramFormattingException
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod
 import org.telegram.telegrambots.meta.api.objects.EntityType
 import org.telegram.telegrambots.meta.api.objects.Update
@@ -104,6 +105,9 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions, private val 
     }
 
     override fun handleTelegramApiException(e: TelegramApiException) {
+        if (TelegramFormattingException.isFormattingError(e))
+            throw TelegramFormattingException(e)
+
         throw e
     }
 

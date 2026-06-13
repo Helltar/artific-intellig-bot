@@ -48,7 +48,7 @@ class CommandMessageSupport(
             .setParseMode(ParseMode.HTML)
             .call(ctx.sender)
 
-    fun replyWithTextDocument(text: String, caption: String): Int {
+    fun replyWithHtmlDocument(text: String, caption: String): Int {
         val title = "replyToMessageId-${message.messageId}"
         val html = buildStyledHtmlPage(title, text.trim()).byteInputStream()
 

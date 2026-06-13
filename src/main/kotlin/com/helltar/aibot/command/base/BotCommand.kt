@@ -43,8 +43,8 @@ abstract class BotCommand(commandContext: BotCommandContext) : BaseCommand(comma
     protected fun replyToMessageWithPhoto(bytes: ByteArray, caption: String, messageId: Int? = message.messageId): Message =
         messageSupport.replyToMessageWithPhoto(bytes, caption, messageId)
 
-    protected fun replyWithTextDocument(text: String, caption: String): Int =
-        messageSupport.replyWithTextDocument(text, caption)
+    protected fun replyWithHtmlDocument(text: String, caption: String): Int =
+        messageSupport.replyWithHtmlDocument(text, caption)
 
     protected fun downloadPhoto(message: Message? = replyMessage, limitBytes: Int): File? =
         messageSupport.downloadPhoto(message, limitBytes)

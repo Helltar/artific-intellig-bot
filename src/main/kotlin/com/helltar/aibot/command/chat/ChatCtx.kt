@@ -5,6 +5,7 @@ import com.helltar.aibot.chat.ChatHistoryManager
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.BotCommand
+import com.helltar.aibot.exceptions.TelegramFormattingException
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.utils.StringUtils.singleLineTruncated
@@ -34,11 +35,11 @@ class ChatCtx(ctx: BotCommandContext) : BotCommand(ctx) {
 
         try {
             replyToMessage(text)
-        } catch (e: Exception) {
+        } catch (e: TelegramFormattingException) {
             log.error { e.message }
 
             if (userChatHistory.isNotEmpty())
-                replyWithTextDocument(text, BotMessages.Chat.savedToFile("context"))
+                replyWithHtmlDocument(text, BotMessages.Chat.savedToFile("context"))
         }
     }
 

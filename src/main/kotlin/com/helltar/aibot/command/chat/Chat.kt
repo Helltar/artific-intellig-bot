@@ -5,6 +5,7 @@ import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.AiCommand
 import com.helltar.aibot.exceptions.ImageTooLargeException
+import com.helltar.aibot.exceptions.TelegramFormattingException
 import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
@@ -12,7 +13,6 @@ import com.helltar.aibot.openai.service.ChatService
 import com.helltar.aibot.openai.service.VisionService
 import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -95,9 +95,9 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
     private fun replyToMessage(text: String, messageId: Int) {
         try {
             super.replyToMessage(text, messageId, webPagePreview = false)
-        } catch (e: TelegramApiException) {
+        } catch (e: TelegramFormattingException) {
             log.error { e.message }
-            replyWithTextDocument(text, BotMessages.Chat.savedToFile("response"))
+            replyWithHtmlDocument(text, BotMessages.Chat.savedToFile("response"))
         }
     }
 
