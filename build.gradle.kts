@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.kotlin.logging.jvm)
     runtimeOnly(libs.logback.classic)
     testImplementation(kotlin("test"))
+    testImplementation(libs.ktor.client.mock)
 }
 
 application {

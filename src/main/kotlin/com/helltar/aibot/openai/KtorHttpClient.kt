@@ -14,18 +14,19 @@ object KtorHttpClient : HttpClient {
 
     private const val TIMEOUT = 120_000L
 
+    val json =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+            explicitNulls = false
+        }
+
     private val client =
         HttpClient(CIO) {
             expectSuccess = true
 
             install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                        encodeDefaults = true
-                        explicitNulls = false
-                    }
-                )
+                json(json)
             }
 
             install(HttpTimeout) {

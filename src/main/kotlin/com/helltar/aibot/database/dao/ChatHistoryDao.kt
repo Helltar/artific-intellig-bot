@@ -1,5 +1,6 @@
 package com.helltar.aibot.database.dao
 
+import com.helltar.aibot.chat.ChatHistoryStorage
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.tables.ChatHistoryTable
 import com.helltar.aibot.openai.models.common.MessageData
@@ -12,9 +13,9 @@ import org.jetbrains.exposed.v1.r2dbc.insert
 import org.jetbrains.exposed.v1.r2dbc.select
 import java.time.Instant
 
-class ChatHistoryDao {
+class ChatHistoryDao : ChatHistoryStorage {
 
-    suspend fun insert(userId: Long, message: MessageData): Boolean = dbTransaction {
+    override suspend fun insert(userId: Long, message: MessageData): Boolean = dbTransaction {
         ChatHistoryTable
             .insert {
                 it[this.userId] = userId
@@ -23,7 +24,7 @@ class ChatHistoryDao {
             }.insertedCount > 0
     }
 
-    suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>> = dbTransaction {
+    override suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>> = dbTransaction {
         ChatHistoryTable
             .select(ChatHistoryTable.role, ChatHistoryTable.content, ChatHistoryTable.createdAt)
             .where { ChatHistoryTable.userId eq userId }
@@ -36,7 +37,7 @@ class ChatHistoryDao {
             }.toList() // todo: flow
     }
 
-    suspend fun deleteOldestEntry(userId: Long): Boolean = dbTransaction {
+    override suspend fun deleteOldestEntry(userId: Long): Boolean = dbTransaction {
         val messageId =
             ChatHistoryTable
                 .select(ChatHistoryTable.id)
@@ -48,7 +49,7 @@ class ChatHistoryDao {
         messageId?.let { ChatHistoryTable.deleteWhere { ChatHistoryTable.id eq messageId } > 0 } == true
     }
 
-    suspend fun clearHistory(userId: Long): Boolean = dbTransaction {
+    override suspend fun clearHistory(userId: Long): Boolean = dbTransaction {
         ChatHistoryTable
             .deleteWhere { ChatHistoryTable.userId eq userId } > 0
     }

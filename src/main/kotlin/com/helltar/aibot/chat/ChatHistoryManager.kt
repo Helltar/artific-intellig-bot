@@ -12,7 +12,7 @@ import java.io.File
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 
-class ChatHistoryManager(private val userId: Long) {
+class ChatHistoryManager(private val userId: Long, private val storage: ChatHistoryStorage = chatHistoryDao) {
 
     private companion object {
         const val MAX_DIALOG_HISTORY_LENGTH = 24576 // todo: tokens
@@ -45,7 +45,7 @@ class ChatHistoryManager(private val userId: Long) {
     }
 
     suspend fun clear(): Boolean = withUserLock {
-        if (chatHistoryDao.clearHistory(userId)) {
+        if (storage.clearHistory(userId)) {
             chatContext().clear()
             true
         } else
@@ -53,7 +53,7 @@ class ChatHistoryManager(private val userId: Long) {
     }
 
     private suspend fun saveMessage(message: MessageData) {
-        if (chatHistoryDao.insert(userId, message))
+        if (storage.insert(userId, message))
             chatContext().add(message to instantNow())
     }
 
@@ -63,7 +63,7 @@ class ChatHistoryManager(private val userId: Long) {
     private suspend fun removeSecondMessage(): Boolean {
         val history = chatContext()
         if (history.size <= 1) return false
-        if (!chatHistoryDao.deleteOldestEntry(userId)) return false
+        if (!storage.deleteOldestEntry(userId)) return false
         history.removeAt(1)
         return true
     }
@@ -93,7 +93,7 @@ class ChatHistoryManager(private val userId: Long) {
 
     private suspend fun chatContext(): MutableList<Pair<MessageData, Instant>> {
         userChatContextMap[userId]?.let { return it }
-        val history = chatHistoryDao.loadHistory(userId).toMutableList()
+        val history = storage.loadHistory(userId).toMutableList()
         return userChatContextMap.putIfAbsent(userId, history) ?: history
     }
 
