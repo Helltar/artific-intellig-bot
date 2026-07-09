@@ -9,5 +9,5 @@ data class ContentPartData(
     val text: String? = null,
 
     @SerialName("image_url")
-    val imageUrl: ImageUrlData? = null
+    val imageUrl: String? = null
 )

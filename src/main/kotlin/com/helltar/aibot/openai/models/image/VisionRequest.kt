@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VisionRequestData(
     val model: String,
-    val messages: List<VisionMessageData>
+    val input: List<VisionMessageData>,
+    val store: Boolean = false
 )
 
 @Serializable

@@ -5,7 +5,7 @@ object ApiConfig {
     const val BASE_URL = "https://api.openai.com/v1"
 
     object Endpoints {
-        const val CHAT_COMPLETIONS = "/chat/completions"
+        const val RESPONSES = "/responses"
         const val IMAGES_GENERATIONS = "/images/generations"
     }
 
@@ -15,8 +15,13 @@ object ApiConfig {
         const val SYSTEM = "system"
     }
 
-    object ChatContentPartType {
-        const val TEXT = "text"
-        const val IMAGE_URL = "image_url"
+    object InputContentType {
+        const val TEXT = "input_text"
+        const val IMAGE = "input_image"
+    }
+
+    object OutputType {
+        const val MESSAGE = "message"
+        const val TEXT = "output_text"
     }
 }
