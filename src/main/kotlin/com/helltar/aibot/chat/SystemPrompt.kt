@@ -2,6 +2,7 @@ package com.helltar.aibot.chat
 
 import com.helltar.aibot.Config
 import com.helltar.aibot.utils.DateTimeUtils.instantNow
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
@@ -22,10 +23,17 @@ import java.time.format.DateTimeFormatter
  */
 object SystemPrompt {
 
+    private val log = KotlinLogging.logger {}
+
     private val dateTimeFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z").withZone(ZoneId.systemDefault())
 
     val instructions: String by lazy { buildInstructions(Config.personalityFile) }
+
+    // called at startup, so the personality the bot runs with is in the log from the first line
+    fun load() {
+        instructions
+    }
 
     fun context(roomName: String, userName: String, userId: Long, dateTime: Instant = instantNow()): String =
         """
@@ -38,7 +46,20 @@ object SystemPrompt {
         """.trimIndent()
 
     internal fun buildInstructions(personalityFile: String?): String {
-        val personality = personalityFile?.let { File(it).readText().trim().ifEmpty { null } } ?: DEFAULT_PERSONALITY
+        val customPersonality = personalityFile?.let { File(it).readText().trim() }
+
+        val personality =
+            when {
+                customPersonality == null ->
+                    DEFAULT_PERSONALITY.also { log.info { "personality: built-in" } }
+
+                customPersonality.isEmpty() ->
+                    DEFAULT_PERSONALITY.also { log.warn { "personality file $personalityFile is empty, falling back to the built-in one" } }
+
+                else ->
+                    customPersonality.also { log.info { "personality: $personalityFile, ${it.length} characters" } }
+            }
+
         return "$personality\n\n$OUTPUT_RULES"
     }
 
