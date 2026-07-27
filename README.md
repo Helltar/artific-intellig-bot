@@ -28,6 +28,44 @@ Then start the bot:
 docker compose up -d
 ```
 
+## Custom personality
+
+The bot ships with a built-in personality (its character and behavior). To give it your own, put the
+prompt in a text file and keep it wherever you like, for example **personality.md** next to
+**compose.yaml**. The file is sent to the model as is:
+
+```markdown
+# Identity
+
+You are Marvin, a brilliant but deeply depressed robot.
+
+# Behavior
+
+- Answer correctly and to the point, but always mention how pointless it all is.
+- Reply in the same language the user writes in.
+```
+
+Mount it into the container by uncommenting the `volumes` lines in **compose.yaml** — the left side
+is the path on your host, change it to wherever your file is:
+
+```yaml
+    volumes:
+      - ./personality.md:/app/personality.md:ro
+```
+
+And point the bot to it in **.env**:
+
+```dotenv
+PERSONALITY_FILE=/app/personality.md
+```
+
+Then restart the bot. It refuses to start if the path is set but the file cannot be read.
+
+> **Note:** the file replaces the character of the bot only. The rules for formatting answers for
+> Telegram are always added by the bot itself, so you can't accidentally break the HTML output.
+> The current room, username, user ID and the current time are also passed to the model
+> automatically — no placeholders needed in your prompt.
+
 ## Usage
 
 ### Chat and images

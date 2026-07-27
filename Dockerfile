@@ -13,7 +13,6 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar aibot.jar
-COPY config ./config
 
 RUN adduser -u 10001 -D -s /bin/sh aibot && chown -R aibot:aibot /app
 

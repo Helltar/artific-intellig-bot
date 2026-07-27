@@ -1,10 +1,9 @@
 package com.helltar.aibot
 
 import io.github.cdimascio.dotenv.dotenv
+import java.io.File
 
 object Config {
-
-    const val SYSTEM_PROMPT_FILE = "config/system.prompt.md"
 
     private val dotenv = dotenv { ignoreIfMissing = true }
 
@@ -31,7 +30,15 @@ object Config {
             databasePassword = readEnv("DATABASE_PASSWORD")
         )
 
+    val personalityFile =
+        readOptionalEnv("PERSONALITY_FILE")?.also { path ->
+            require(File(path).canRead()) { "personality file is missing or not readable: $path" }
+        }
+
     private fun readEnv(env: String) =
         dotenv[env]?.ifBlank { throw IllegalArgumentException("environment variable $env is blank") }
             ?: throw IllegalArgumentException("environment variable $env is missing")
+
+    private fun readOptionalEnv(env: String) =
+        dotenv[env]?.trim()?.takeIf { it.isNotEmpty() }
 }

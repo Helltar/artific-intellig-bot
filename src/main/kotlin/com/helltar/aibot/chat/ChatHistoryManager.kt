@@ -1,23 +1,22 @@
 package com.helltar.aibot.chat
 
-import com.helltar.aibot.Config.SYSTEM_PROMPT_FILE
 import com.helltar.aibot.database.dao.chatHistoryDao
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.telegram.telegrambots.meta.api.objects.message.Message
-import java.io.File
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Keeps the dialog history of a single user: user and assistant messages only.
+ * The system prompt is not a part of it, it is built per request by [SystemPrompt].
+ */
 class ChatHistoryManager(private val userId: Long, private val storage: ChatHistoryStorage = chatHistoryDao) {
 
     private companion object {
         const val MAX_DIALOG_HISTORY_LENGTH = 24576 // todo: tokens
-        val placeholderRegex = Regex("""\{(room_name|user_name|user_id)}""")
-        val systemPromptTemplate by lazy { File(SYSTEM_PROMPT_FILE).readText() }
         val userChatContextMap = ConcurrentHashMap<Long, MutableList<Pair<MessageData, Instant>>>()
         val userLocks = ConcurrentHashMap<Long, Mutex>()
     }
@@ -30,16 +29,11 @@ class ChatHistoryManager(private val userId: Long, private val storage: ChatHist
         chatContext().map { it.first }
     }
 
-    suspend fun systemPrompt(): String? = withUserLock {
-        chatContext().firstOrNull()?.first?.takeIf { it.role == ChatRole.SYSTEM }?.content
-    }
-
     suspend fun saveAssistantMessage(message: String): Unit = withUserLock {
         saveMessage(MessageData(ChatRole.ASSISTANT, message))
     }
 
-    suspend fun saveUserMessage(message: Message, messageText: String) = withUserLock {
-        addSystemPromptIfNeeded(message)
+    suspend fun saveUserMessage(messageText: String) = withUserLock {
         saveMessage(MessageData(ChatRole.USER, messageText))
         ensureDialogLengthWithinLimit()
     }
@@ -53,42 +47,30 @@ class ChatHistoryManager(private val userId: Long, private val storage: ChatHist
     }
 
     private suspend fun saveMessage(message: MessageData) {
+        val context = chatContext()
+
         if (storage.insert(userId, message))
-            chatContext().add(message to instantNow())
+            context.add(message to instantNow())
     }
 
     private suspend fun contentLength(): Int =
         chatContext().sumOf { it.first.content.length }
 
-    private suspend fun removeSecondMessage(): Boolean {
-        val history = chatContext()
-        if (history.size <= 1) return false
-        if (!storage.deleteOldestEntry(userId)) return false
-        history.removeAt(1)
-        return true
-    }
-
+    // keeps the history within the limit and never lets it start with an assistant message, an answer without its question only confuses the model
     private suspend fun ensureDialogLengthWithinLimit() {
         while (contentLength() > MAX_DIALOG_HISTORY_LENGTH ||
-            chatContext().getOrNull(1)?.first?.role == ChatRole.ASSISTANT
+            chatContext().firstOrNull()?.first?.role == ChatRole.ASSISTANT
         ) {
-            if (!removeSecondMessage()) break
+            if (!removeOldestMessage()) break
         }
     }
 
-    private suspend fun addSystemPromptIfNeeded(message: Message) {
-        val context = chatContext()
-
-        if (context.firstOrNull()?.first?.role == ChatRole.SYSTEM)
-            return
-
-        val username = message.from.userName ?: message.from.firstName
-        val chatTitle = message.chat.title ?: username
-        val replacements = mapOf("room_name" to chatTitle, "user_name" to username, "user_id" to userId.toString())
-        val systemPromptContent = placeholderRegex.replace(systemPromptTemplate) { replacements.getValue(it.groupValues[1]) }
-        val systemPromptData = MessageData(ChatRole.SYSTEM, systemPromptContent)
-
-        context.add(0, systemPromptData to instantNow())
+    private suspend fun removeOldestMessage(): Boolean {
+        val history = chatContext()
+        if (history.isEmpty()) return false
+        if (!storage.deleteOldestEntry(userId)) return false
+        history.removeAt(0)
+        return true
     }
 
     private suspend fun chatContext(): MutableList<Pair<MessageData, Instant>> {

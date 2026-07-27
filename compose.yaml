@@ -5,6 +5,10 @@ services:
     image: ghcr.io/helltar/aibot:latest
     restart: unless-stopped
     env_file: .env
+    # to give the bot your own personality: uncomment the lines below and set
+    # PERSONALITY_FILE=/app/personality.md in .env, the path on the host is up to you
+    # volumes:
+    #   - ./personality.md:/app/personality.md:ro
     depends_on:
       postgres:
         condition: service_healthy

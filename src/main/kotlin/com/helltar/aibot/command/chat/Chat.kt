@@ -1,6 +1,7 @@
 package com.helltar.aibot.command.chat
 
 import com.helltar.aibot.chat.ChatHistoryManager
+import com.helltar.aibot.chat.SystemPrompt
 import com.helltar.aibot.command.BotCommandContext
 import com.helltar.aibot.command.CommandNames
 import com.helltar.aibot.command.base.AiCommand
@@ -11,10 +12,7 @@ import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService
 import com.helltar.aibot.openai.service.VisionService
-import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
@@ -22,7 +20,6 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
         const val USER_MESSAGE_LIMIT = 4000
         const val IMAGE_SIZE_LIMIT_BYTES = 1024 * 1024
         const val VISION_DEFAULT_PROMPT = "What's in this image?"
-        val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z").withZone(ZoneId.systemDefault())
         val log = KotlinLogging.logger {}
     }
 
@@ -42,7 +39,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
                     argumentsString.takeIf { it.isNotBlank() }
                         ?: VISION_DEFAULT_PROMPT
 
-                chatHistoryManager.saveUserMessage(message, prompt)
+                chatHistoryManager.saveUserMessage(prompt)
 
                 retrieveVisionAnswer(prompt)
             }
@@ -58,17 +55,18 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
 
     private suspend fun retrieveChatAnswer(messages: List<MessageData>): String? =
         try {
-            ChatService(chatModel(), openaiApiKey()).getReply(withCurrentTime(messages))
+            // the context goes after the history: everything before it stays the same between requests and can be reused by the api as a cached prompt prefix
+            val input = messages + MessageData(ChatRole.SYSTEM, chatContext())
+            ChatService(chatModel(), openaiApiKey(), userId).getReply(input, SystemPrompt.instructions)
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(BotMessages.Chat.EXCEPTION)
             null
         }
 
-    private fun withCurrentTime(messages: List<MessageData>): List<MessageData> {
-        if (messages.isEmpty()) return messages
-        val timeNote = MessageData(ChatRole.SYSTEM, "Current date and time: ${dateTimeFormatter.format(instantNow())}")
-        return messages.dropLast(1) + timeNote + messages.last()
+    private fun chatContext(): String {
+        val userName = message.from.userName ?: message.from.firstName
+        return SystemPrompt.context(roomName = message.chat.title ?: userName, userName, userId)
     }
 
     private suspend fun retrieveVisionAnswer(prompt: String): String? {
@@ -81,8 +79,8 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             }
 
         return try {
-            val systemPrompt = chatHistoryManager.systemPrompt()
-            VisionService(visionModel(), openaiApiKey()).analyzeImage(prompt, photo, systemPrompt)
+            VisionService(visionModel(), openaiApiKey(), userId)
+                .analyzeImage(prompt, photo, SystemPrompt.instructions, chatContext())
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(BotMessages.Chat.EXCEPTION)
@@ -134,7 +132,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             text = it.trim()
 
             if (text.length <= USER_MESSAGE_LIMIT) {
-                chatHistoryManager.saveUserMessage(message, text)
+                chatHistoryManager.saveUserMessage(text)
                 messageId
             } else {
                 replyToMessage(BotMessages.Command.manyCharacters(USER_MESSAGE_LIMIT))

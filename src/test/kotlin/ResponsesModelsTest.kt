@@ -19,25 +19,42 @@ class ResponsesModelsTest {
     fun `chat request serializes to responses api format`() {
         val request =
             ResponsesRequestData(
-                "gpt-test",
-                listOf(
-                    MessageData(ChatRole.SYSTEM, "you are a bot"),
-                    MessageData(ChatRole.USER, "hello")
-                )
+                model = "gpt-test",
+                input = listOf(
+                    MessageData(ChatRole.USER, "hello"),
+                    MessageData(ChatRole.SYSTEM, "# Context")
+                ),
+                instructions = "you are a bot",
+                promptCacheKey = "chat-abc",
+                safetyIdentifier = "abc"
             )
 
         val body = json.encodeToJsonElement(ResponsesRequestData.serializer(), request).jsonObject
 
         assertEquals("gpt-test", body["model"]?.jsonPrimitive?.content)
         assertEquals(false, body["store"]?.jsonPrimitive?.boolean, "store=false must be sent explicitly")
+        assertEquals("you are a bot", body["instructions"]?.jsonPrimitive?.content)
+        assertEquals("chat-abc", body["prompt_cache_key"]?.jsonPrimitive?.content)
+        assertEquals("abc", body["safety_identifier"]?.jsonPrimitive?.content)
         assertNull(body["messages"], "legacy chat completions field must not be present")
+        assertNull(body["user"], "user is replaced by prompt_cache_key and safety_identifier")
 
         val input = assertNotNull(body["input"]).jsonArray
         assertEquals(2, input.size)
-        assertEquals("system", input[0].jsonObject["role"]?.jsonPrimitive?.content)
-        assertEquals("you are a bot", input[0].jsonObject["content"]?.jsonPrimitive?.content)
-        assertEquals("user", input[1].jsonObject["role"]?.jsonPrimitive?.content)
-        assertEquals("hello", input[1].jsonObject["content"]?.jsonPrimitive?.content)
+        assertEquals("user", input[0].jsonObject["role"]?.jsonPrimitive?.content)
+        assertEquals("hello", input[0].jsonObject["content"]?.jsonPrimitive?.content)
+        assertEquals("system", input[1].jsonObject["role"]?.jsonPrimitive?.content)
+        assertEquals("# Context", input[1].jsonObject["content"]?.jsonPrimitive?.content)
+    }
+
+    @Test
+    fun `optional request fields are omitted when not set`() {
+        val request = ResponsesRequestData("gpt-test", listOf(MessageData(ChatRole.USER, "hello")))
+        val body = json.encodeToJsonElement(ResponsesRequestData.serializer(), request).jsonObject
+
+        assertNull(body["instructions"])
+        assertNull(body["prompt_cache_key"])
+        assertNull(body["safety_identifier"])
     }
 
     @Test
