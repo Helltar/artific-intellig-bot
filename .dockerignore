@@ -1,14 +1,9 @@
-.git
-.gradle
-.idea
-.kotlin
-build
-deploy
-test
-data
-.env
-.env.example
-README.md
-compose.yaml
-compose.local.yaml
-Dockerfile
+# everything is ignored, only what the build needs is let in
+
+*
+
+!src
+!gradle/libs.versions.toml
+!build.gradle.kts
+!gradle.properties
+!settings.gradle.kts
