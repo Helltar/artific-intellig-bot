@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation(libs.tgbots.module) { exclude("org.telegram", "telegrambots-webhook") }
+    implementation(libs.heartbeat)
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.exposed)
     runtimeOnly(libs.r2dbc.postgresql)
