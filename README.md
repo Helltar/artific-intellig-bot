@@ -7,9 +7,9 @@ A Telegram bot for group chats that chats, analyzes images, and generates images
 Run it with Docker Compose:
 
 ```bash
-mkdir aibot && cd aibot && \
-wget https://raw.githubusercontent.com/Helltar/artific-intellig-bot/master/{.env.example,compose.yaml} && \
-cp .env.example .env
+mkdir aibot && cd aibot && curl -fsSLO \
+  "https://github.com/Helltar/artific-intellig-bot/raw/master/{compose.yaml,.env.example}" && \
+  mv .env.example .env
 ```
 
 Open **.env** and fill in:
