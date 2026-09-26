@@ -20,8 +20,8 @@ class SudoersDao {
                 it[this.userId] = userId
                 it[this.username] = username?.let(this.username::fit)
             }
+            .insertedCount > 0
     }
-        .insertedCount > 0
 
     suspend fun isAdmin(userId: Long): Boolean = dbTransaction {
         SudoersTable

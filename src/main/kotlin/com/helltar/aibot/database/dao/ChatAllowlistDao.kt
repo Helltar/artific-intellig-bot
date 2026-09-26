@@ -20,8 +20,8 @@ class ChatAllowlistDao {
                 it[this.chatId] = chatId
                 it[this.title] = title?.let(this.title::fit)
             }
+            .insertedCount > 0
     }
-        .insertedCount > 0
 
     suspend fun remove(chatId: Long): Boolean = dbTransaction {
         ChatAllowlistTable
@@ -40,7 +40,7 @@ class ChatAllowlistDao {
             }.toList()
     }
 
-    suspend fun isExists(chatId: Long): Boolean = dbTransaction {
+    suspend fun contains(chatId: Long): Boolean = dbTransaction {
         ChatAllowlistTable
             .select(ChatAllowlistTable.chatId)
             .where { ChatAllowlistTable.chatId eq chatId }

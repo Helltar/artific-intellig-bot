@@ -10,12 +10,12 @@ import org.jetbrains.exposed.v1.r2dbc.update
 
 class CommandsDao {
 
-    suspend fun changeState(command: String, disable: Boolean): Int = dbTransaction {
+    suspend fun changeState(command: String, disable: Boolean): Boolean = dbTransaction {
         CommandsStateTable
             .update({ CommandsStateTable.commandName eq command }) {
                 it[isDisabled] = disable
                 it[updatedAt] = instantNow()
-            }
+            } > 0
     }
 
     suspend fun isDisabled(command: String): Boolean = dbTransaction {

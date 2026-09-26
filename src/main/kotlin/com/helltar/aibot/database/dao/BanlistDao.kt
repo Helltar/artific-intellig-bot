@@ -60,7 +60,6 @@ class BanlistDao {
                 )
             }.toList()
     }
-
 }
 
 val banlistDao = BanlistDao()

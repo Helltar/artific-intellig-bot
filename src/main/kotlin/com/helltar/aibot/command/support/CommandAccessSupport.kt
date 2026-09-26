@@ -18,7 +18,7 @@ class CommandAccessSupport(
         commandsDao.isDisabled(command)
 
     suspend fun isChatInAllowlist() =
-        chatAllowlistDao.isExists(ctx.chatId())
+        chatAllowlistDao.contains(ctx.chatId())
 
     suspend fun isUserBanned(userId: Long) =
         banlistDao.isBanned(userId)
