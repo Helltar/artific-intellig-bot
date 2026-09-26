@@ -3,9 +3,11 @@ package com.helltar.aibot.messages
 import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
+import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_REASONING_EFFORT
 import com.helltar.aibot.command.CommandNames.User.CMD_CHAT
 import com.helltar.aibot.command.CommandNames.User.CMD_CHAT_CTX_REMOVE
 import com.helltar.aibot.command.CommandNames.User.CMD_IMAGE_GEN
+import com.helltar.aibot.openai.ApiConfig.ReasoningEffort
 
 object BotMessages {
 
@@ -112,12 +114,17 @@ object BotMessages {
         const val CHAT_FAIL_UPDATE = "⚠️ Could not update the chat model"
         const val IMAGES_FAIL_UPDATE = "⚠️ Could not update the image generation model"
         const val BAD_MODEL_NAME_LENGTH = "❌ Model name is too short"
+        const val REASONING_EFFORT_FAIL_UPDATE = "⚠️ Could not update the reasoning effort"
+        const val BAD_REASONING_EFFORT = "❌ Unknown reasoning effort"
 
         fun chatSuccessUpdate(modelName: String) =
             "✅ Chat model updated to <b>$modelName</b>"
 
         fun imagesSuccessUpdate(modelName: String) =
             "✅ Image generation model updated to <b>$modelName</b>"
+
+        fun reasoningEffortSuccessUpdate(effort: String) =
+            "✅ Reasoning effort updated to <b>$effort</b>"
     }
 
     object Ui {
@@ -137,6 +144,15 @@ object BotMessages {
             
             To change it, use:
             <code>/$CMD_UPDATE_IMAGE_GEN_MODEL</code> &lt;image-model&gt;
+        """.trimIndent()
+
+        fun updateReasoningEffort(currentEffort: String) = """
+            ℹ️ Current reasoning effort for chat and vision: <b>$currentEffort</b>
+            
+            To change it, use:
+            <code>/$CMD_UPDATE_REASONING_EFFORT</code> &lt;${ReasoningEffort.VALUES.joinToString("|")}|${ReasoningEffort.MODEL_DEFAULT}&gt;
+            
+            Supported values depend on the model; <b>${ReasoningEffort.MODEL_DEFAULT}</b> leaves the choice to the model.
         """.trimIndent()
 
         fun slowmode(maxUsageCount: Int) = """

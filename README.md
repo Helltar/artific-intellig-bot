@@ -104,4 +104,5 @@ Available only to `CREATOR_ID`:
 - `/addchat` — add a chat to the allowlist; run it in the chat or pass a chat ID
 - `/chatmodel <model>` — set the OpenAI model for chat and vision
 - `/imgmodel <model>` — set the model for image generation
+- `/effort <level>` — set the reasoning effort for chat and vision (default: `low`; `default` leaves it to the model)
 - `/slowmode` — configure the rate limit (default: 10 requests per hour per user)

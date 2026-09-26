@@ -57,7 +57,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
         try {
             // the context goes after the history: everything before it stays the same between requests and can be reused by the api as a cached prompt prefix
             val input = messages + MessageData(ChatRole.SYSTEM, chatContext())
-            ChatService(chatModel(), openaiApiKey(), userId).getReply(input, SystemPrompt.instructions)
+            ChatService(chatModel(), openaiApiKey(), userId, reasoningEffort()).getReply(input, SystemPrompt.instructions)
         } catch (e: Exception) {
             log.error { e.message }
             replyToMessage(BotMessages.Chat.EXCEPTION)
@@ -79,7 +79,7 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
             }
 
         return try {
-            VisionService(visionModel(), openaiApiKey(), userId)
+            VisionService(visionModel(), openaiApiKey(), userId, reasoningEffort())
                 .analyzeImage(prompt, photo, SystemPrompt.instructions, chatContext())
         } catch (e: Exception) {
             log.error { e.message }

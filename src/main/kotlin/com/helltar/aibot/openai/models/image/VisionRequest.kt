@@ -1,6 +1,7 @@
 package com.helltar.aibot.openai.models.image
 
 import com.helltar.aibot.openai.models.common.ContentPartData
+import com.helltar.aibot.openai.models.responses.ReasoningData
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,6 +18,8 @@ data class VisionRequestData(
 
     @SerialName("safety_identifier")
     val safetyIdentifier: String? = null,
+
+    val reasoning: ReasoningData? = null,
 
     val store: Boolean = false
 )

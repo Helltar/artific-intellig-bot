@@ -21,6 +21,7 @@ object CommandNames {
         const val CMD_SLOWMODE = "slowmode"
         const val CMD_UPDATE_CHAT_MODEL = "chatmodel"
         const val CMD_UPDATE_IMAGE_GEN_MODEL = "imgmodel"
+        const val CMD_UPDATE_REASONING_EFFORT = "effort"
     }
 
     object Admin {

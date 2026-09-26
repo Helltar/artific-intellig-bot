@@ -23,6 +23,7 @@ import com.helltar.aibot.command.CommandNames.Creator.CMD_ADD_CHAT
 import com.helltar.aibot.command.CommandNames.Creator.CMD_SLOWMODE
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_CHAT_MODEL
 import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_IMAGE_GEN_MODEL
+import com.helltar.aibot.command.CommandNames.Creator.CMD_UPDATE_REASONING_EFFORT
 import com.helltar.aibot.command.CommandNames.General.CMD_ABOUT
 import com.helltar.aibot.command.CommandNames.General.CMD_MYID
 import com.helltar.aibot.command.CommandNames.General.CMD_START
@@ -89,6 +90,7 @@ class ArtificIntelligBotHandler(botModuleOptions: BotModuleOptions, private val 
         registerCreatorCommand(CMD_SLOWMODE, ::SlowmodeSetting)
         registerCreatorCommand(CMD_UPDATE_CHAT_MODEL, ::UpdateChatModel)
         registerCreatorCommand(CMD_UPDATE_IMAGE_GEN_MODEL, ::UpdateImageGenModel)
+        registerCreatorCommand(CMD_UPDATE_REASONING_EFFORT, ::UpdateReasoningEffort)
     }
 
     override fun onUpdate(update: Update): BotApiMethod<*>? {

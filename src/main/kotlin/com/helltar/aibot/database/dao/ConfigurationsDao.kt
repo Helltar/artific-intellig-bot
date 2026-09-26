@@ -16,10 +16,12 @@ class ConfigurationsDao {
         const val KEY_CHAT_MODEL = "chat_model"
         const val KEY_VISION_MODEL = "vision_model"
         const val KEY_IMAGE_GEN_MODEL = "image_gen_model"
+        const val KEY_REASONING_EFFORT = "reasoning_effort"
         const val KEY_SLOWMODE_MAX_USAGE_COUNT = "global_slowmode_max_usage_count"
         const val DEFAULT_CHAT_MODEL = "gpt-6-sol"
         const val DEFAULT_VISION_MODEL = "gpt-6-sol"
         const val DEFAULT_IMAGE_GEN_MODEL = "gpt-image-2.5-flare"
+        const val DEFAULT_REASONING_EFFORT = "low"
         const val NULL_MARKER = "<NULL>"
     }
 
@@ -48,6 +50,13 @@ class ConfigurationsDao {
 
     suspend fun updateImageGenModel(model: String): Boolean =
         setAndCache(KEY_IMAGE_GEN_MODEL, model)
+
+    // shared by chat and vision, like the model set by one command; ReasoningEffort.MODEL_DEFAULT leaves it to the model
+    suspend fun reasoningEffort(): String =
+        getCached(KEY_REASONING_EFFORT) ?: DEFAULT_REASONING_EFFORT
+
+    suspend fun updateReasoningEffort(effort: String): Boolean =
+        setAndCache(KEY_REASONING_EFFORT, effort)
 
     private suspend fun getCached(key: String): String? =
         when (val cached = cache[key]) {

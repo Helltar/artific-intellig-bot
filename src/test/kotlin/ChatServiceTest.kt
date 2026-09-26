@@ -34,7 +34,7 @@ class ChatServiceTest {
     fun `getReply posts full history to responses endpoint and returns output text`() = runBlocking {
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
 
-        val reply = ChatService("gpt-test", "sk-test", USER_ID, httpClient).getReply(messages, "you are a bot")
+        val reply = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
 
         assertEquals("Hi!", reply)
         assertEquals("/v1/responses", httpClient.requestPath)
@@ -53,7 +53,7 @@ class ChatServiceTest {
     fun `getReply sends the system prompt as instructions, out of the input`() = runBlocking {
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
 
-        ChatService("gpt-test", "sk-test", USER_ID, httpClient).getReply(messages, "you are a bot")
+        ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
 
         val body = Json.parseToJsonElement(httpClient.requestBody).jsonObject
         assertEquals("you are a bot", body["instructions"]?.jsonPrimitive?.content)
@@ -66,7 +66,7 @@ class ChatServiceTest {
     @Test
     fun `getReply identifies the user by a hash, the same one between requests`() = runBlocking {
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
-        val service = ChatService("gpt-test", "sk-test", USER_ID, httpClient)
+        val service = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient)
 
         service.getReply(messages, "you are a bot")
         val first = Json.parseToJsonElement(httpClient.requestBody).jsonObject
@@ -89,12 +89,25 @@ class ChatServiceTest {
     fun `every user gets an own cache key`() = runBlocking {
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
 
-        ChatService("gpt-test", "sk-test", USER_ID, httpClient).getReply(messages, "you are a bot")
+        ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
         val first = Json.parseToJsonElement(httpClient.requestBody).jsonObject["prompt_cache_key"]?.jsonPrimitive?.content
 
-        ChatService("gpt-test", "sk-test", USER_ID + 1, httpClient).getReply(messages, "you are a bot")
+        ChatService("gpt-test", "sk-test", USER_ID + 1, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
         val second = Json.parseToJsonElement(httpClient.requestBody).jsonObject["prompt_cache_key"]?.jsonPrimitive?.content
 
         assertNotEquals(first, second)
+    }
+
+    @Test
+    fun `getReply sends the reasoning effort only when it is set`() = runBlocking {
+        val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
+
+        ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = "low", httpClient = httpClient).getReply(messages, "you are a bot")
+        val withEffort = Json.parseToJsonElement(httpClient.requestBody).jsonObject
+        assertEquals("low", withEffort["reasoning"]?.jsonObject?.get("effort")?.jsonPrimitive?.content)
+
+        ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
+        val withoutEffort = Json.parseToJsonElement(httpClient.requestBody).jsonObject
+        assertNull(withoutEffort["reasoning"], "without an effort the model default must apply")
     }
 }

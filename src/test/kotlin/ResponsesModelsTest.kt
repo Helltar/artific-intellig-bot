@@ -55,6 +55,7 @@ class ResponsesModelsTest {
         assertNull(body["instructions"])
         assertNull(body["prompt_cache_key"])
         assertNull(body["safety_identifier"])
+        assertNull(body["reasoning"])
     }
 
     @Test

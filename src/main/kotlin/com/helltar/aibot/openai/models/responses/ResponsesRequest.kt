@@ -18,5 +18,12 @@ data class ResponsesRequestData(
     @SerialName("safety_identifier")
     val safetyIdentifier: String? = null,
 
+    val reasoning: ReasoningData? = null,
+
     val store: Boolean = false
+)
+
+@Serializable
+data class ReasoningData(
+    val effort: String
 )

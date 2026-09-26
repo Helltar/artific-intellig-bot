@@ -33,7 +33,7 @@ class VisionServiceTest {
     fun `analyzeImage sends base64 data url with input_text and input_image parts`() = withTempImage { image, imageBase64 ->
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
 
-        val answer = VisionService("gpt-test", "sk-test", USER_ID, httpClient).analyzeImage("what is this?", image, "you are a bot")
+        val answer = VisionService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).analyzeImage("what is this?", image, "you are a bot")
 
         assertEquals("A cat.", answer)
         assertEquals("/v1/responses", httpClient.requestPath)
@@ -59,7 +59,7 @@ class VisionServiceTest {
     fun `analyzeImage prepends system message when context is given`() = withTempImage { image, _ ->
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
 
-        VisionService("gpt-test", "sk-test", USER_ID, httpClient).analyzeImage("what is this?", image, "you are a bot", context = "# Context")
+        VisionService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).analyzeImage("what is this?", image, "you are a bot", context = "# Context")
 
         val input = Json.parseToJsonElement(httpClient.requestBody).jsonObject["input"]!!.jsonArray
         assertEquals(2, input.size)
@@ -79,12 +79,22 @@ class VisionServiceTest {
     fun `analyzeImage identifies the user with an own cache key`() = withTempImage { image, _ ->
         val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
 
-        VisionService("gpt-test", "sk-test", USER_ID, httpClient).analyzeImage("what is this?", image, "you are a bot")
+        VisionService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).analyzeImage("what is this?", image, "you are a bot")
 
         val body = Json.parseToJsonElement(httpClient.requestBody).jsonObject
         val safetyIdentifier = assertNotNull(body["safety_identifier"]?.jsonPrimitive?.content)
 
         assertFalse(safetyIdentifier.contains(USER_ID.toString()), "the telegram id must not be sent as is")
         assertEquals("vision-$safetyIdentifier", body["prompt_cache_key"]?.jsonPrimitive?.content)
+    }
+
+    @Test
+    fun `analyzeImage sends the reasoning effort`() = withTempImage { image, _ ->
+        val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
+
+        VisionService("gpt-test", "sk-test", USER_ID, reasoningEffort = "high", httpClient = httpClient).analyzeImage("what is this?", image, "you are a bot")
+
+        val body = Json.parseToJsonElement(httpClient.requestBody).jsonObject
+        assertEquals("high", body["reasoning"]?.jsonObject?.get("effort")?.jsonPrimitive?.content)
     }
 }

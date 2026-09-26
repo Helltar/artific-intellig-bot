@@ -9,6 +9,7 @@ import com.helltar.aibot.openai.KtorHttpClient
 import com.helltar.aibot.openai.models.common.ContentPartData
 import com.helltar.aibot.openai.models.image.VisionMessageData
 import com.helltar.aibot.openai.models.image.VisionRequestData
+import com.helltar.aibot.openai.models.responses.ReasoningData
 import com.helltar.aibot.openai.models.responses.ResponsesResponseData
 import io.ktor.client.call.*
 import java.io.File
@@ -18,6 +19,7 @@ class VisionService(
     private val model: String,
     private val apiKey: String,
     private val userId: Long,
+    private val reasoningEffort: String?,
     private val httpClient: HttpClient = KtorHttpClient
 ) {
 
@@ -47,7 +49,8 @@ class VisionService(
                 input = input,
                 instructions = instructions,
                 promptCacheKey = ApiUser.promptCacheKey(CACHE_KEY_PREFIX, userId),
-                safetyIdentifier = ApiUser.safetyIdentifier(userId)
+                safetyIdentifier = ApiUser.safetyIdentifier(userId),
+                reasoning = reasoningEffort?.let { ReasoningData(it) }
             )
 
         val response: ResponsesResponseData = httpClient.post(apiKey, Endpoints.RESPONSES, request).body()
