@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.exposed)
     runtimeOnly(libs.r2dbc.postgresql)
+    runtimeOnly(libs.r2dbc.pool)
     implementation(libs.jackson.module.kotlin)
     implementation(libs.dotenv.kotlin)
     implementation(libs.kotlin.logging.jvm)
@@ -36,4 +37,13 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.shadowJar {
+    // r2dbc finds its drivers through META-INF/services, and the pool and postgresql both ship the same file:
+    // it has to be merged, while the default EXCLUDE strategy would drop the second one before any merging
+    mergeServiceFiles()
+    filesMatching("META-INF/services/**") {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
 }

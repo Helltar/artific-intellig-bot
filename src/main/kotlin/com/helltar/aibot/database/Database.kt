@@ -14,7 +14,8 @@ import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 object Database {
 
     fun init(config: Config.BotConfig, toggleableCommands: List<String>) {
-        val url = "r2dbc:postgresql://${config.postgresqlHost}:5432/${config.databaseName}"
+        // pooled: without a pool every transaction opens a new connection to postgres; a small bot needs only a few
+        val url = "r2dbc:pool:postgresql://${config.postgresqlHost}:5432/${config.databaseName}?initialSize=1&maxSize=5"
         val database = R2dbcDatabase.connect(url, user = config.databaseUser, password = config.databasePassword)
 
         runBlocking {
