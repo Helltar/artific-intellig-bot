@@ -24,6 +24,7 @@ class ChatHistoryDao : ChatHistoryStorage {
             }.insertedCount > 0
     }
 
+    // a list, not a flow: an r2dbc query runs only while it is collected inside its transaction, and the manager keeps the whole history in memory anyway
     override suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>> = dbTransaction {
         ChatHistoryTable
             .select(ChatHistoryTable.role, ChatHistoryTable.content, ChatHistoryTable.createdAt)
@@ -34,7 +35,7 @@ class ChatHistoryDao : ChatHistoryStorage {
                     it[ChatHistoryTable.role],
                     it[ChatHistoryTable.content]
                 ) to it[ChatHistoryTable.createdAt]
-            }.toList() // todo: flow
+            }.toList()
     }
 
     override suspend fun deleteOldestEntry(userId: Long): Boolean = dbTransaction {
