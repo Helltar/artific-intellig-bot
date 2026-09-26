@@ -1,5 +1,6 @@
 package com.helltar.aibot.database.dao
 
+import com.helltar.aibot.database.CachedSet
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.BanlistData
@@ -16,29 +17,30 @@ import org.telegram.telegrambots.meta.api.objects.User
 
 class BanlistDao {
 
-    suspend fun ban(user: User, reason: String?): Boolean = dbTransaction {
-        BannedUsersTable
-            .insertIgnore {
-                it[userId] = user.id
-                it[username] = user.userName?.let(username::fit)
-                it[firstName] = firstName.fit(user.firstName)
-                it[this.reason] = reason?.let(this.reason::fit)
-            }
-            .insertedCount > 0
-    }
+    // checked on every command
+    private val bannedIds = CachedSet { dbTransaction { BannedUsersTable.select(BannedUsersTable.userId).map { it[BannedUsersTable.userId] }.toList() } }
 
-    suspend fun unban(userId: Long): Boolean = dbTransaction {
-        BannedUsersTable
-            .deleteWhere { BannedUsersTable.userId eq userId } > 0
-    }
+    // the row exists after an insert or an ignored duplicate alike, so the cache follows either way
+    suspend fun ban(user: User, reason: String?): Boolean =
+        dbTransaction {
+            BannedUsersTable
+                .insertIgnore {
+                    it[userId] = user.id
+                    it[username] = user.userName?.let(username::fit)
+                    it[firstName] = firstName.fit(user.firstName)
+                    it[this.reason] = reason?.let(this.reason::fit)
+                }
+                .insertedCount > 0
+        }.also { bannedIds.add(user.id) }
 
-    suspend fun isBanned(userId: Long): Boolean = dbTransaction {
-        BannedUsersTable
-            .select(BannedUsersTable.userId)
-            .where { BannedUsersTable.userId eq userId }
-            .empty()
-            .not()
-    }
+    suspend fun unban(userId: Long): Boolean =
+        dbTransaction {
+            BannedUsersTable
+                .deleteWhere { BannedUsersTable.userId eq userId } > 0
+        }.also { bannedIds.remove(userId) }
+
+    suspend fun isBanned(userId: Long): Boolean =
+        bannedIds.contains(userId)
 
     suspend fun reason(userId: Long): String? = dbTransaction {
         BannedUsersTable

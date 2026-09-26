@@ -1,5 +1,6 @@
 package com.helltar.aibot.database.dao
 
+import com.helltar.aibot.database.CachedSet
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.ChatAllowlistData
@@ -14,19 +15,25 @@ import org.jetbrains.exposed.v1.r2dbc.selectAll
 
 class ChatAllowlistDao {
 
-    suspend fun add(chatId: Long, title: String?): Boolean = dbTransaction {
-        ChatAllowlistTable
-            .insertIgnore {
-                it[this.chatId] = chatId
-                it[this.title] = title?.let(this.title::fit)
-            }
-            .insertedCount > 0
-    }
+    // checked on every command
+    private val chatIds = CachedSet { dbTransaction { ChatAllowlistTable.select(ChatAllowlistTable.chatId).map { it[ChatAllowlistTable.chatId] }.toList() } }
 
-    suspend fun remove(chatId: Long): Boolean = dbTransaction {
-        ChatAllowlistTable
-            .deleteWhere { this.chatId eq chatId } > 0
-    }
+    // the row exists after an insert or an ignored duplicate alike, so the cache follows either way
+    suspend fun add(chatId: Long, title: String?): Boolean =
+        dbTransaction {
+            ChatAllowlistTable
+                .insertIgnore {
+                    it[this.chatId] = chatId
+                    it[this.title] = title?.let(this.title::fit)
+                }
+                .insertedCount > 0
+        }.also { chatIds.add(chatId) }
+
+    suspend fun remove(chatId: Long): Boolean =
+        dbTransaction {
+            ChatAllowlistTable
+                .deleteWhere { this.chatId eq chatId } > 0
+        }.also { chatIds.remove(chatId) }
 
     suspend fun list(): List<ChatAllowlistData> = dbTransaction {
         ChatAllowlistTable
@@ -35,18 +42,13 @@ class ChatAllowlistDao {
                 ChatAllowlistData(
                     it[ChatAllowlistTable.chatId],
                     it[ChatAllowlistTable.title],
-                    it[ChatAllowlistTable.createdAt],
+                    it[ChatAllowlistTable.createdAt]
                 )
             }.toList()
     }
 
-    suspend fun contains(chatId: Long): Boolean = dbTransaction {
-        ChatAllowlistTable
-            .select(ChatAllowlistTable.chatId)
-            .where { ChatAllowlistTable.chatId eq chatId }
-            .empty()
-            .not()
-    }
+    suspend fun contains(chatId: Long): Boolean =
+        chatIds.contains(chatId)
 }
 
 val chatAllowlistDao = ChatAllowlistDao()

@@ -1,5 +1,6 @@
 package com.helltar.aibot.database.dao
 
+import com.helltar.aibot.database.CachedSet
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.SudoersData
@@ -14,27 +15,28 @@ import org.jetbrains.exposed.v1.r2dbc.selectAll
 
 class SudoersDao {
 
-    suspend fun add(userId: Long, username: String?): Boolean = dbTransaction {
-        SudoersTable
-            .insertIgnore {
-                it[this.userId] = userId
-                it[this.username] = username?.let(this.username::fit)
-            }
-            .insertedCount > 0
-    }
+    // checked on every command
+    private val adminIds = CachedSet { dbTransaction { SudoersTable.select(SudoersTable.userId).map { it[SudoersTable.userId] }.toList() } }
 
-    suspend fun isAdmin(userId: Long): Boolean = dbTransaction {
-        SudoersTable
-            .select(SudoersTable.userId)
-            .where { SudoersTable.userId eq userId }
-            .empty()
-            .not()
-    }
+    // the row exists after an insert or an ignored duplicate alike, so the cache follows either way
+    suspend fun add(userId: Long, username: String?): Boolean =
+        dbTransaction {
+            SudoersTable
+                .insertIgnore {
+                    it[this.userId] = userId
+                    it[this.username] = username?.let(this.username::fit)
+                }
+                .insertedCount > 0
+        }.also { adminIds.add(userId) }
 
-    suspend fun remove(userId: Long): Boolean = dbTransaction {
-        SudoersTable
-            .deleteWhere { this.userId eq userId } > 0
-    }
+    suspend fun isAdmin(userId: Long): Boolean =
+        adminIds.contains(userId)
+
+    suspend fun remove(userId: Long): Boolean =
+        dbTransaction {
+            SudoersTable
+                .deleteWhere { this.userId eq userId } > 0
+        }.also { adminIds.remove(userId) }
 
     suspend fun list(): List<SudoersData> = dbTransaction {
         SudoersTable
