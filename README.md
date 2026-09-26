@@ -1,5 +1,8 @@
 # AI Bot for Telegram
 
+<a href="https://github.com/Helltar/artific-intellig-bot/actions/workflows/build.yml"><img src="https://github.com/Helltar/artific-intellig-bot/actions/workflows/build.yml/badge.svg" alt="build"></a>
+<a href="https://github.com/Helltar/artific-intellig-bot/pkgs/container/aibot"><img src="https://img.shields.io/badge/ghcr-aibot-blue?logo=docker" alt="GHCR"></a>
+
 A Telegram bot for group chats that chats, analyzes images, and generates images using the OpenAI API.
 
 ## Installation
@@ -7,9 +10,9 @@ A Telegram bot for group chats that chats, analyzes images, and generates images
 Run it with Docker Compose:
 
 ```bash
-mkdir aibot && cd aibot && curl -fsSLO \
-  "https://github.com/Helltar/artific-intellig-bot/raw/master/{compose.yaml,.env.example}" && \
-  mv .env.example .env
+repo=https://raw.githubusercontent.com/Helltar/artific-intellig-bot/master
+mkdir aibot && cd aibot && \
+  curl -fsSLO "$repo/{compose.yaml,.env.example}" && mv .env.example .env
 ```
 
 Open **.env** and fill in:
