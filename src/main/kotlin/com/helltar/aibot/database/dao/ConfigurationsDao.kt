@@ -5,9 +5,8 @@ import com.helltar.aibot.database.tables.ConfigurationsTable
 import com.helltar.aibot.utils.DateTimeUtils.instantNow
 import kotlinx.coroutines.flow.singleOrNull
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.r2dbc.insertIgnore
 import org.jetbrains.exposed.v1.r2dbc.select
-import org.jetbrains.exposed.v1.r2dbc.update
+import org.jetbrains.exposed.v1.r2dbc.upsert
 import java.util.concurrent.ConcurrentHashMap
 
 class ConfigurationsDao {
@@ -81,17 +80,15 @@ class ConfigurationsDao {
             ?.getOrNull(ConfigurationsTable.value)
     }
 
+    // one statement for both cases: insert ... on conflict (key) do update, keeping the created_at of the first insert
     private suspend fun setConfiguration(key: String, value: String): Boolean = dbTransaction {
-        (ConfigurationsTable
-            .update({ ConfigurationsTable.key eq key }) {
+        ConfigurationsTable
+            .upsert(onUpdateExclude = listOf(ConfigurationsTable.createdAt)) {
+                it[this.key] = key
                 it[this.value] = value
-                it[this.updatedAt] = instantNow()
-            }.takeIf { it > 0 }
-            ?: ConfigurationsTable
-                .insertIgnore {
-                    it[this.key] = key
-                    it[this.value] = value
-                }.insertedCount) > 0
+                it[updatedAt] = instantNow()
+            }
+            .insertedCount > 0
     }
 }
 
