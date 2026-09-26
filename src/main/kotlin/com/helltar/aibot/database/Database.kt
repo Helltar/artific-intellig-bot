@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 import org.jetbrains.exposed.v1.r2dbc.R2dbcTransaction
 import org.jetbrains.exposed.v1.r2dbc.SchemaUtils
+import org.jetbrains.exposed.v1.r2dbc.batchInsert
 import org.jetbrains.exposed.v1.r2dbc.insertIgnore
 import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 
@@ -47,13 +48,11 @@ object Database {
             }
     }
 
+    // ignore: a command already known keeps the state an admin gave it
     private suspend fun initializeCommands(toggleableCommands: List<String>) {
-        toggleableCommands.forEach { command ->
-            CommandsStateTable
-                .insertIgnore { // todo: batchInsert
-                    it[commandName] = command
-                    it[isDisabled] = false
-                }
+        CommandsStateTable.batchInsert(toggleableCommands, ignore = true, shouldReturnGeneratedValues = false) {
+            this[CommandsStateTable.commandName] = it
+            this[CommandsStateTable.isDisabled] = false
         }
     }
 }
