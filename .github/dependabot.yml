@@ -1,0 +1,72 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # without a prefix dependabot starts the subject with a capital "Bump", a lowercase prefix keeps it lowercase
+    commit-message:
+      prefix: build
+    # one pull request per ecosystem per week instead of one per dependency: fewer CI runs, one
+    # merge, and no textual conflict between bumps that sit on adjacent lines of the version catalog.
+    # majors stay outside the group on purpose — telegrambots, exposed and ktor each need their own
+    # audit before landing, which cannot happen inside a pull request that also moves five patch versions.
+    groups:
+      gradle:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  # the base images of the Dockerfile
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build
+    ignore:
+      # the jre major is the bot's jvm: the build targets 21, so a bump here is a decision, not a refresh.
+      - dependency-name: eclipse-temurin
+        update-types:
+          - version-update:semver-major
+    groups:
+      docker:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  # the images of compose.yaml, the file every self-hoster downloads
+  - package-ecosystem: docker-compose
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build
+    ignore:
+      # a postgres major cannot read the data directory of the previous one without pg_upgrade, so it
+      # would break every existing installation on the next pull.
+      - dependency-name: postgres
+        update-types:
+          - version-update:semver-major
