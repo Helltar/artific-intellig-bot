@@ -110,4 +110,21 @@ class ChatServiceTest {
         val withoutEffort = Json.parseToJsonElement(httpClient.requestBody).jsonObject
         assertNull(withoutEffort["reasoning"], "without an effort the model default must apply")
     }
+
+    @Test
+    fun `getReply fails on a response without text instead of returning an empty reply`() = runBlocking {
+        val incomplete = """
+            {
+              "model": "gpt-test",
+              "status": "incomplete",
+              "incomplete_details": { "reason": "max_output_tokens" },
+              "output": [ { "type": "reasoning", "summary": [] } ]
+            }
+        """
+
+        val service = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = FakeOpenAiHttpClient(incomplete))
+        val error = assertFailsWith<IllegalStateException> { service.getReply(messages, "you are a bot") }
+
+        assertTrue(error.message!!.contains("max_output_tokens"), "the reason must get to the log")
+    }
 }

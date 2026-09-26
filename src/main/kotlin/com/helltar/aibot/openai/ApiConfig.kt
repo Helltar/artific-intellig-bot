@@ -23,6 +23,7 @@ object ApiConfig {
     object OutputType {
         const val MESSAGE = "message"
         const val TEXT = "output_text"
+        const val REFUSAL = "refusal"
     }
 
     /* https://developers.openai.com/api/docs/guides/reasoning#reasoning-effort */

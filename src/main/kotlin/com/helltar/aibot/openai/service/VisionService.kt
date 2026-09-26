@@ -11,6 +11,7 @@ import com.helltar.aibot.openai.models.image.VisionMessageData
 import com.helltar.aibot.openai.models.image.VisionRequestData
 import com.helltar.aibot.openai.models.responses.ReasoningData
 import com.helltar.aibot.openai.models.responses.ResponsesResponseData
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.*
 import java.io.File
 import java.util.*
@@ -26,6 +27,7 @@ class VisionService(
     private companion object {
         const val CACHE_KEY_PREFIX = "vision"
         val BASE64_Encoder: Base64.Encoder = Base64.getEncoder()
+        val log = KotlinLogging.logger {}
     }
 
     suspend fun analyzeImage(text: String, image: File, instructions: String, context: String? = null): String {
@@ -55,6 +57,8 @@ class VisionService(
 
         val response: ResponsesResponseData = httpClient.post(apiKey, Endpoints.RESPONSES, request).body()
 
-        return response.outputText()
+        log.info { "vision: ${response.model}, status=${response.status}, ${response.usage?.summary()}" }
+
+        return response.answerText()
     }
 }

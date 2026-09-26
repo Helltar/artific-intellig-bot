@@ -152,4 +152,55 @@ class ResponsesModelsTest {
         val payload = """{ "model": "gpt-test", "output": [ { "type": "reasoning", "summary": [] } ] }"""
         assertEquals("", json.decodeFromString<ResponsesResponseData>(payload).outputText())
     }
+
+    @Test
+    fun `answerText falls back to the refusal`() {
+        val payload = """
+            {
+              "model": "gpt-test",
+              "status": "completed",
+              "output": [
+                { "type": "message", "role": "assistant", "content": [ { "type": "refusal", "refusal": "I can't help with that." } ] }
+              ]
+            }
+        """
+
+        assertEquals("I can't help with that.", json.decodeFromString<ResponsesResponseData>(payload).answerText())
+    }
+
+    @Test
+    fun `answerText keeps the text of an incomplete response`() {
+        val payload = """
+            {
+              "model": "gpt-test",
+              "status": "incomplete",
+              "incomplete_details": { "reason": "content_filter" },
+              "output": [
+                { "type": "message", "role": "assistant", "content": [ { "type": "output_text", "text": "partial" } ] }
+              ]
+            }
+        """
+
+        assertEquals("partial", json.decodeFromString<ResponsesResponseData>(payload).answerText())
+    }
+
+    @Test
+    fun `answerText fails when there is nothing to show`() {
+        val payload = """{ "model": "gpt-test", "status": "completed", "output": [ { "type": "reasoning", "summary": [] } ] }"""
+        assertFailsWith<IllegalStateException> { json.decodeFromString<ResponsesResponseData>(payload).answerText() }
+    }
+
+    @Test
+    fun `usage details are optional`() {
+        val payload = """
+            {
+              "model": "gpt-test",
+              "output": [],
+              "usage": { "input_tokens": 5, "output_tokens": 7, "total_tokens": 12 }
+            }
+        """
+
+        val usage = assertNotNull(json.decodeFromString<ResponsesResponseData>(payload).usage)
+        assertEquals("input=5 (cached=0, cache_write=0), output=7 (reasoning=0)", usage.summary())
+    }
 }
