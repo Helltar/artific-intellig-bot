@@ -1,6 +1,7 @@
 package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
+import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.ChatAllowlistData
 import com.helltar.aibot.database.tables.ChatAllowlistTable
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,7 @@ class ChatAllowlistDao {
         ChatAllowlistTable
             .insertIgnore {
                 it[this.chatId] = chatId
-                it[this.title] = title?.take(70)
+                it[this.title] = title?.let(this.title::fit)
             }
     }
         .insertedCount > 0

@@ -1,6 +1,7 @@
 package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
+import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.BanlistData
 import com.helltar.aibot.database.tables.BannedUsersTable
 import kotlinx.coroutines.flow.map
@@ -19,9 +20,9 @@ class BanlistDao {
         BannedUsersTable
             .insertIgnore {
                 it[userId] = user.id
-                it[username] = user.userName
-                it[firstName] = user.firstName
-                it[this.reason] = reason
+                it[username] = user.userName?.let(username::fit)
+                it[firstName] = firstName.fit(user.firstName)
+                it[this.reason] = reason?.let(this.reason::fit)
             }
             .insertedCount > 0
     }

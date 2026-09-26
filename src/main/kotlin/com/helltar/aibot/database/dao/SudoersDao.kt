@@ -1,6 +1,7 @@
 package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
+import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.SudoersData
 import com.helltar.aibot.database.tables.SudoersTable
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,7 @@ class SudoersDao {
         SudoersTable
             .insertIgnore {
                 it[this.userId] = userId
-                it[this.username] = username
+                it[this.username] = username?.let(this.username::fit)
             }
     }
         .insertedCount > 0
