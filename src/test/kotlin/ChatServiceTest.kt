@@ -18,7 +18,14 @@ class ChatServiceTest {
               "output": [
                 { "type": "reasoning", "summary": [] },
                 { "type": "message", "role": "assistant", "content": [ { "type": "output_text", "text": "Hi!" } ] }
-              ]
+              ],
+              "usage": {
+                "input_tokens": 1200,
+                "input_tokens_details": { "cached_tokens": 1024, "cache_write_tokens": 100 },
+                "output_tokens": 30,
+                "output_tokens_details": { "reasoning_tokens": 10 },
+                "total_tokens": 1230
+              }
             }
         """
     }
@@ -36,7 +43,7 @@ class ChatServiceTest {
 
         val reply = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
 
-        assertEquals("Hi!", reply)
+        assertEquals("Hi!", reply.text)
         assertEquals("/v1/responses", httpClient.requestPath)
         assertEquals("Bearer sk-test", httpClient.authHeader)
 
@@ -109,6 +116,18 @@ class ChatServiceTest {
         ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
         val withoutEffort = Json.parseToJsonElement(httpClient.requestBody).jsonObject
         assertNull(withoutEffort["reasoning"], "without an effort the model default must apply")
+    }
+
+    @Test
+    fun `getReply returns the usage, the history is trimmed by its input tokens`() = runBlocking {
+        val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON)
+
+        val usage = assertNotNull(ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot").usage)
+
+        assertEquals(1200, usage.inputTokens)
+        assertEquals(1024, usage.inputTokensDetails?.cachedTokens)
+        assertEquals(100, usage.inputTokensDetails?.cacheWriteTokens)
+        assertEquals(10, usage.outputTokensDetails?.reasoningTokens)
     }
 
     @Test

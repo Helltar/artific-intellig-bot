@@ -8,8 +8,11 @@ import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.models.responses.ReasoningData
 import com.helltar.aibot.openai.models.responses.ResponsesRequestData
 import com.helltar.aibot.openai.models.responses.ResponsesResponseData
+import com.helltar.aibot.openai.models.responses.UsageData
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.*
+
+data class ChatReply(val text: String, val usage: UsageData?)
 
 class ChatService(
     private val model: String,
@@ -24,7 +27,7 @@ class ChatService(
         val log = KotlinLogging.logger {}
     }
 
-    suspend fun getReply(messages: List<MessageData>, instructions: String): String {
+    suspend fun getReply(messages: List<MessageData>, instructions: String): ChatReply {
         val request =
             ResponsesRequestData(
                 model = model,
@@ -39,6 +42,6 @@ class ChatService(
 
         log.info { "chat: ${response.model}, status=${response.status}, ${response.usage?.summary()}" }
 
-        return response.answerText()
+        return ChatReply(response.answerText(), response.usage)
     }
 }

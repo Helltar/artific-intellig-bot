@@ -53,16 +53,27 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
     override fun commandName() =
         CommandNames.User.CMD_CHAT
 
-    private suspend fun retrieveChatAnswer(messages: List<MessageData>): String? =
-        try {
-            // the context goes after the history: everything before it stays the same between requests and can be reused by the api as a cached prompt prefix
-            val input = messages + MessageData(ChatRole.SYSTEM, chatContext())
-            ChatService(chatModel(), openaiApiKey(), userId, reasoningEffort()).getReply(input, SystemPrompt.instructions)
-        } catch (e: Exception) {
-            log.error { e.message }
-            replyToMessage(BotMessages.Chat.EXCEPTION)
-            null
+    private suspend fun retrieveChatAnswer(messages: List<MessageData>): String? {
+        // the context goes after the history: everything before it stays the same between requests and can be reused by the api as a cached prompt prefix
+        val input = messages + MessageData(ChatRole.SYSTEM, chatContext())
+        val instructions = SystemPrompt.instructions
+
+        val reply =
+            try {
+                ChatService(chatModel(), openaiApiKey(), userId, reasoningEffort()).getReply(input, instructions)
+            } catch (e: Exception) {
+                log.error { e.message }
+                replyToMessage(BotMessages.Chat.EXCEPTION)
+                return null
+            }
+
+        reply.usage?.let { usage ->
+            val requestChars = instructions.length + input.sumOf { it.content.length }
+            chatHistoryManager.fitTokenBudget(usage.inputTokens, requestChars)
         }
+
+        return reply.text
+    }
 
     private fun chatContext(): String {
         val userName = message.from.userName ?: message.from.firstName
