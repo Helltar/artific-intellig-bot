@@ -17,9 +17,9 @@ class ConfigurationsDao {
         const val KEY_VISION_MODEL = "vision_model"
         const val KEY_IMAGE_GEN_MODEL = "image_gen_model"
         const val KEY_SLOWMODE_MAX_USAGE_COUNT = "global_slowmode_max_usage_count"
-        const val DEFAULT_CHAT_MODEL = "gpt-5.2"
-        const val DEFAULT_VISION_MODEL = "gpt-5.2"
-        const val DEFAULT_IMAGE_GEN_MODEL = "gpt-image-1.5"
+        const val DEFAULT_CHAT_MODEL = "gpt-6-sol"
+        const val DEFAULT_VISION_MODEL = "gpt-6-sol"
+        const val DEFAULT_IMAGE_GEN_MODEL = "gpt-image-2.5-flare"
         const val NULL_MARKER = "<NULL>"
     }
 
