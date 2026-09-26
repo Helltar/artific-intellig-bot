@@ -1,6 +1,8 @@
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
 import com.helltar.aibot.openai.service.ChatService
+import io.ktor.client.plugins.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.*
 import kotlin.test.*
@@ -145,5 +147,33 @@ class ChatServiceTest {
         val error = assertFailsWith<IllegalStateException> { service.getReply(messages, "you are a bot") }
 
         assertTrue(error.message!!.contains("max_output_tokens"), "the reason must get to the log")
+    }
+
+    @Test
+    fun `transient errors are retried`() = runBlocking {
+        val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON, listOf(HttpStatusCode.TooManyRequests, HttpStatusCode.InternalServerError, HttpStatusCode.OK))
+
+        val reply = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient).getReply(messages, "you are a bot")
+
+        assertEquals("Hi!", reply.text)
+        assertEquals(3, httpClient.requestCount)
+    }
+
+    @Test
+    fun `retries give up after two attempts`() = runBlocking {
+        val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON, listOf(HttpStatusCode.ServiceUnavailable))
+        val service = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient)
+
+        assertFailsWith<ServerResponseException> { service.getReply(messages, "you are a bot") }
+        assertEquals(3, httpClient.requestCount)
+    }
+
+    @Test
+    fun `a bad request is not retried`() = runBlocking {
+        val httpClient = FakeOpenAiHttpClient(RESPONSE_JSON, listOf(HttpStatusCode.BadRequest))
+        val service = ChatService("gpt-test", "sk-test", USER_ID, reasoningEffort = null, httpClient = httpClient)
+
+        assertFailsWith<ClientRequestException> { service.getReply(messages, "you are a bot") }
+        assertEquals(1, httpClient.requestCount)
     }
 }

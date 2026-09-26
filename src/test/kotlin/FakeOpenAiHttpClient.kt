@@ -1,19 +1,23 @@
-import com.helltar.aibot.openai.KtorHttpClient
+import com.helltar.aibot.openai.KtorHttpClient.openAiDefaults
 import io.ktor.client.engine.mock.*
-import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 
-/* Replicates KtorHttpClient's setup (same Json config, content negotiation, bearer auth)
-   but sends requests to a MockEngine, capturing them for assertions. */
+/* Uses KtorHttpClient's setup (same Json config, content negotiation, retries, bearer auth)
+   but sends requests to a MockEngine, capturing them for assertions.
+   Every response after the last one in [statuses] repeats it. */
 
-class FakeOpenAiHttpClient(private val responseJson: String) : com.helltar.aibot.openai.HttpClient {
+class FakeOpenAiHttpClient(
+    private val responseJson: String,
+    private val statuses: List<HttpStatusCode> = listOf(HttpStatusCode.OK)
+) : com.helltar.aibot.openai.HttpClient {
 
     var requestPath = ""
     var requestBody = ""
     var authHeader: String? = null
+    var requestCount = 0
 
     private val client =
         io.ktor.client.HttpClient(
@@ -21,13 +25,14 @@ class FakeOpenAiHttpClient(private val responseJson: String) : com.helltar.aibot
                 requestPath = request.url.encodedPath
                 requestBody = request.body.toByteArray().decodeToString()
                 authHeader = request.headers[HttpHeaders.Authorization]
-                respond(responseJson, HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
+                val status = statuses.getOrElse(requestCount++) { statuses.last() }
+                respond(responseJson, status, headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()))
             }
         ) {
-            expectSuccess = true
+            openAiDefaults()
 
-            install(ContentNegotiation) {
-                json(KtorHttpClient.json)
+            install(HttpRequestRetry) {
+                delay { } // no backoff in tests
             }
         }
 
