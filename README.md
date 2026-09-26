@@ -3,7 +3,7 @@
 <a href="https://github.com/Helltar/artific-intellig-bot/actions/workflows/build.yml"><img src="https://github.com/Helltar/artific-intellig-bot/actions/workflows/build.yml/badge.svg" alt="build"></a>
 <a href="https://github.com/Helltar/artific-intellig-bot/pkgs/container/aibot"><img src="https://img.shields.io/badge/ghcr-aibot-blue?logo=docker" alt="GHCR"></a>
 
-A Telegram bot for group chats that chats, analyzes images, and generates images using the OpenAI API.
+A Telegram bot for group chats that answers questions, describes images, and generates new ones with the OpenAI API.
 
 ## Installation
 
@@ -104,5 +104,5 @@ Available only to `CREATOR_ID`:
 - `/addchat` — add a chat to the allowlist; run it in the chat or pass a chat ID
 - `/chatmodel <model>` — set the OpenAI model for chat and vision
 - `/imgmodel <model>` — set the model for image generation
-- `/effort <level>` — set the reasoning effort for chat and vision (default: `low`; `default` leaves it to the model)
+- `/effort <level>` — set the reasoning effort for chat and vision (default: `low`)
 - `/slowmode` — configure the rate limit (default: 10 requests per hour per user)
