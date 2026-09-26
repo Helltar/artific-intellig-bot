@@ -25,6 +25,7 @@ dependencies {
     runtimeOnly(libs.logback.classic)
     testImplementation(kotlin("test"))
     testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.testcontainers)
 }
 
 application {

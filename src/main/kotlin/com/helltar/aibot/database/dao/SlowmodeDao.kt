@@ -2,8 +2,8 @@ package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.models.SlowmodeStatusData
-import com.helltar.aibot.database.tables.SlowmodeTable
-import com.helltar.aibot.utils.DateTimeUtils.instantNow
+import com.helltar.aibot.database.tables.SlowmodeUsageTable
+import com.helltar.aibot.database.utcNow
 import kotlinx.coroutines.flow.singleOrNull
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.plus
@@ -14,7 +14,7 @@ import org.jetbrains.exposed.v1.r2dbc.update
 class SlowmodeDao {
 
     suspend fun registerUser(userId: Long): Boolean = dbTransaction {
-        SlowmodeTable
+        SlowmodeUsageTable
             .insertIgnore {
                 it[this.userId] = userId
             }
@@ -22,30 +22,30 @@ class SlowmodeDao {
     }
 
     suspend fun incrementUsageCount(userId: Long): Boolean = dbTransaction {
-        SlowmodeTable
-            .update({ SlowmodeTable.userId eq userId }) {
+        SlowmodeUsageTable
+            .update({ SlowmodeUsageTable.userId eq userId }) {
                 it[usageCount] = usageCount + 1
-                it[updatedAt] = instantNow()
+                it[lastUsedAt] = utcNow()
             } > 0
     }
 
     suspend fun resetUsageCount(userId: Long): Boolean = dbTransaction {
-        SlowmodeTable
-            .update({ SlowmodeTable.userId eq userId }) {
+        SlowmodeUsageTable
+            .update({ SlowmodeUsageTable.userId eq userId }) {
                 it[usageCount] = 1
-                it[updatedAt] = instantNow()
+                it[lastUsedAt] = utcNow()
             } > 0
     }
 
     suspend fun slowmodeStatus(userId: Long): SlowmodeStatusData? = dbTransaction {
-        SlowmodeTable
-            .select(SlowmodeTable.usageCount, SlowmodeTable.updatedAt)
-            .where { SlowmodeTable.userId eq userId }
+        SlowmodeUsageTable
+            .select(SlowmodeUsageTable.usageCount, SlowmodeUsageTable.lastUsedAt)
+            .where { SlowmodeUsageTable.userId eq userId }
             .singleOrNull()
             ?.let {
                 SlowmodeStatusData(
-                    it[SlowmodeTable.usageCount],
-                    it[SlowmodeTable.updatedAt]
+                    it[SlowmodeUsageTable.usageCount],
+                    it[SlowmodeUsageTable.lastUsedAt].toInstant()
                 )
             }
     }

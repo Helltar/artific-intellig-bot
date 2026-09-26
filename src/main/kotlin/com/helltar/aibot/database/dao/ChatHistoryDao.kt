@@ -2,7 +2,7 @@ package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.chat.ChatHistoryStorage
 import com.helltar.aibot.database.Database.dbTransaction
-import com.helltar.aibot.database.tables.ChatHistoryTable
+import com.helltar.aibot.database.tables.ChatMessagesTable
 import com.helltar.aibot.openai.models.common.MessageData
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
@@ -16,7 +16,7 @@ import java.time.Instant
 class ChatHistoryDao : ChatHistoryStorage {
 
     override suspend fun insert(userId: Long, message: MessageData): Boolean = dbTransaction {
-        ChatHistoryTable
+        ChatMessagesTable
             .insert {
                 it[this.userId] = userId
                 it[role] = message.role
@@ -26,33 +26,33 @@ class ChatHistoryDao : ChatHistoryStorage {
 
     // a list, not a flow: an r2dbc query runs only while it is collected inside its transaction, and the manager keeps the whole history in memory anyway
     override suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>> = dbTransaction {
-        ChatHistoryTable
-            .select(ChatHistoryTable.role, ChatHistoryTable.content, ChatHistoryTable.createdAt)
-            .where { ChatHistoryTable.userId eq userId }
-            .orderBy(ChatHistoryTable.id)
+        ChatMessagesTable
+            .select(ChatMessagesTable.role, ChatMessagesTable.content, ChatMessagesTable.createdAt)
+            .where { ChatMessagesTable.userId eq userId }
+            .orderBy(ChatMessagesTable.id)
             .map {
                 MessageData(
-                    it[ChatHistoryTable.role],
-                    it[ChatHistoryTable.content]
-                ) to it[ChatHistoryTable.createdAt]
+                    it[ChatMessagesTable.role],
+                    it[ChatMessagesTable.content]
+                ) to it[ChatMessagesTable.createdAt].toInstant()
             }.toList()
     }
 
     // one statement for the whole cut: delete ... where id in (select ... order by id limit count)
     override suspend fun deleteOldest(userId: Long, count: Int): Int = dbTransaction {
         val oldest =
-            ChatHistoryTable
-                .select(ChatHistoryTable.id)
-                .where { ChatHistoryTable.userId eq userId }
-                .orderBy(ChatHistoryTable.id)
+            ChatMessagesTable
+                .select(ChatMessagesTable.id)
+                .where { ChatMessagesTable.userId eq userId }
+                .orderBy(ChatMessagesTable.id)
                 .limit(count)
 
-        ChatHistoryTable.deleteWhere { id inSubQuery oldest }
+        ChatMessagesTable.deleteWhere { id inSubQuery oldest }
     }
 
     override suspend fun clearHistory(userId: Long): Boolean = dbTransaction {
-        ChatHistoryTable
-            .deleteWhere { ChatHistoryTable.userId eq userId } > 0
+        ChatMessagesTable
+            .deleteWhere { ChatMessagesTable.userId eq userId } > 0
     }
 }
 

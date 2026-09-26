@@ -58,7 +58,7 @@ class BanlistDao {
                     it[BannedUsersTable.username],
                     it[BannedUsersTable.firstName],
                     it[BannedUsersTable.reason],
-                    it[BannedUsersTable.bannedAt]
+                    it[BannedUsersTable.bannedAt].toInstant()
                 )
             }.toList()
     }

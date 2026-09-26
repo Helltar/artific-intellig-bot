@@ -2,6 +2,15 @@ package com.helltar.aibot.database
 
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.VarCharColumnType
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+
+/**
+ * The value for a timestamp column. The columns are `timestamptz`: they keep the instant itself, so what
+ * was written reads back the same whatever time zone the bot or the database runs in.
+ */
+fun utcNow(): OffsetDateTime =
+    OffsetDateTime.now(ZoneOffset.UTC)
 
 /**
  * Cuts [value] to the length of this varchar column: postgres rejects a longer value instead of cutting it.

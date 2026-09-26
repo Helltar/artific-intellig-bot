@@ -2,8 +2,8 @@ package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.CachedSet
 import com.helltar.aibot.database.Database.dbTransaction
-import com.helltar.aibot.database.tables.CommandsStateTable
-import com.helltar.aibot.utils.DateTimeUtils.instantNow
+import com.helltar.aibot.database.tables.CommandStatesTable
+import com.helltar.aibot.database.utcNow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.core.eq
@@ -16,20 +16,20 @@ class CommandsDao {
     private val disabledCommands =
         CachedSet {
             dbTransaction {
-                CommandsStateTable
-                    .select(CommandsStateTable.commandName)
-                    .where { CommandsStateTable.isDisabled eq true }
-                    .map { it[CommandsStateTable.commandName] }
+                CommandStatesTable
+                    .select(CommandStatesTable.commandName)
+                    .where { CommandStatesTable.isDisabled eq true }
+                    .map { it[CommandStatesTable.commandName] }
                     .toList()
             }
         }
 
     suspend fun changeState(command: String, disable: Boolean): Boolean =
         dbTransaction {
-            CommandsStateTable
-                .update({ CommandsStateTable.commandName eq command }) {
+            CommandStatesTable
+                .update({ CommandStatesTable.commandName eq command }) {
                     it[isDisabled] = disable
-                    it[updatedAt] = instantNow()
+                    it[updatedAt] = utcNow()
                 } > 0
         }.also { updated ->
             if (updated) {

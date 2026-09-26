@@ -1,8 +1,8 @@
 package com.helltar.aibot.database.dao
 
 import com.helltar.aibot.database.Database.dbTransaction
-import com.helltar.aibot.database.tables.ConfigurationsTable
-import com.helltar.aibot.utils.DateTimeUtils.instantNow
+import com.helltar.aibot.database.tables.SettingsTable
+import com.helltar.aibot.database.utcNow
 import kotlinx.coroutines.flow.singleOrNull
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.r2dbc.select
@@ -73,20 +73,20 @@ class ConfigurationsDao {
         setConfiguration(key, value.toString()).also { if (it) cache[key] = value.toString() }
 
     private suspend fun getConfigValue(key: String): String? = dbTransaction {
-        ConfigurationsTable
-            .select(ConfigurationsTable.value)
-            .where { ConfigurationsTable.key eq key }
+        SettingsTable
+            .select(SettingsTable.value)
+            .where { SettingsTable.key eq key }
             .singleOrNull()
-            ?.getOrNull(ConfigurationsTable.value)
+            ?.getOrNull(SettingsTable.value)
     }
 
     // one statement for both cases: insert ... on conflict (key) do update, keeping the created_at of the first insert
     private suspend fun setConfiguration(key: String, value: String): Boolean = dbTransaction {
-        ConfigurationsTable
-            .upsert(onUpdateExclude = listOf(ConfigurationsTable.createdAt)) {
+        SettingsTable
+            .upsert(onUpdateExclude = listOf(SettingsTable.createdAt)) {
                 it[this.key] = key
                 it[this.value] = value
-                it[updatedAt] = instantNow()
+                it[updatedAt] = utcNow()
             }
             .insertedCount > 0
     }

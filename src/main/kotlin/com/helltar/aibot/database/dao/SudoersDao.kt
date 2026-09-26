@@ -4,7 +4,7 @@ import com.helltar.aibot.database.CachedSet
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.SudoersData
-import com.helltar.aibot.database.tables.SudoersTable
+import com.helltar.aibot.database.tables.AdminsTable
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.core.eq
@@ -16,12 +16,12 @@ import org.jetbrains.exposed.v1.r2dbc.selectAll
 class SudoersDao {
 
     // checked on every command
-    private val adminIds = CachedSet { dbTransaction { SudoersTable.select(SudoersTable.userId).map { it[SudoersTable.userId] }.toList() } }
+    private val adminIds = CachedSet { dbTransaction { AdminsTable.select(AdminsTable.userId).map { it[AdminsTable.userId] }.toList() } }
 
     // the row exists after an insert or an ignored duplicate alike, so the cache follows either way
     suspend fun add(userId: Long, username: String?): Boolean =
         dbTransaction {
-            SudoersTable
+            AdminsTable
                 .insertIgnore {
                     it[this.userId] = userId
                     it[this.username] = username?.let(this.username::fit)
@@ -34,18 +34,18 @@ class SudoersDao {
 
     suspend fun remove(userId: Long): Boolean =
         dbTransaction {
-            SudoersTable
+            AdminsTable
                 .deleteWhere { this.userId eq userId } > 0
         }.also { adminIds.remove(userId) }
 
     suspend fun list(): List<SudoersData> = dbTransaction {
-        SudoersTable
+        AdminsTable
             .selectAll()
             .map {
                 SudoersData(
-                    it[SudoersTable.userId],
-                    it[SudoersTable.username],
-                    it[SudoersTable.createdAt]
+                    it[AdminsTable.userId],
+                    it[AdminsTable.username],
+                    it[AdminsTable.createdAt].toInstant()
                 )
             }.toList()
     }

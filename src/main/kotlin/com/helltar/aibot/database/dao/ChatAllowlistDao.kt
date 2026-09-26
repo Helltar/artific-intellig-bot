@@ -4,7 +4,7 @@ import com.helltar.aibot.database.CachedSet
 import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.fit
 import com.helltar.aibot.database.models.ChatAllowlistData
-import com.helltar.aibot.database.tables.ChatAllowlistTable
+import com.helltar.aibot.database.tables.AllowedChatsTable
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.core.eq
@@ -16,12 +16,12 @@ import org.jetbrains.exposed.v1.r2dbc.selectAll
 class ChatAllowlistDao {
 
     // checked on every command
-    private val chatIds = CachedSet { dbTransaction { ChatAllowlistTable.select(ChatAllowlistTable.chatId).map { it[ChatAllowlistTable.chatId] }.toList() } }
+    private val chatIds = CachedSet { dbTransaction { AllowedChatsTable.select(AllowedChatsTable.chatId).map { it[AllowedChatsTable.chatId] }.toList() } }
 
     // the row exists after an insert or an ignored duplicate alike, so the cache follows either way
     suspend fun add(chatId: Long, title: String?): Boolean =
         dbTransaction {
-            ChatAllowlistTable
+            AllowedChatsTable
                 .insertIgnore {
                     it[this.chatId] = chatId
                     it[this.title] = title?.let(this.title::fit)
@@ -31,18 +31,18 @@ class ChatAllowlistDao {
 
     suspend fun remove(chatId: Long): Boolean =
         dbTransaction {
-            ChatAllowlistTable
+            AllowedChatsTable
                 .deleteWhere { this.chatId eq chatId } > 0
         }.also { chatIds.remove(chatId) }
 
     suspend fun list(): List<ChatAllowlistData> = dbTransaction {
-        ChatAllowlistTable
+        AllowedChatsTable
             .selectAll()
             .map {
                 ChatAllowlistData(
-                    it[ChatAllowlistTable.chatId],
-                    it[ChatAllowlistTable.title],
-                    it[ChatAllowlistTable.createdAt]
+                    it[AllowedChatsTable.chatId],
+                    it[AllowedChatsTable.title],
+                    it[AllowedChatsTable.createdAt].toInstant()
                 )
             }.toList()
     }
