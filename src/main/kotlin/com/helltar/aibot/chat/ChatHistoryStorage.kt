@@ -9,7 +9,8 @@ interface ChatHistoryStorage {
 
     suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>>
 
-    suspend fun deleteOldestEntry(userId: Long): Boolean
+    // returns how many messages were deleted
+    suspend fun deleteOldest(userId: Long, count: Int): Int
 
     suspend fun clearHistory(userId: Long): Boolean
 }

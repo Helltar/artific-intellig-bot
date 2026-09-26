@@ -56,17 +56,25 @@ class ChatHistoryManager(private val userId: Long, private val storage: ChatHist
         if (requestTokens <= MAX_REQUEST_TOKENS || requestChars <= 0) return@withUserLock
 
         val tokensPerChar = requestTokens.toDouble() / requestChars
-        val sizeBefore = chatContext().size
+        val history = chatContext()
+
+        var count = 0
+        var chars = history.sumOf { it.first.content.length }
 
         // never let the history start with an assistant message, an answer without its question only confuses the model
-        while (contentLength() * tokensPerChar > TRIMMED_HISTORY_TOKENS ||
-            chatContext().firstOrNull()?.first?.role == ChatRole.ASSISTANT
+        while (count < history.size &&
+            (chars * tokensPerChar > TRIMMED_HISTORY_TOKENS || history[count].first.role == ChatRole.ASSISTANT)
         ) {
-            if (!removeOldestMessage()) break
+            chars -= history[count].first.content.length
+            count++
         }
 
-        val dropped = sizeBefore - chatContext().size
-        log.info { "request took $requestTokens input tokens, $dropped oldest messages dropped from the history" }
+        if (count == 0) return@withUserLock
+
+        val deleted = storage.deleteOldest(userId, count)
+        history.subList(0, deleted.coerceAtMost(history.size)).clear()
+
+        log.info { "request took $requestTokens input tokens, $deleted oldest messages dropped from the history" }
     }
 
     suspend fun clear(): Boolean = withUserLock {
@@ -82,17 +90,6 @@ class ChatHistoryManager(private val userId: Long, private val storage: ChatHist
 
         if (storage.insert(userId, message))
             context.add(message to instantNow())
-    }
-
-    private suspend fun contentLength(): Int =
-        chatContext().sumOf { it.first.content.length }
-
-    private suspend fun removeOldestMessage(): Boolean {
-        val history = chatContext()
-        if (history.isEmpty()) return false
-        if (!storage.deleteOldestEntry(userId)) return false
-        history.removeAt(0)
-        return true
     }
 
     private suspend fun chatContext(): MutableList<Pair<MessageData, Instant>> {

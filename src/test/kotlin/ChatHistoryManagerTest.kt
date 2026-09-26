@@ -12,6 +12,7 @@ import kotlin.test.*
 private class FakeChatHistoryStorage : ChatHistoryStorage {
 
     val stored = mutableListOf<MessageData>()
+    var deleteCalls = 0
 
     override suspend fun insert(userId: Long, message: MessageData): Boolean {
         stored.add(message)
@@ -21,10 +22,11 @@ private class FakeChatHistoryStorage : ChatHistoryStorage {
     override suspend fun loadHistory(userId: Long): List<Pair<MessageData, Instant>> =
         stored.map { it to Instant.now() }
 
-    override suspend fun deleteOldestEntry(userId: Long): Boolean {
-        if (stored.isEmpty()) return false
-        stored.removeAt(0)
-        return true
+    override suspend fun deleteOldest(userId: Long, count: Int): Int {
+        deleteCalls++
+        val deleted = count.coerceAtMost(stored.size)
+        stored.subList(0, deleted).clear()
+        return deleted
     }
 
     override suspend fun clearHistory(userId: Long): Boolean {
@@ -67,6 +69,7 @@ class ChatHistoryManagerTest {
         manager.fitTokenBudget(requestTokens = 20_000, requestChars = 61_000)
 
         assertEquals(6, manager.messages().size)
+        assertEquals(0, storage.deleteCalls)
     }
 
     @Test
@@ -88,6 +91,7 @@ class ChatHistoryManagerTest {
         assertEquals(ChatRole.USER, messages.first().role, "an assistant reply must not become the first message")
         assertTrue(messages.last().content.startsWith("answer 9"), "the latest messages must be kept")
         assertEquals(messages.map { it.content }, storage.stored.map { it.content }, "trimming must also delete from storage")
+        assertEquals(1, storage.deleteCalls, "the whole cut must be one delete")
     }
 
     @Test

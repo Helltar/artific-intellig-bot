@@ -5,9 +5,9 @@ import com.helltar.aibot.database.Database.dbTransaction
 import com.helltar.aibot.database.tables.ChatHistoryTable
 import com.helltar.aibot.openai.models.common.MessageData
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inSubQuery
 import org.jetbrains.exposed.v1.r2dbc.deleteWhere
 import org.jetbrains.exposed.v1.r2dbc.insert
 import org.jetbrains.exposed.v1.r2dbc.select
@@ -38,16 +38,16 @@ class ChatHistoryDao : ChatHistoryStorage {
             }.toList()
     }
 
-    override suspend fun deleteOldestEntry(userId: Long): Boolean = dbTransaction {
-        val messageId =
+    // one statement for the whole cut: delete ... where id in (select ... order by id limit count)
+    override suspend fun deleteOldest(userId: Long, count: Int): Int = dbTransaction {
+        val oldest =
             ChatHistoryTable
                 .select(ChatHistoryTable.id)
                 .where { ChatHistoryTable.userId eq userId }
                 .orderBy(ChatHistoryTable.id)
-                .limit(1)
-                .singleOrNull()?.getOrNull(ChatHistoryTable.id)
+                .limit(count)
 
-        messageId?.let { ChatHistoryTable.deleteWhere { ChatHistoryTable.id eq messageId } > 0 } == true
+        ChatHistoryTable.deleteWhere { id inSubQuery oldest }
     }
 
     override suspend fun clearHistory(userId: Long): Boolean = dbTransaction {

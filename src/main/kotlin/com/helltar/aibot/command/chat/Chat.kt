@@ -10,6 +10,7 @@ import com.helltar.aibot.exceptions.TelegramFormattingException
 import com.helltar.aibot.messages.BotMessages
 import com.helltar.aibot.openai.ApiConfig.ChatRole
 import com.helltar.aibot.openai.models.common.MessageData
+import com.helltar.aibot.openai.service.ChatReply
 import com.helltar.aibot.openai.service.ChatService
 import com.helltar.aibot.openai.service.VisionService
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -26,54 +27,54 @@ class Chat(ctx: BotCommandContext) : AiCommand(ctx) {
     private val chatHistoryManager = ChatHistoryManager(userId)
 
     override suspend fun run() {
-        var messageIdToReply = message.messageId
-
-        val answer =
-            if (replyMessage?.hasPhoto() != true) {
-                processUserMessage()?.let { messageId ->
-                    messageIdToReply = messageId
-                    retrieveChatAnswer(chatHistoryManager.messages())
-                }
-            } else {
-                val prompt =
-                    argumentsString.takeIf { it.isNotBlank() }
-                        ?: VISION_DEFAULT_PROMPT
-
-                chatHistoryManager.saveUserMessage(prompt)
-
-                retrieveVisionAnswer(prompt)
-            }
-
-        answer?.let {
-            replyToMessage(it, messageIdToReply)
-            chatHistoryManager.saveAssistantMessage(it)
-        }
+        if (replyMessage?.hasPhoto() == true)
+            answerAboutPhoto()
+        else
+            answerInChat()
     }
 
     override fun commandName() =
         CommandNames.User.CMD_CHAT
 
-    private suspend fun retrieveChatAnswer(messages: List<MessageData>): String? {
+    private suspend fun answerInChat() {
+        val messageId = processUserMessage() ?: return
+
         // the context goes after the history: everything before it stays the same between requests and can be reused by the api as a cached prompt prefix
-        val input = messages + MessageData(ChatRole.SYSTEM, chatContext())
-        val instructions = SystemPrompt.instructions
+        val input = chatHistoryManager.messages() + MessageData(ChatRole.SYSTEM, chatContext())
+        val reply = retrieveChatReply(input) ?: return
 
-        val reply =
-            try {
-                ChatService(chatModel(), openaiApiKey(), userId, reasoningEffort()).getReply(input, instructions)
-            } catch (e: Exception) {
-                log.error { e.message }
-                replyToMessage(BotMessages.Chat.EXCEPTION)
-                return null
-            }
+        sendAnswer(reply.text, messageId)
 
+        // cut only after the answer is out, the user does not wait for the database
         reply.usage?.let { usage ->
-            val requestChars = instructions.length + input.sumOf { it.content.length }
+            val requestChars = SystemPrompt.instructions.length + input.sumOf { it.content.length }
             chatHistoryManager.fitTokenBudget(usage.inputTokens, requestChars)
         }
-
-        return reply.text
     }
+
+    private suspend fun answerAboutPhoto() {
+        val prompt =
+            argumentsString.takeIf { it.isNotBlank() }
+                ?: VISION_DEFAULT_PROMPT
+
+        chatHistoryManager.saveUserMessage(prompt)
+
+        retrieveVisionAnswer(prompt)?.let { sendAnswer(it, message.messageId) }
+    }
+
+    private suspend fun sendAnswer(text: String, messageId: Int) {
+        replyToMessage(text, messageId)
+        chatHistoryManager.saveAssistantMessage(text)
+    }
+
+    private suspend fun retrieveChatReply(input: List<MessageData>): ChatReply? =
+        try {
+            ChatService(chatModel(), openaiApiKey(), userId, reasoningEffort()).getReply(input, SystemPrompt.instructions)
+        } catch (e: Exception) {
+            log.error { e.message }
+            replyToMessage(BotMessages.Chat.EXCEPTION)
+            null
+        }
 
     private fun chatContext(): String {
         val userName = message.from.userName ?: message.from.firstName
