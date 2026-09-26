@@ -8,6 +8,10 @@ updates:
     # without a prefix dependabot starts the subject with a capital "Bump", a lowercase prefix keeps it lowercase
     commit-message:
       prefix: build
+    # the default second label of gradle updates is "java", named after the language rather than the build tool
+    labels:
+      - dependencies
+      - gradle
     # one pull request per ecosystem per week instead of one per dependency: fewer CI runs, one
     # merge, and no textual conflict between bumps that sit on adjacent lines of the version catalog.
     # majors stay outside the group on purpose — telegrambots, exposed and ktor each need their own
