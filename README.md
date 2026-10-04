@@ -20,7 +20,7 @@ mkdir aibot && cd aibot && \
 Edit **.env** and fill in your values:
 
 - `CREATOR_ID` — your Telegram user ID, e.g. `1234567890` (this user becomes the bot's owner)
-- `BOT_TOKEN` and `BOT_USERNAME` — the bot's token and username (e.g. `artific_intellig_bot`) from [BotFather](https://t.me/BotFather)
+- `BOT_TOKEN` and `BOT_USERNAME` — the bot's token and username (e.g. `artific_intellig_bot`)
 - `OPENAI_API_KEY` — your [OpenAI API key](https://platform.openai.com/api-keys)
 - PostgreSQL connection settings (host, database name, user, password)
 
