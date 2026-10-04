@@ -12,11 +12,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   postgres:
     container_name: postgres-container
