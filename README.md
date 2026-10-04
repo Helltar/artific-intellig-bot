@@ -7,7 +7,9 @@ A Telegram bot for group chats that answers questions, describes images, and gen
 
 ## Installation
 
-Run it with Docker Compose:
+### Docker Compose
+
+Download the configuration files:
 
 ```bash
 repo=https://raw.githubusercontent.com/Helltar/artific-intellig-bot/master
@@ -15,20 +17,31 @@ mkdir aibot && cd aibot && \
   curl -fsSLO "$repo/{compose.yaml,.env.example}" && mv .env.example .env
 ```
 
-Open **.env** and fill in:
+Edit **.env** and fill in your values:
 
 - `CREATOR_ID` — your Telegram user ID, e.g. `1234567890` (this user becomes the bot's owner)
-- `BOT_TOKEN` — get it from [BotFather](https://t.me/BotFather)
-- `BOT_USERNAME` — get it from [BotFather](https://t.me/BotFather), e.g. `artific_intellig_bot`
+- `BOT_TOKEN` and `BOT_USERNAME` — the bot's token and username (e.g. `artific_intellig_bot`) from [BotFather](https://t.me/BotFather)
 - `OPENAI_API_KEY` — your [OpenAI API key](https://platform.openai.com/api-keys)
 - PostgreSQL connection settings (host, database name, user, password)
 
 > **Note:** Compose includes a ready-to-use PostgreSQL service, so `POSTGRESQL_HOST=postgres` works out of the box. To use your own external database instead, set `POSTGRESQL_HOST` to its host and remove the `postgres` service from `compose.yaml`.
 
-Then start the bot:
+Start the bot:
 
 ```bash
 docker compose up -d
+```
+
+### Build from source
+
+To run your own build instead of the published image, clone the repository, create **.env** the
+same way, and add **compose.local.yaml** on top — it builds the image from the checkout on every
+start:
+
+```bash
+git clone https://github.com/Helltar/artific-intellig-bot.git && cd artific-intellig-bot
+cp .env.example .env
+docker compose -f compose.yaml -f compose.local.yaml up -d
 ```
 
 ## Custom personality
